@@ -8,7 +8,7 @@ import About from "@/components/About";
 import DesignerCoder from "@/components/DesignerCoder";
 import Skills from "@/components/Skills";
 import LeetCode from "@/components/LeetCode";
-import GitHubContributions from "@/components/GitHubContributions";
+
 import Experience from "@/components/Experience";
 import Services from "@/components/Services";
 import Projects from "@/components/Projects";
