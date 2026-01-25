@@ -73,20 +73,18 @@ export default function About() {
             <motion.div
                 className="flex-1"
             >
-                <h2 className="text-6xl md:text-8xl font-black text-white leading-[0.9] mb-2 font-heading tracking-tighter uppercase">
-                    {portfolioData.personal.title.split("|")[0].trim()}
+                <h2 className="text-5xl md:text-7xl font-black text-white leading-[0.9] mb-2 font-heading tracking-tighter">
+                    About
                 </h2>
                 <h2
-                    className="text-6xl md:text-8xl font-black text-[#1a1a1a] leading-[0.9] mb-8 font-heading tracking-tighter uppercase"
+                    className="text-5xl md:text-7xl font-black text-[#1a1a1a] leading-[0.9] mb-8 font-heading tracking-tighter"
                     style={{ WebkitTextStroke: "2px #333" }}
                 >
-                    {portfolioData.personal.title.split("|")[1]?.trim() || "ENGINEER"}
+                    Me
                 </h2>
 
                 <p className="text-gray-400 text-lg mb-12 max-w-xl leading-relaxed">
-                    Passionate about creating intuitive and engaging user experiences.
-                    I specialize in transforming complex requirements into beautifully
-                    crafted, secure, and scalable products.
+                    {portfolioData.personal.description}
                 </p>
 
                 {/* Stats */}

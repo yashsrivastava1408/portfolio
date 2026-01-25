@@ -91,7 +91,8 @@ export default function BackgroundAnimation() {
 
         const init = () => {
             particles = [];
-            const particleCount = Math.min(Math.floor((w * h) / 15000), 80); // Slightly fewer for cleaner look
+            // Reduced particle count for better performance
+            const particleCount = Math.min(Math.floor((w * h) / 25000), 50);
             for (let i = 0; i < particleCount; i++) {
                 particles.push(new Particle());
             }

@@ -6,7 +6,7 @@ export const portfolioData = {
     name: "Yash Srivastava",
     title: "Full Stack Developer | DevSecOps Enthusiast",
     description:
-      "I am a second-year B.Tech student in Computer Science and Engineering with a strong foundation in software development, cloud-native technologies, and IoT. I consistently engage in internships and hackathons to apply my skills in real-world scenarios, ranging from secure DevOps pipelines to AI-driven healthcare solutions.",
+      "Third-year B.Tech Computer Science student who builds systems end-to-end — from backend code to production deployments. Currently a DevOps Intern working on CI/CD pipelines, containerization, and cloud-native workflows using GitHub Actions, Jenkins, Docker, Kubernetes, and Linux. My core strengths include Java, Python, backend development, and DevOps fundamentals. Actively expanding skills in cloud computing, automation, and scalable system design. Seeking internship or early-career opportunities in Software Engineering, Platform, Cloud, or DevOps roles.",
     email: "yashsrivastava1408@gmail.com",
     phone: "+91-6394026578",
     resume: "/legacy_backup/photos/yash resume final copy.pdf",
@@ -41,6 +41,7 @@ export const portfolioData = {
       company: "XenKrypt Technologies",
       role: "DevOps Intern",
       period: "Dec 2025 – Present",
+      logo: "/logos/xenkrypt.png",
       description:
         "Improved CI performance by 82% through matrix-driven optimizations and redesigned GitHub Actions. Eliminated silent deployment failures by refactoring Makefile workflows and stabilized Jenkins CI in a self-hosted GitLab environment, ensuring reliable pipeline execution.",
     },
@@ -48,6 +49,7 @@ export const portfolioData = {
       company: "SheSafe",
       role: "Research & Development Intern",
       period: "June 2025 – July 2025",
+      logo: "/logos/shesafe.png",
       description:
         "Engineered a wearable safety pendant prototype under jewelry-sized constraints. Explored device miniaturization and investigated real-time SOS transmission challenges, balancing energy efficiency with accurate location detection.",
     },
@@ -55,6 +57,7 @@ export const portfolioData = {
       company: "Code Tech IT Solution",
       role: "Software Development Intern",
       period: "Jan 2025 – Mar 2025",
+      logo: "/logos/codetech.png",
       description:
         "Built a Chrome extension to monitor user website activity for productivity analysis. Developed a scalable real-time chat system with instant messaging and read receipts using Socket.IO, MongoDB, and Express.js.",
     },
@@ -148,6 +151,32 @@ export const portfolioData = {
       tags: ["IoT", "Solar", "Energy"],
       link: "https://github.com/yashsrivastava1408/home-automation",
       category: "IoT",
+    },
+  ],
+  gallery: [
+    {
+      id: 1,
+      title: "Opening the Server Rack",
+      imageUrl: "/gallery/rack-server.png",
+      description: "Explored the backbone of our infrastructure by opening up a rack server, checking hardware, and configuring static IPs. Witnessing Kubernetes pods spin up on actual hardware was a game-changer.",
+    },
+    {
+      id: 2,
+      title: "Top 5 at CodeMavens 2025",
+      imageUrl: "/gallery/codemavens-punya.png",
+      description: "Team Syntax Slayer secured a Top 5 spot with 'Punya', a MERN-stack platform fighting food wastage. Built with React, Node.js, and MongoDB to connect donors, NGOs, and volunteers.",
+    },
+    {
+      id: 3,
+      title: "Smart India Hackathon Journey",
+      imageUrl: "/gallery/sih-urbanpulse.png",
+      description: "Built 'UrbanPulse', an AI-powered Traffic Management System using YOLOv8 and Flask. Although we didn't win, the hands-on learning in computer vision and real-time alerts was invaluable.",
+    },
+    {
+      id: 4,
+      title: "Building XenKrypt",
+      imageUrl: "/gallery/xenkrypt-team.jpg",
+      description: "The XenKrypt team – a group of driven individuals building a next-gen cybersecurity startup from scratch. Learning by doing and pushing the limits of production-grade systems.",
     },
   ],
 };

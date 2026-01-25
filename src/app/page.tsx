@@ -8,14 +8,18 @@ import About from "@/components/About";
 import DesignerCoder from "@/components/DesignerCoder";
 import Skills from "@/components/Skills";
 import LeetCode from "@/components/LeetCode";
+import GitHubContributions from "@/components/GitHubContributions";
 import Experience from "@/components/Experience";
 import Services from "@/components/Services";
 import Projects from "@/components/Projects";
 import ContactBento from "@/components/ContactBento";
+import Footer from "@/components/Footer";
+import ScrollProgress from "@/components/ScrollProgress";
 import BackgroundAnimation from "@/components/BackgroundAnimation";
 import SplashScreen from "@/components/SplashScreen";
 import { useState, useEffect } from "react";
 import { AnimatePresence, motion } from "framer-motion";
+import PhotoGallery from "@/components/PhotoGallery";
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -27,6 +31,7 @@ export default function Home() {
           <SplashScreen finishLoading={() => setIsLoading(false)} />
         )}
       </AnimatePresence>
+
 
       {!isLoading && (
         <motion.div
@@ -43,7 +48,9 @@ export default function Home() {
           <Experience />
           <Services />
           <Projects />
+          <PhotoGallery />
           <ContactBento />
+          <Footer />
         </motion.div>
       )}
     </main>

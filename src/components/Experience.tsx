@@ -157,9 +157,28 @@ export default function Experience() {
                             <h2 className="text-4xl md:text-5xl font-bold text-white mb-2">
                                 {experiences[activeIndex].role}
                             </h2>
-                            <h3 className="text-xl text-gray-400 mb-8 font-light">
-                                {experiences[activeIndex].company}
-                            </h3>
+                            <div className="flex items-center gap-3 mb-8">
+                                {/* Company Logo */}
+                                <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center overflow-hidden">
+                                    {experiences[activeIndex].logo ? (
+                                        <img
+                                            src={experiences[activeIndex].logo}
+                                            alt={experiences[activeIndex].company}
+                                            className="w-full h-full object-contain p-1"
+                                            onError={(e) => {
+                                                e.currentTarget.style.display = 'none';
+                                                e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                                            }}
+                                        />
+                                    ) : null}
+                                    <span className={`text-white/60 font-bold text-sm ${experiences[activeIndex].logo ? 'hidden' : ''}`}>
+                                        {experiences[activeIndex].company.split(' ').map(w => w[0]).join('').slice(0, 2)}
+                                    </span>
+                                </div>
+                                <h3 className="text-xl text-gray-400 font-light">
+                                    {experiences[activeIndex].company}
+                                </h3>
+                            </div>
 
                             <div className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10 rounded-2xl p-8 backdrop-blur-md shadow-2xl">
                                 <p className="text-base md:text-lg text-gray-300 leading-relaxed font-light">
