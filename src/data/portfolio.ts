@@ -9,7 +9,7 @@ export const portfolioData = {
       "Third-year B.Tech Computer Science student who builds systems end-to-end — from backend code to production deployments. Currently a DevOps Intern working on CI/CD pipelines, containerization, and cloud-native workflows using GitHub Actions, Jenkins, Docker, Kubernetes, and Linux. My core strengths include Java, Python, backend development, and DevOps fundamentals. Actively expanding skills in cloud computing, automation, and scalable system design. Seeking internship or early-career opportunities in Software Engineering, Platform, Cloud, or DevOps roles.",
     email: "yashsrivastava1408@gmail.com",
     phone: "+91-6394026578",
-    resume: "/legacy_backup/photos/yash resume final copy.pdf",
+    resume: "/resume.png",
     social: [
       {
         name: "LinkedIn",
@@ -23,18 +23,36 @@ export const portfolioData = {
       },
     ],
   },
+  education: [
+    {
+      institution: "SRM Institute of Science and Technology",
+      degree: "Bachelor of Technology",
+      location: "Chennai, Tamil Nadu",
+      period: "Aug. 2023 – Present",
+    },
+  ],
   skills: [
-    "Java",
     "Python",
     "C/C++",
-    "Data Structures & Algorithms",
-    "React",
+    "SQL",
     "Node.js",
-    "Next.js",
-    "Docker & Kubernetes",
-    "CI/CD (Jenkins, GitLab)",
+    "Flask",
+    "React",
+    "Data Structures & Algorithms",
+    "OOP",
+    "REST APIs",
+    "Microservices",
+    "DBMS",
+    "Docker",
+    "Kubernetes",
+    "CI/CD",
+    "Jenkins",
     "AWS",
-    "IoT & MQTT",
+    "Git",
+    "GitHub",
+    "GitLab",
+    "Argo CD",
+    "MySQL"
   ],
   experience: [
     {
@@ -43,15 +61,15 @@ export const portfolioData = {
       period: "Dec 2025 – Present",
       logo: "/logos/xenkrypt.png",
       description:
-        "Improved CI performance by 82% through matrix-driven optimizations and redesigned GitHub Actions. Eliminated silent deployment failures by refactoring Makefile workflows and stabilized Jenkins CI in a self-hosted GitLab environment, ensuring reliable pipeline execution.",
+        "Improved CI performance by 82% (22 min → 4 min) by redesigning GitHub Actions using matrix-driven conditional execution and intelligent change detection. Eliminated silent deployment failures by refactoring Makefile workflows to validate Docker images early. Stabilized Jenkins CI in a self-hosted GitLab environment by integrating secure credential handling and commit status reporting.",
     },
     {
       company: "SheSafe",
-      role: "Research & Development Intern",
+      role: "Research and Development Intern",
       period: "June 2025 – July 2025",
       logo: "/logos/shesafe.png",
       description:
-        "Engineered a wearable safety pendant prototype under jewelry-sized constraints. Explored device miniaturization and investigated real-time SOS transmission challenges, balancing energy efficiency with accurate location detection.",
+        "Engineered a wearable safety pendant prototype, optimizing sensor, battery, microphone, and alert-button layout within jewelry-sized constraints. Evaluated low-power components for smartphone-independent tracking. Investigated real-time SOS transmission latency, optimizing GPS update intervals.",
     },
     {
       company: "Code Tech IT Solution",
@@ -59,15 +77,15 @@ export const portfolioData = {
       period: "Jan 2025 – Mar 2025",
       logo: "/logos/codetech.png",
       description:
-        "Built a Chrome extension to monitor user website activity for productivity analysis. Developed a scalable real-time chat system with instant messaging and read receipts using Socket.IO, MongoDB, and Express.js.",
+        "Built a Chrome extension tracking activity across 20+ websites, generating weekly automated reports to help users reduce unproductive screen time. Developed a real-time chat system supporting 100+ concurrent connections with instant messaging, read receipts, and online/offline presence using Socket.IO, MongoDB, and Express.js.",
     },
   ],
   projects: [
     {
       title: "Aether Clinic",
       description:
-        "Full-stack AI healthcare platform with real-time medical chat and image-based insights using React, Node.js, and MongoDB. Features hybrid AI architecture (Ollama + Cloud LLMs) reducing latency by 35%.",
-      tags: ["React", "Node.js", "AI", "Cloud-Native"],
+        "Full-stack AI healthcare platform enabling real-time medical chat, automated report analysis, and image-based insights using React, Node.js, and MongoDB. Designed a hybrid AI inference architecture reducing response latency by 35%. Built a secure, modular REST API backend with AES-256 encryption.",
+      tags: ["React", "Node.js", "MongoDB", "Cloud-Native AI"],
       link: "https://github.com/yashsrivastava1408/Aether-Clinic",
       category: "Software",
       image: "/projects/aether-clinic-1.png",
@@ -75,10 +93,11 @@ export const portfolioData = {
     {
       title: "Urban Plus",
       description:
-        "Accident detection system using YOLOv5 and OpenCV with 92% accuracy. Integrated IoT-powered traffic light automation to prioritize emergency vehicles and reduced system latency using multithreading.",
-      tags: ["Python", "YOLOv5", "IoT", "OpenCV"],
+        "YOLOv5-based accident detection system achieving 92% accuracy, enabling real-time identification of road collisions from CCTV feeds. Integrated IoT-powered traffic signal automation. Optimized end-to-end system latency by 35% using multithreading.",
+      tags: ["Python", "YOLOv5", "OpenCV", "MQTT", "IoT"],
       link: "https://github.com/yashsrivastava1408/UrbanPluss",
       category: "Software",
+      image: "/projects/urban-pulse-dashboard.png",
     },
     {
       title: "LinguaLive",
@@ -95,6 +114,7 @@ export const portfolioData = {
       tags: ["React", "Web Speech API", "AI", "Sustainable Tech"],
       link: "https://github.com/yashsrivastava1408/Groviaa",
       category: "Software",
+      image: "/projects/grovia.png",
     },
     {
       title: "Smart Shop",

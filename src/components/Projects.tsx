@@ -129,7 +129,7 @@ export default function Projects() {
                                         <Github className="w-4 h-4" /> View Source
                                     </a>
                                     <a href={project.link} target="_blank" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors pb-1">
-                                        <ExternalLink className="w-4 h-4" /> Live Demo
+                                        <ExternalLink className="w-4 h-4" />
                                     </a>
                                 </div>
                             </div>

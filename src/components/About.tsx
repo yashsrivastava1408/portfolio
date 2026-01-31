@@ -28,7 +28,7 @@ export default function About() {
                         {/* Image */}
                         <div className="relative w-full aspect-[4/5] rounded-[30px] overflow-hidden mb-8 bg-[#1a1a1a] flex items-center justify-center">
                             <Image
-                                src="/profile.jpg"
+                                src="/yash.png"
                                 alt="Yash Srivastava"
                                 fill
                                 className="object-cover grayscale hover:grayscale-0 transition-all duration-500"
@@ -87,6 +87,23 @@ export default function About() {
                     {portfolioData.personal.description}
                 </p>
 
+                {/* Education */}
+                <div className="mb-12">
+                    <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Education</h3>
+                    {portfolioData.education.map((edu, index) => (
+                        <div key={index} className="flex flex-col md:flex-row md:items-center justify-between gap-2 p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                            <div>
+                                <h4 className="text-xl font-bold text-white max-w-md">{edu.institution}</h4>
+                                <p className="text-gray-400 mt-1">{edu.degree}</p>
+                            </div>
+                            <div className="text-right md:text-right">
+                                <p className="text-orange-400 font-mono text-sm">{edu.period}</p>
+                                <p className="text-gray-600 text-xs mt-1 uppercase tracking-wider">{edu.location}</p>
+                            </div>
+                        </div>
+                    ))}
+                </div>
+
                 {/* Stats */}
                 <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-12">
                     <div>
@@ -101,12 +118,8 @@ export default function About() {
                             Projects<br />Completed
                         </p>
                     </div>
-                    <div>
-                        <h4 className="text-5xl font-bold text-white mb-2">+10</h4>
-                        <p className="text-xs text-gray-500 uppercase tracking-widest">
-                            Hackathon<br />Wins
-                        </p>
-                    </div>
+
+
                 </div>
 
                 {/* CTAs */}
@@ -123,7 +136,7 @@ export default function About() {
                         className="px-8 py-4 bg-[#ccff00] text-black rounded-xl font-bold hover:bg-[#b3e600] transition-colors shadow-lg shadow-[#ccff00]/20 flex items-center gap-2"
                     >
                         <Download className="w-5 h-5" />
-                        Download CV
+                        Download Resume
                     </a>
                 </div>
             </motion.div>

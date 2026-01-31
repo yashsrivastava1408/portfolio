@@ -5,6 +5,8 @@ import { portfolioData } from "@/data/portfolio";
 import { useState, useRef, useEffect } from "react";
 import { useLenis } from "./SmoothScroll";
 
+
+
 export default function Experience() {
     const [activeIndex, setActiveIndex] = useState(0);
     const experiences = portfolioData.experience;
