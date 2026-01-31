@@ -47,7 +47,7 @@ export default function Hero() {
 
                 <motion.h1
                     variants={{ hidden: { y: 40, opacity: 0 }, visible: { y: 0, opacity: 1 } }}
-                    className="text-7xl md:text-[10rem] font-bold font-heading mb-8 tracking-tighter leading-none"
+                    className="text-5xl md:text-[10rem] font-bold font-heading mb-8 tracking-tighter leading-none"
                 >
                     <span className="bg-clip-text text-transparent bg-gradient-to-b from-white to-white/60">
                         Yash

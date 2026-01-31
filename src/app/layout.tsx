@@ -16,6 +16,7 @@ const playfair = Playfair_Display({
 });
 
 export const metadata: Metadata = {
+  metadataBase: new URL(process.env.NEXT_PUBLIC_BASE_URL || 'https://portfolio-theta-lyart-35.vercel.app'),
   title: "Yash Srivastava | Full Stack Developer & DevSecOps Enthusiast",
   description: "Third-year B.Tech Computer Science student building systems end-to-end. DevOps Intern with expertise in CI/CD, Docker, Kubernetes, and cloud-native workflows. Seeking SDE, DevOps, or Cloud roles.",
   keywords: ["Full Stack Developer", "DevSecOps", "DevOps", "Software Engineer", "React", "Next.js", "Docker", "Kubernetes", "CI/CD", "Cloud", "Portfolio"],
