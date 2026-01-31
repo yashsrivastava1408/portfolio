@@ -2,7 +2,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, Trophy, Flame, Target } from "lucide-react";
+import { ExternalLink, Trophy, Target } from "lucide-react";
 
 export default function LeetCode() {
     // Mock Data - Replace with actual fetch if needed or static update

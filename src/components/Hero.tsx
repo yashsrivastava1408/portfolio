@@ -3,7 +3,7 @@
 
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
-import { ArrowDown, Download, Mail } from "lucide-react";
+import { Download, Mail } from "lucide-react";
 
 export default function Hero() {
     return (

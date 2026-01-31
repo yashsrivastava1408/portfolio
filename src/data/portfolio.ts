@@ -1,5 +1,5 @@
 
-import { Github, Linkedin, Mail, Phone, ExternalLink } from "lucide-react";
+import { Github, Linkedin } from "lucide-react";
 
 export const portfolioData = {
   personal: {

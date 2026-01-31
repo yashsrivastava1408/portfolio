@@ -27,6 +27,18 @@ export default function MusicWidget() {
     const [isPlaying, setIsPlaying] = useState(true);
     const [progress, setProgress] = useState(0);
 
+    const handleNext = () => {
+        setCurrentIndex(prev => (prev + 1) % PLAYLIST.length);
+        setProgress(0);
+        setIsPlaying(true);
+    };
+
+    const handlePrev = () => {
+        setCurrentIndex(prev => (prev - 1 + PLAYLIST.length) % PLAYLIST.length);
+        setProgress(0);
+        setIsPlaying(true);
+    };
+
     // Simulate progress
     useEffect(() => {
         if (!isPlaying) return;
@@ -40,21 +52,10 @@ export default function MusicWidget() {
 
     useEffect(() => {
         if (progress >= 100) {
+            // eslint-disable-next-line react-hooks/set-state-in-effect
             handleNext();
         }
     }, [progress]);
-
-    const handleNext = () => {
-        setCurrentIndex(prev => (prev + 1) % PLAYLIST.length);
-        setProgress(0);
-        setIsPlaying(true);
-    };
-
-    const handlePrev = () => {
-        setCurrentIndex(prev => (prev - 1 + PLAYLIST.length) % PLAYLIST.length);
-        setProgress(0);
-        setIsPlaying(true);
-    };
 
     const currentSong = PLAYLIST[currentIndex];
 

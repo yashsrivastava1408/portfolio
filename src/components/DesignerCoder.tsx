@@ -1,8 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
 import Image from "next/image";
-import { portfolioData } from "@/data/portfolio";
 
 export default function DesignerCoder() {
     return (

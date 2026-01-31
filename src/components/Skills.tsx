@@ -3,8 +3,8 @@
 
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
-import { useState, useEffect } from "react";
-import Image from "next/image";
+import { useState } from "react";
+
 
 // Helper to get icon URL
 const getIconUrl = (skill: string) => {
@@ -50,15 +50,12 @@ const SkillPill = ({ skill }: { skill: { name: string, icon: string } }) => (
 );
 
 export default function Skills() {
-    const [visualSkills, setVisualSkills] = useState<{ name: string, icon: string }[]>([]);
-
-    useEffect(() => {
-        const skills = portfolioData.skills.map(skill => ({
+    const [visualSkills] = useState<{ name: string, icon: string }[]>(() =>
+        portfolioData.skills.map(skill => ({
             name: skill,
             icon: getIconUrl(skill)
-        })).filter(s => s.icon !== "");
-        setVisualSkills(skills);
-    }, []);
+        })).filter(s => s.icon !== "")
+    );
 
     // Split skills into two rows used for marquee
     const half = Math.ceil(visualSkills.length / 2);

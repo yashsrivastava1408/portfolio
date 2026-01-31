@@ -70,7 +70,7 @@ export default function TechStreamBackground() {
             ctx.font = "14px monospace";
             ctx.textAlign = "center";
 
-            streams.forEach((stream, index) => {
+            streams.forEach((stream) => {
                 stream.y += stream.speed;
 
                 // Reset if off screen
@@ -87,7 +87,7 @@ export default function TechStreamBackground() {
                     if (charY > -20 && charY < canvas.height + 20) {
                         // Head characters are brighter
                         const isHead = i === 0;
-                        const isTail = i > stream.length - 5;
+
 
                         if (isHead) {
                             ctx.fillStyle = "#ffffff"; // Bright white head

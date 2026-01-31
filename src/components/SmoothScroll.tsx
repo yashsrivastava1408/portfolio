@@ -19,6 +19,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
             smoothWheel: true,
         });
 
+        // eslint-disable-next-line react-hooks/set-state-in-effect
         setLenis(lenisInstance);
 
         function raf(time: number) {

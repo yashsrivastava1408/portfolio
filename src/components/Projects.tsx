@@ -3,8 +3,7 @@
 
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
-import { Github, ExternalLink, ArrowRight, Check, Plus } from "lucide-react";
-import { useEffect, useState } from "react";
+import { Github, ExternalLink, ArrowRight, Plus } from "lucide-react";
 import Image from "next/image";
 
 export default function Projects() {
@@ -34,7 +33,7 @@ export default function Projects() {
             <div className="flex flex-col gap-32">
                 {featuredProjects.map((project, index) => {
                     const colorGradient = colors[index % colors.length];
-                    // @ts-ignore - Dynamic property check
+
                     const hasImage = project.image;
 
                     return (
@@ -70,7 +69,7 @@ export default function Projects() {
                                     <div className="h-48 md:h-64 bg-[#050505] relative w-full group-hover:scale-105 transition-transform duration-700">
                                         {hasImage ? (
                                             <Image
-                                                // @ts-ignore
+
                                                 src={project.image}
                                                 alt={project.title}
                                                 fill

@@ -16,8 +16,7 @@ export default function ServerRoomBackground() {
         let lights: Light[] = [];
 
         // Configuration
-        const ROWS = 40;
-        const COLS = 20;
+
         const SPACING_X = 50; // Horizontal spacing
         const SPACING_Y = 20; // Vertical spacing (rack unit height)
 

@@ -13,7 +13,8 @@ export default function BackgroundAnimation() {
         const ctx = canvas.getContext("2d");
         if (!ctx) return;
 
-        let particles: Particle[] = [];
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
+        let particles: any[] = [];
         let animationFrameId: number;
         let w = (canvas.width = window.innerWidth);
         let h = (canvas.height = window.innerHeight);
@@ -21,80 +22,72 @@ export default function BackgroundAnimation() {
         // Mouse state
         const mouse = { x: -1000, y: -1000 };
 
-        class Particle {
-            x: number;
-            y: number;
-            vx: number;
-            vy: number;
-            size: number;
-            color: string;
-            friction: number;
+        const createParticle = () => {
+            const x = Math.random() * w;
+            const y = Math.random() * h;
+            // Initial gentle drift
+            const vx = (Math.random() - 0.5) * 0.5;
+            const vy = (Math.random() - 0.5) * 0.5 - 0.2; // Slight upward bias
+            const size = Math.random() * 2 + 1;
+            // Techy colors: Cyan, Purple, White
+            const colors = ["#6d28d9", "#db2777", "#ffffff", "#00ffff"];
+            const color = colors[Math.floor(Math.random() * colors.length)];
 
-            constructor() {
-                this.x = Math.random() * w;
-                this.y = Math.random() * h;
-                // Initial gentle drift
-                this.vx = (Math.random() - 0.5) * 0.5;
-                this.vy = (Math.random() - 0.5) * 0.5 - 0.2; // Slight upward bias
-                this.size = Math.random() * 2 + 1;
-                // Techy colors: Cyan, Purple, White
-                const colors = ["#6d28d9", "#db2777", "#ffffff", "#00ffff"];
-                this.color = colors[Math.floor(Math.random() * colors.length)];
-                this.friction = 0.98; // Space-like damping
-            }
 
-            update() {
-                // 1. Mouse Repulsion
-                const dx = this.x - mouse.x;
-                const dy = this.y - mouse.y;
-                const dist = Math.sqrt(dx * dx + dy * dy);
+            return {
+                x, y, vx, vy,
+                update: function () {
+                    // 1. Mouse Repulsion
+                    const dx = this.x - mouse.x;
+                    const dy = this.y - mouse.y;
+                    const dist = Math.sqrt(dx * dx + dy * dy);
 
-                if (dist < 200) {
-                    const force = (200 - dist) / 200;
-                    const repulsionX = (dx / dist) * force * 2; // mild push
-                    const repulsionY = (dy / dist) * force * 2;
-                    this.vx += repulsionX;
-                    this.vy += repulsionY;
+                    if (dist < 200) {
+                        const force = (200 - dist) / 200;
+                        const repulsionX = (dx / dist) * force * 2; // mild push
+                        const repulsionY = (dy / dist) * force * 2;
+                        this.vx += repulsionX;
+                        this.vy += repulsionY;
+                    }
+
+                    // 2. Slow Upward/Random Drift (Anti-Gravity)
+                    this.vy -= 0.005; // Constant gentle antigravity
+                    this.vx += (Math.random() - 0.5) * 0.02; // Random Brownian motion
+
+                    // 3. Limit Speed (Terminal Velocity)
+                    const speedLimit = 2;
+                    const currentSpeed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
+                    if (currentSpeed > speedLimit) {
+                        this.vx = (this.vx / currentSpeed) * speedLimit;
+                        this.vy = (this.vy / currentSpeed) * speedLimit;
+                    }
+
+                    // 4. Update Position
+                    this.x += this.vx;
+                    this.y += this.vy;
+
+                    // 5. Wrap Around (Infinite Space)
+                    if (this.x < -50) this.x = w + 50;
+                    if (this.x > w + 50) this.x = -50;
+                    if (this.y < -50) this.y = h + 50;
+                    if (this.y > h + 50) this.y = -50;
+                },
+                draw: function () {
+                    if (!ctx) return;
+                    ctx.beginPath();
+                    ctx.arc(this.x, this.y, size, 0, Math.PI * 2);
+                    ctx.fillStyle = color;
+                    ctx.fill();
                 }
-
-                // 2. Slow Upward/Random Drift (Anti-Gravity)
-                this.vy -= 0.005; // Constant gentle antigravity
-                this.vx += (Math.random() - 0.5) * 0.02; // Random Brownian motion
-
-                // 3. Limit Speed (Terminal Velocity)
-                const speedLimit = 2;
-                const currentSpeed = Math.sqrt(this.vx * this.vx + this.vy * this.vy);
-                if (currentSpeed > speedLimit) {
-                    this.vx = (this.vx / currentSpeed) * speedLimit;
-                    this.vy = (this.vy / currentSpeed) * speedLimit;
-                }
-
-                // 4. Update Position
-                this.x += this.vx;
-                this.y += this.vy;
-
-                // 5. Wrap Around (Infinite Space)
-                if (this.x < -50) this.x = w + 50;
-                if (this.x > w + 50) this.x = -50;
-                if (this.y < -50) this.y = h + 50;
-                if (this.y > h + 50) this.y = -50;
-            }
-
-            draw() {
-                if (!ctx) return;
-                ctx.beginPath();
-                ctx.arc(this.x, this.y, this.size, 0, Math.PI * 2);
-                ctx.fillStyle = this.color;
-                ctx.fill();
-            }
-        }
+            };
+        };
 
         const init = () => {
             particles = [];
             // Reduced particle count for better performance
             const particleCount = Math.min(Math.floor((w * h) / 25000), 50);
             for (let i = 0; i < particleCount; i++) {
-                particles.push(new Particle());
+                particles.push(createParticle());
             }
         };
 

@@ -2,13 +2,10 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { useEffect, useState } from "react";
+import { useEffect } from "react";
 
 export default function SplashScreen({ finishLoading }: { finishLoading: () => void }) {
-    const [isMounted, setIsMounted] = useState(false);
-
     useEffect(() => {
-        setIsMounted(true);
         // Sync with animation duration
         const timeout = setTimeout(() => {
             finishLoading();

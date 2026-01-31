@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { Camera, ExternalLink, ImageIcon } from "lucide-react";
+import { Camera, ImageIcon } from "lucide-react";
 import Image from "next/image";
 import { portfolioData } from "@/data/portfolio";
 

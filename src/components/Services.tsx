@@ -1,7 +1,7 @@
 
 "use client";
 
-import { motion } from "framer-motion";
+
 import { Code2, Server, BrainCircuit, ArrowUpRight } from "lucide-react";
 
 const services = [
