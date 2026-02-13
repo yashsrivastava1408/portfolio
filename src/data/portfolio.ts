@@ -82,6 +82,15 @@ export const portfolioData = {
   ],
   projects: [
     {
+      title: "Lock Focus",
+      description:
+        "Adaptive digital reading ecosystem for neurodiverse users, featuring ADHD-friendly interfaces, dyslexia-aware layouts, and behavior-driven design. Secured 3rd Place at HackElite'26 national hackathon.",
+      tags: ["React", "AI", "Accessibility", "Neurodiversity"],
+      link: "https://github.com/yashsrivastava1408/HackElite26",
+      category: "Software",
+      image: "/projects/lock-focus.png",
+    },
+    {
       title: "Aether Clinic",
       description:
         "Full-stack AI healthcare platform enabling real-time medical chat, automated report analysis, and image-based insights using React, Node.js, and MongoDB. Designed a hybrid AI inference architecture reducing response latency by 35%. Built a secure, modular REST API backend with AES-256 encryption.",
@@ -176,27 +185,34 @@ export const portfolioData = {
   gallery: [
     {
       id: 1,
+      title: "3rd Place at HackElite'26",
+      imageUrl: "/gallery/hackelite-26.jpg",
+      description: "Secured 3rd place among 900+ teams at HackElite'26. Developed 'Lock Focus', an accessibility-first reading platform, defending technical architecture and business viability through six intense rounds.",
+    },
+    {
+      id: 2,
       title: "Opening the Server Rack",
       imageUrl: "/gallery/rack-server.png",
       description: "Explored the backbone of our infrastructure by opening up a rack server, checking hardware, and configuring static IPs. Witnessing Kubernetes pods spin up on actual hardware was a game-changer.",
     },
     {
-      id: 2,
+      id: 3,
       title: "Top 5 at CodeMavens 2025",
       imageUrl: "/gallery/codemavens-punya.png",
       description: "Team Syntax Slayer secured a Top 5 spot with 'Punya', a MERN-stack platform fighting food wastage. Built with React, Node.js, and MongoDB to connect donors, NGOs, and volunteers.",
     },
     {
-      id: 3,
+      id: 4,
       title: "Smart India Hackathon Journey",
       imageUrl: "/gallery/sih-urbanpulse.png",
       description: "Built 'UrbanPulse', an AI-powered Traffic Management System using YOLOv8 and Flask. Although we didn't win, the hands-on learning in computer vision and real-time alerts was invaluable.",
     },
     {
-      id: 4,
+      id: 5,
       title: "Building XenKrypt",
       imageUrl: "/gallery/xenkrypt-team.jpg",
       description: "The XenKrypt team – a group of driven individuals building a next-gen cybersecurity startup from scratch. Learning by doing and pushing the limits of production-grade systems.",
     },
+
   ],
 };

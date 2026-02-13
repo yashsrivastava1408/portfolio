@@ -4,6 +4,7 @@ import { motion } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
 import { Copy, Mail, Check, Github, Linkedin, ExternalLink } from "lucide-react";
 import Globe from "./Globe";
+import Image from "next/image";
 import { useState } from "react";
 
 export default function ContactBento() {
@@ -80,8 +81,14 @@ export default function ContactBento() {
                                 </div>
                                 <div className="absolute left-0 right-0 top-1/2 h-[1px] bg-gradient-to-r from-transparent via-white/20 to-transparent" />
 
-                                <div className="w-20 h-20 rounded-full border-2 border-primary/50 bg-[#111] flex items-center justify-center z-20 shadow-[0_0_30px_rgba(109,40,217,0.3)]">
-                                    <img src="/profile.jpg" className="w-full h-full object-cover rounded-full opacity-80" alt="User" />
+                                <div className="w-20 h-20 rounded-full border-2 border-primary/50 bg-[#111] flex items-center justify-center z-20 shadow-[0_0_30px_rgba(109,40,217,0.3)] relative overflow-hidden">
+                                    <Image
+                                        src="/profile.jpg"
+                                        className="grayscale opacity-80"
+                                        alt="User Profile"
+                                        fill
+                                        style={{ objectFit: 'cover' }}
+                                    />
                                 </div>
 
                                 <div className="w-16 h-16 rounded-full border-2 border-white/10 bg-black flex items-center justify-center z-10">

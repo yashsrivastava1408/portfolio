@@ -3,6 +3,7 @@
 
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
+import Image from "next/image";
 import { useState } from "react";
 
 
@@ -18,7 +19,7 @@ const getIconUrl = (skill: string) => {
         "react": "react",
         "nodejs": "nodedotjs",
         "nextjs": "nextdotjs",
-        "aws": "amazonwebservices",
+        "aws": "aws",
         "sql": "mysql",
         "django": "django",
         "flask": "flask",
@@ -43,7 +44,13 @@ const getIconUrl = (skill: string) => {
 const SkillPill = ({ skill }: { skill: { name: string, icon: string } }) => (
     <div className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-full mx-4 min-w-max hover:bg-white/10 transition-colors group">
         <div className="w-8 h-8 relative opacity-70 group-hover:opacity-100 transition-opacity">
-            <img src={skill.icon} alt={skill.name} className="w-full h-full object-contain invert" />
+            <Image
+                src={skill.icon}
+                alt={skill.name}
+                fill
+                unoptimized
+                className="object-contain invert"
+            />
         </div>
         <span className="text-gray-300 font-medium whitespace-nowrap">{skill.name}</span>
     </div>

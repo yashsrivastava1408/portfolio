@@ -2,6 +2,7 @@
 
 import { motion, AnimatePresence } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
+import Image from "next/image";
 import { useState, useRef, useEffect } from "react";
 import { useLenis } from "./SmoothScroll";
 
@@ -163,15 +164,19 @@ export default function Experience() {
                                 {/* Company Logo */}
                                 <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center overflow-hidden">
                                     {experiences[activeIndex].logo ? (
-                                        <img
-                                            src={experiences[activeIndex].logo}
-                                            alt={experiences[activeIndex].company}
-                                            className="w-full h-full object-contain p-1"
-                                            onError={(e) => {
-                                                e.currentTarget.style.display = 'none';
-                                                e.currentTarget.nextElementSibling?.classList.remove('hidden');
-                                            }}
-                                        />
+                                        <div className="relative w-full h-full">
+                                            <Image
+                                                src={experiences[activeIndex].logo}
+                                                alt={experiences[activeIndex].company}
+                                                fill
+                                                className="object-contain p-1"
+                                                onError={(e) => {
+                                                    const target = e.currentTarget as unknown as HTMLElement;
+                                                    target.style.display = 'none';
+                                                    target.parentElement?.nextElementSibling?.classList.remove('hidden');
+                                                }}
+                                            />
+                                        </div>
                                     ) : null}
                                     <span className={`text-white/60 font-bold text-sm ${experiences[activeIndex].logo ? 'hidden' : ''}`}>
                                         {experiences[activeIndex].company.split(' ').map(w => w[0]).join('').slice(0, 2)}

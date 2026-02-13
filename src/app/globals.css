@@ -56,6 +56,14 @@
   transform-style: preserve-3d;
 }
 
+@utility tilt-3d {
+  transform: rotateX(15deg) rotateY(-15deg) rotateZ(10deg);
+}
+
+@utility tilt-3d-hover {
+  transform: rotateX(0deg) rotateY(0deg) rotateZ(0deg) scale(1.05);
+}
+
 /* Counter-spin to keep icons facing forward while parent rotates */
 .animate-counter-spin {
   animation: counter-spin 30s linear infinite;
