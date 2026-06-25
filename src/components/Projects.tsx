@@ -3,11 +3,12 @@
 
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
-import { Github, ExternalLink, ArrowRight, Plus } from "lucide-react";
+import { Github, ExternalLink, ArrowRight } from "lucide-react";
 import Image from "next/image";
+import SectionHeading from "./SectionHeading";
 
 export default function Projects() {
-    // We'll limit to top 3-4 projects for this "Curated" view as it takes more space
+    // We'll limit to top 4 projects for this "Curated" view as it takes more space
     const featuredProjects = portfolioData.projects.slice(0, 4);
 
     const colors = [
@@ -17,24 +18,51 @@ export default function Projects() {
         "from-emerald-500 to-teal-500", // Green
     ];
 
+    // Extract real highlights from each project's description
+    const getProjectHighlights = (project: typeof featuredProjects[0]) => {
+        const desc = project.description;
+        const highlights: string[] = [];
+
+        // Extract numbers and metrics from the description
+        const metricPatterns = [
+            /(\d+%[^,.]*)/g,
+            /(\d+\+[^,.]*)/g,
+            /(securing?\s+\d+[^,.]*)/gi,
+            /(achieving?\s+\d+[^,.]*)/gi,
+        ];
+
+        for (const pattern of metricPatterns) {
+            const matches = desc.match(pattern);
+            if (matches) {
+                highlights.push(...matches.map(m => m.trim()));
+            }
+        }
+
+        // Fallback: extract key phrases from tags if no metrics found
+        if (highlights.length === 0) {
+            highlights.push(
+                `Built with ${project.tags.slice(0, 2).join(" & ")}`,
+                project.tags.length > 2 ? `Powered by ${project.tags.slice(2).join(", ")}` : "Production-ready architecture"
+            );
+        }
+
+        return highlights.slice(0, 3);
+    };
+
     return (
         <section id="projects" className="py-32 px-4 max-w-7xl mx-auto">
-            <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
-                className="mb-32 text-center"
-            >
-                <h2 className="text-6xl md:text-8xl text-white font-heading tracking-tight">
-                    Curated <span className="font-cursive text-accent italic pr-2 text-pink-500">Work</span>
-                </h2>
-            </motion.div>
+            {/* Section Divider */}
+            <div className="w-full max-w-lg mx-auto h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-32" />
+
+            <div className="mb-32 text-center">
+                <SectionHeading accent="Work" accentClassName="font-cursive text-pink-500 italic pr-2">Curated</SectionHeading>
+            </div>
 
             <div className="flex flex-col gap-32">
                 {featuredProjects.map((project, index) => {
                     const colorGradient = colors[index % colors.length];
-
                     const hasImage = project.image;
+                    const highlights = getProjectHighlights(project);
 
                     return (
                         <motion.div
@@ -51,7 +79,7 @@ export default function Projects() {
                                     <ArrowRight className="w-8 h-8 -rotate-45" />
                                 </div>
 
-                                <h3 className="text-2xl font-bold text-white mb-2 leading-tight max-w-xs relative z-20">{project.description}</h3>
+                                <h3 className="text-2xl font-bold text-white mb-2 leading-tight max-w-xs relative z-20">{project.description.split('.')[0]}.</h3>
 
                                 {/* Browser Mockup */}
                                 <div className="mt-12 relative rounded-t-xl bg-[#0a0a0a] border-t-4 border-x-4 border-[#1a1a1a] shadow-2xl translate-y-4 group-hover:translate-y-2 transition-transform duration-500 overflow-hidden">
@@ -96,23 +124,17 @@ export default function Projects() {
                                 </div>
 
                                 <p className="text-lg text-gray-400 leading-relaxed">
-                                    A platform designed to solve real-world problems. {project.description}
-                                    Built with performance and scalability in mind.
+                                    {project.description}
                                 </p>
 
-                                <div className="space-y-4">
-                                    <div className="flex items-start gap-3">
-                                        <Plus className="w-5 h-5 text-gray-500 mt-1 flex-shrink-0" />
-                                        <p className="text-gray-300">Advanced architecture using modern tech stack.</p>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <Plus className="w-5 h-5 text-pink-500 mt-1 flex-shrink-0" />
-                                        <p className="text-gray-300">Optimized for speed and user experience.</p>
-                                    </div>
-                                    <div className="flex items-start gap-3">
-                                        <Plus className="w-5 h-5 text-purple-500 mt-1 flex-shrink-0" />
-                                        <p className="text-gray-300">Secure and scalable backend integration.</p>
-                                    </div>
+                                {/* Real project highlights */}
+                                <div className="space-y-3">
+                                    {highlights.map((highlight, i) => (
+                                        <div key={i} className="flex items-start gap-3">
+                                            <div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${colorGradient} mt-2.5 flex-shrink-0`} />
+                                            <p className="text-gray-300 text-sm">{highlight}</p>
+                                        </div>
+                                    ))}
                                 </div>
 
                                 <div className="flex flex-wrap gap-3">

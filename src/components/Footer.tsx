@@ -1,7 +1,7 @@
 "use client";
 
 import { portfolioData } from "@/data/portfolio";
-import { Github, Linkedin, Mail, Heart } from "lucide-react";
+import { Github, Linkedin, Mail, Heart, ArrowUp } from "lucide-react";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
@@ -14,8 +14,23 @@ export default function Footer() {
 
     const quickLinks = ["About", "Skills", "Projects", "Contact"];
 
+    const scrollToTop = () => {
+        window.scrollTo({ top: 0, behavior: "smooth" });
+    };
+
     return (
-        <footer className="border-t border-white/5 bg-[#030303]">
+        <footer className="border-t border-white/5 bg-[#030303] relative">
+            {/* Back to Top Button */}
+            <div className="absolute -top-6 left-1/2 -translate-x-1/2">
+                <button
+                    onClick={scrollToTop}
+                    className="group w-12 h-12 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-lg shadow-primary/10 hover:shadow-primary/30 hover:-translate-y-1"
+                    aria-label="Back to top"
+                >
+                    <ArrowUp className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
+                </button>
+            </div>
+
             <div className="max-w-7xl mx-auto px-4 py-12">
                 <div className="grid grid-cols-1 md:grid-cols-3 gap-12 mb-12">
                     {/* Brand */}

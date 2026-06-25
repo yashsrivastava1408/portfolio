@@ -3,6 +3,8 @@
 
 
 import { Code2, Server, BrainCircuit, ArrowUpRight } from "lucide-react";
+import { motion } from "framer-motion";
+import SectionHeading from "./SectionHeading";
 
 const services = [
     {
@@ -31,10 +33,11 @@ const services = [
 export default function Services() {
     return (
         <section className="py-32 px-4 relative max-w-7xl mx-auto">
+            {/* Section Divider */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
             <div className="mb-20 text-center relative z-20">
-                <h2 className="text-6xl md:text-8xl text-white font-heading tracking-tight mb-4">
-                    What I <span className="font-cursive text-accent italic pr-2">Do</span>
-                </h2>
+                <SectionHeading accent="Do" className="mb-4">What I</SectionHeading>
                 <p className="text-gray-500 text-sm uppercase tracking-widest max-w-lg mx-auto">
                     Bridging the gap between creative design and robust engineering
                 </p>
@@ -42,7 +45,14 @@ export default function Services() {
 
             <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
                 {services.map((service, index) => (
-                    <div key={index} className="group relative h-[500px] perspective-1000">
+                    <motion.div
+                        key={index}
+                        initial={{ opacity: 0, y: 40 }}
+                        whileInView={{ opacity: 1, y: 0 }}
+                        viewport={{ once: true, margin: "-50px" }}
+                        transition={{ duration: 0.6, delay: index * 0.15 }}
+                        className="group relative h-[500px] perspective-1000"
+                    >
                         <div className="relative w-full h-full transition-all duration-500 group-hover:-translate-y-4">
 
                             {/* Background Gradient Blob */}
@@ -82,7 +92,7 @@ export default function Services() {
                                 <div className="absolute bottom-0 left-0 w-full h-1 bg-gradient-to-r from-transparent via-white/20 to-transparent scale-x-0 group-hover:scale-x-100 transition-transform duration-700" />
                             </div>
                         </div>
-                    </div>
+                    </motion.div>
                 ))}
             </div>
         </section>

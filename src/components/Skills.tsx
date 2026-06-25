@@ -5,6 +5,7 @@ import { motion } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
 import Image from "next/image";
 import { useState } from "react";
+import SectionHeading from "./SectionHeading";
 
 
 // Helper to get icon URL
@@ -70,13 +71,14 @@ export default function Skills() {
     const row2 = visualSkills.slice(half);
 
     return (
-        <section id="skills" className="py-32 px-4 relative overflow-hidden bg-[#0A0A0A]">
+        <section id="skills" className="py-32 px-4 relative overflow-hidden bg-[#050505]">
+            {/* Section Divider */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+
             <div className="mb-20 text-center relative z-20">
-                <h2 className="text-6xl md:text-7xl text-white font-heading tracking-tight">
-                    The Secret <span className="font-cursive text-accent italic pr-2">Sauce</span>
-                </h2>
+                <SectionHeading accent="Sauce">The Secret</SectionHeading>
                 <p className="text-gray-500 mt-4 text-sm uppercase tracking-widest">
-                    Technologies & Tools I Use
+                    Technologies &amp; Tools I Use
                 </p>
             </div>
 

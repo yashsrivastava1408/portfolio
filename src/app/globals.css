@@ -18,8 +18,7 @@
 
   --font-sans: var(--font-inter), sans-serif;
   --font-heading: var(--font-playfair), serif;
-  --font-cursive: cursive;
-  /* Using default cursive for now, ideally 'Instrument Serif' or similar */
+  --font-cursive: var(--font-cormorant), serif;
 
   --animate-gradient-x: gradient-x 15s ease infinite;
 

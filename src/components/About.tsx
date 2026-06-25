@@ -16,14 +16,18 @@ export default function About() {
             {/* Left: Profile Card */}
             <motion.div
                 className="w-full max-w-md relative"
+                initial={{ opacity: 0, x: -40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut" }}
             >
                 {/* Profile Card Wrapper */}
                 <div className="relative">
                     {/* White Card */}
                     <div className="bg-white rounded-[40px] p-6 pb-12 text-center text-black relative z-10 overflow-hidden shadow-2xl skew-y-1 hover:skew-y-0 transition-transform duration-500 origin-bottom-right">
                         {/* Decorative Circles */}
-                        <div className="absolute top-0 left-0 w-32 h-32 border-2 border-dashed border-orange-400 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-50" />
-                        <div className="absolute bottom-0 right-0 w-40 h-40 border-2 border-dashed border-orange-400 rounded-full translate-x-1/3 translate-y-1/3 opacity-50" />
+                        <div className="absolute top-0 left-0 w-32 h-32 border-2 border-dashed border-purple-500/50 rounded-full -translate-x-1/2 -translate-y-1/2 opacity-50" />
+                        <div className="absolute bottom-0 right-0 w-40 h-40 border-2 border-dashed border-pink-500/50 rounded-full translate-x-1/3 translate-y-1/3 opacity-50" />
 
                         {/* Image */}
                         <div className="relative w-full aspect-[4/5] rounded-[30px] overflow-hidden mb-8 bg-[#1a1a1a] flex items-center justify-center">
@@ -41,7 +45,7 @@ export default function About() {
                             <div className="absolute inset-0 flex items-center justify-center bg-gray-900 text-white font-black text-6xl opacity-0 fallback-opacity">
                                 YS
                             </div>
-                            <div className="absolute inset-0 bg-orange-500/10 mix-blend-overlay pointer-events-none" />
+                            <div className="absolute inset-0 bg-purple-500/10 mix-blend-overlay pointer-events-none" />
                         </div>
 
                         <h3 className="text-3xl font-heading font-bold mb-2">
@@ -49,7 +53,7 @@ export default function About() {
                         </h3>
 
                         <div className="flex justify-center mb-6">
-                            <div className="w-8 h-8 rounded-full bg-orange-500 flex items-center justify-center text-white">
+                            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-purple-500 to-pink-500 flex items-center justify-center text-white">
                                 <span className="font-bold text-xs">YS</span>
                             </div>
                         </div>
@@ -72,6 +76,10 @@ export default function About() {
             {/* Right: Content */}
             <motion.div
                 className="flex-1"
+                initial={{ opacity: 0, x: 40 }}
+                whileInView={{ opacity: 1, x: 0 }}
+                viewport={{ once: true, margin: "-100px" }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
             >
                 <h2 className="text-5xl md:text-7xl font-black text-white leading-[0.9] mb-2 font-heading tracking-tighter">
                     About
@@ -97,7 +105,7 @@ export default function About() {
                                 <p className="text-gray-400 mt-1">{edu.degree}</p>
                             </div>
                             <div className="text-right md:text-right">
-                                <p className="text-orange-400 font-mono text-sm">{edu.period}</p>
+                                <p className="text-purple-400 font-mono text-sm">{edu.period}</p>
                                 <p className="text-gray-600 text-xs mt-1 uppercase tracking-wider">{edu.location}</p>
                             </div>
                         </div>
@@ -126,14 +134,14 @@ export default function About() {
                 <div className="flex flex-wrap gap-4">
                     <a
                         href="#contact"
-                        className="px-8 py-4 bg-orange-500 text-white rounded-xl font-bold hover:bg-orange-600 transition-colors shadow-lg shadow-orange-500/20"
+                        className="px-8 py-4 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
                     >
                         Hire Me
                     </a>
                     <a
                         href={portfolioData.personal.resume}
                         target="_blank"
-                        className="px-8 py-4 bg-[#ccff00] text-black rounded-xl font-bold hover:bg-[#b3e600] transition-colors shadow-lg shadow-[#ccff00]/20 flex items-center gap-2"
+                        className="px-8 py-4 bg-white/10 text-white border border-white/10 rounded-xl font-bold hover:bg-white/20 transition-colors shadow-lg flex items-center gap-2 backdrop-blur-sm"
                     >
                         <Download className="w-5 h-5" />
                         Download Resume

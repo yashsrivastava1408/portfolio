@@ -21,6 +21,9 @@ export default function Experience() {
     // ⏱ detects scroll idle
     const wheelIdleTimeout = useRef<number | null>(null);
 
+    // 📱 Touch swipe tracking
+    const touchStartX = useRef(0);
+
     // 🔄 Sync active index to ref for stable event listener
     const activeIndexRef = useRef(activeIndex);
     useEffect(() => {
@@ -95,12 +98,15 @@ export default function Experience() {
         <section
             ref={containerRef}
             onMouseLeave={() => lenis?.start()}
-            className="py-32 px-4 relative max-w-7xl mx-auto overflow-hidden min-h-[800px] flex items-center justify-center"
+            className="py-32 px-4 relative max-w-7xl mx-auto overflow-hidden min-h-[600px] md:min-h-[800px] flex items-center justify-center"
         >
-            <div className="flex flex-col md:flex-row items-center justify-center w-full gap-16 md:gap-32 relative z-10">
+            {/* Section Divider */}
+            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-                {/* Left: Dial */}
-                <div className="relative w-[300px] h-[600px] md:w-[400px] flex-shrink-0 flex items-center justify-center">
+            <div className="flex flex-col md:flex-row items-center justify-center w-full gap-12 md:gap-32 relative z-10">
+
+                {/* Left: Dial (Desktop Only) */}
+                <div className="relative w-[300px] h-[600px] md:w-[400px] flex-shrink-0 items-center justify-center hidden md:flex">
                     <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-white/5 opacity-40 translate-x-[50%]" />
                     <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[550px] h-[550px] rounded-full border-2 border-dashed border-white/10 opacity-30 translate-x-[50%]" />
 
@@ -138,7 +144,16 @@ export default function Experience() {
                 </div>
 
                 {/* Right: Content */}
-                <div className="flex-1 max-w-xl relative min-h-[400px]">
+                <div className="flex-1 max-w-xl relative min-h-[350px] md:min-h-[400px] w-full"
+                    onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+                    onTouchEnd={(e) => {
+                        const diff = touchStartX.current - e.changedTouches[0].clientX;
+                        if (Math.abs(diff) > 50) {
+                            if (diff > 0) setActiveIndex(prev => Math.min(prev + 1, experiences.length - 1));
+                            else setActiveIndex(prev => Math.max(prev - 1, 0));
+                        }
+                    }}
+                >
                     <AnimatePresence mode="wait">
                         <motion.div
                             key={activeIndex}
@@ -149,7 +164,7 @@ export default function Experience() {
                             className="relative z-10"
                         >
                             <div className="flex items-center gap-4 mb-6">
-                                <span className="text-6xl font-black text-white/5 font-heading absolute -left-12 -top-10 select-none">
+                                <span className="text-6xl font-black text-white/5 font-heading absolute -left-4 md:-left-12 -top-10 select-none">
                                     0{activeIndex + 1}
                                 </span>
                                 <div className="px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-wider">
@@ -157,7 +172,7 @@ export default function Experience() {
                                 </div>
                             </div>
 
-                            <h2 className="text-4xl md:text-5xl font-bold text-white mb-2">
+                            <h2 className="text-3xl md:text-5xl font-bold text-white mb-2">
                                 {experiences[activeIndex].role}
                             </h2>
                             <div className="flex items-center gap-3 mb-8">
@@ -187,13 +202,45 @@ export default function Experience() {
                                 </h3>
                             </div>
 
-                            <div className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10 rounded-2xl p-8 backdrop-blur-md shadow-2xl">
+                            <div className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-md shadow-2xl">
                                 <p className="text-base md:text-lg text-gray-300 leading-relaxed font-light">
                                     {experiences[activeIndex].description}
                                 </p>
                             </div>
                         </motion.div>
                     </AnimatePresence>
+
+                    {/* Mobile Navigation: Prev/Next + Dots */}
+                    <div className="flex items-center justify-center gap-6 mt-8 md:hidden">
+                        <button
+                            onClick={() => setActiveIndex(prev => Math.max(prev - 1, 0))}
+                            disabled={activeIndex === 0}
+                            className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-colors"
+                            aria-label="Previous experience"
+                        >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M15 19l-7-7 7-7" /></svg>
+                        </button>
+
+                        <div className="flex gap-2">
+                            {experiences.map((_, i) => (
+                                <button
+                                    key={i}
+                                    onClick={() => setActiveIndex(i)}
+                                    className={`w-2.5 h-2.5 rounded-full transition-all duration-300 ${i === activeIndex ? 'bg-accent w-6' : 'bg-white/20 hover:bg-white/40'}`}
+                                    aria-label={`Go to experience ${i + 1}`}
+                                />
+                            ))}
+                        </div>
+
+                        <button
+                            onClick={() => setActiveIndex(prev => Math.min(prev + 1, experiences.length - 1))}
+                            disabled={activeIndex === experiences.length - 1}
+                            className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-colors"
+                            aria-label="Next experience"
+                        >
+                            <svg className="w-4 h-4" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" /></svg>
+                        </button>
+                    </div>
                 </div>
             </div>
         </section>
