@@ -146,12 +146,18 @@ export default function Projects() {
                                 </div>
 
                                 <div className="flex gap-4 pt-4">
-                                    <a href={project.link} target="_blank" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors pb-1">
+                                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors pb-1">
                                         <Github className="w-4 h-4" /> View Source
                                     </a>
-                                    <a href={project.link} target="_blank" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors pb-1">
-                                        <ExternalLink className="w-4 h-4" />
-                                    </a>
+                                    {'liveUrl' in project && project.liveUrl ? (
+                                        <a href={project.liveUrl as string} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors pb-1">
+                                            <ExternalLink className="w-4 h-4" /> Live Demo
+                                        </a>
+                                    ) : (
+                                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors pb-1">
+                                            <ExternalLink className="w-4 h-4" /> Live
+                                        </a>
+                                    )}
                                 </div>
                             </div>
                         </motion.div>

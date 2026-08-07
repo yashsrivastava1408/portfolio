@@ -38,6 +38,10 @@ export const portfolioData = {
     "Node.js",
     "Flask",
     "React",
+    "LangGraph / RAG",
+    "WebSockets",
+    "Qdrant Vector DB",
+    "xterm.js / PTY",
     "Data Structures & Algorithms",
     "OOP",
     "REST APIs",
@@ -55,6 +59,14 @@ export const portfolioData = {
     "MySQL"
   ],
   experience: [
+    {
+      company: "TalenciaGlobal",
+      role: "Software Trainee",
+      period: "Jan 2026 – Present",
+      logo: "/logos/talenciaglobal.png",
+      description:
+        "Containerized multi-service security stacks (Vault, Prometheus, Grafana) with Docker Compose & GitHub Actions to achieve zero configuration drift across all environments. Built a Next.js documentation platform with JWT auth, Markdown rendering, Mermaid diagram support, and admin access control as a single secure source of truth for technical specs.",
+    },
     {
       company: "XenKrypt Technologies",
       role: "DevOps Intern",
@@ -81,6 +93,24 @@ export const portfolioData = {
     },
   ],
   projects: [
+    {
+      title: "OpsAcademy",
+      description:
+        "Interactive browser-based DevOps learning platform featuring 14 production-grade courses, live Linux terminal (<50ms latency via xterm.js & node-pty), multi-agent LangGraph RAG mentor with Qdrant Vector DB, and an automated Docker sandbox auto-reaper reducing idle costs by ~90%.",
+      tags: ["React 19", "Node.js", "LangGraph RAG", "Docker", "WebSockets", "Qdrant"],
+      link: "https://github.com/yashsrivastava1408/OpsAcademy",
+      liveUrl: "https://ops-academy-chi.vercel.app",
+      category: "Software",
+      image: "/projects/opsacademy.png",
+    },
+    {
+      title: "Sentrix AI Security Platform",
+      description:
+        "Unified 8-layer AI security & DevSecOps stack covering dataset governance, MLflow/Vault model signing, real-time OPA policy guardrails, and ELK/Kafka telemetry across microservices with OpenTelemetry observability.",
+      tags: ["DevSecOps", "Docker", "Kubernetes", "Kafka", "ELK Stack", "OPA", "Python"],
+      link: "https://github.com/yashsrivastava1408",
+      category: "Software",
+    },
     {
       title: "Lock Focus",
       description:
