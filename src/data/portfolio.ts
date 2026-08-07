@@ -104,14 +104,6 @@ export const portfolioData = {
       image: "/projects/opsacademy.png",
     },
     {
-      title: "Sentrix AI Security Platform",
-      description:
-        "Unified 8-layer AI security & DevSecOps stack covering dataset governance, MLflow/Vault model signing, real-time OPA policy guardrails, and ELK/Kafka telemetry across microservices with OpenTelemetry observability.",
-      tags: ["DevSecOps", "Docker", "Kubernetes", "Kafka", "ELK Stack", "OPA", "Python"],
-      link: "https://github.com/yashsrivastava1408",
-      category: "Software",
-    },
-    {
       title: "Lock Focus",
       description:
         "Adaptive digital reading ecosystem for neurodiverse users, featuring ADHD-friendly interfaces, dyslexia-aware layouts, and behavior-driven design. Secured 3rd Place at HackElite'26 national hackathon.",
