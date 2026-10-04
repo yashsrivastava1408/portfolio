@@ -85,13 +85,30 @@ export default function BackgroundAnimation() {
         const init = () => {
             particles = [];
             // Reduced particle count for better performance
-            const particleCount = Math.min(Math.floor((w * h) / 25000), 50);
+            const particleCount = Math.min(Math.floor((w * h) / 40000), 32);
             for (let i = 0; i < particleCount; i++) {
                 particles.push(createParticle());
             }
         };
 
-        const animate = () => {
+        let wasCovered = false;
+        let lastFrame = 0;
+        const animate = (now: number = 0) => {
+            // ~30fps is plenty for slow drifting dots and halves the CPU/GPU cost
+            if (now - lastFrame < 32) {
+                animationFrameId = requestAnimationFrame(animate);
+                return;
+            }
+            lastFrame = now;
+            // The hero panels are opaque, so drawing behind them is wasted work.
+            const covered = window.scrollY < h * 0.85 || document.hidden;
+            if (covered) {
+                if (!wasCovered) ctx.clearRect(0, 0, w, h);
+                wasCovered = true;
+                animationFrameId = requestAnimationFrame(animate);
+                return;
+            }
+            wasCovered = false;
             ctx.clearRect(0, 0, w, h);
 
             // Update and Draw Particles
@@ -154,7 +171,7 @@ export default function BackgroundAnimation() {
         window.addEventListener("mouseout", handleMouseLeave);
 
         init();
-        animate();
+        animationFrameId = requestAnimationFrame(animate);
 
         return () => {
             window.removeEventListener("resize", handleResize);

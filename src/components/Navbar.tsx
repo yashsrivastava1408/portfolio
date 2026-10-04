@@ -35,7 +35,7 @@ export default function Navbar() {
         >
             <div className="flex flex-col items-center w-full max-w-2xl">
                 {/* Main Bar */}
-                <div className="flex items-center justify-between w-full px-6 py-3 rounded-full bg-secondary/80 backdrop-blur-md border border-white/10 shadow-lg shadow-primary/5 relative z-50">
+                <div className="flex items-center justify-between w-full px-6 py-3 rounded-full bg-secondary/90 border border-white/10 shadow-lg shadow-primary/5 relative z-50">
                     <a href="#" className="text-xl font-heading font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
                         YS
                     </a>

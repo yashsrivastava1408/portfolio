@@ -1,16 +1,55 @@
 "use client";
 
 import Image from "next/image";
+import { useRef } from "react";
 import { motion } from "framer-motion";
+import gsap from "gsap";
+import { useGSAP } from "@gsap/react";
+import { AuroraGrid, CodeRain } from "./HeroBackground";
 import { portfolioData } from "@/data/portfolio";
 import { Download, Mail } from "lucide-react";
+import Crazy3DModel from "./Crazy3DModel";
+import HeroGallery from "./HeroGallery";
 
 export default function DesignerCoder() {
+    const root = useRef<HTMLElement>(null);
+
+    useGSAP(
+        () => {
+            if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+            if (!window.matchMedia("(min-width: 768px)").matches) return;
+
+            const spotX = gsap.quickTo(".hero-spot", "x", { duration: 0.6, ease: "power3.out" });
+            const spotY = gsap.quickTo(".hero-spot", "y", { duration: 0.6, ease: "power3.out" });
+            const onMove = (e: PointerEvent) => {
+                const r = root.current!.getBoundingClientRect();
+                gsap.to(".hero-spot", { opacity: 1, duration: 0.4, overwrite: "auto" });
+                spotX(e.clientX - r.left);
+                spotY(e.clientY - r.top);
+            };
+            window.addEventListener("pointermove", onMove);
+
+            const tl = gsap.timeline({ defaults: { ease: "power3.out" } });
+            tl.from(".hero-panel-left", { xPercent: -100, duration: 1.1, clearProps: "transform" }, 0)
+                .from(".hero-panel-right", { xPercent: 100, duration: 1.1, clearProps: "transform" }, 0)
+                .from(".hero-split-line", { scaleY: 0, transformOrigin: "top", duration: 1, clearProps: "transform" }, 0.5)
+                .from(".hero-title", { yPercent: 40, opacity: 0, duration: 0.9, stagger: 0.15 }, 1.0)
+                .from(".hero-copy", { y: 20, opacity: 0, duration: 0.7, stagger: 0.15 }, 1.4)
+                .from(".hero-pill", { scale: 0.6, opacity: 0, duration: 0.6, ease: "back.out(2)" }, 3.0);
+
+            return () => window.removeEventListener("pointermove", onMove);
+        },
+        { scope: root },
+    );
+
     return (
-        <section className="relative min-h-screen w-full overflow-hidden flex flex-col justify-center">
+        <section id="hero" ref={root} className="relative min-h-screen w-full overflow-hidden flex flex-col justify-center">
             {/* Spotlight Effects */}
-            <div className="absolute top-0 left-1/4 -translate-x-1/2 w-[600px] h-[400px] bg-purple-500/[0.08] blur-[120px] rounded-full pointer-events-none" />
-            <div className="absolute bottom-0 right-1/4 translate-x-1/2 w-[600px] h-[400px] bg-pink-500/[0.08] blur-[120px] rounded-full pointer-events-none" />
+            
+            
+
+            {/* Cursor-following glow */}
+            <div className="hero-spot absolute top-0 left-0 w-[440px] h-[440px] -ml-[220px] -mt-[220px] rounded-full pointer-events-none z-20 opacity-0 will-change-transform bg-[radial-gradient(circle,rgba(168,85,247,0.2),transparent_65%)]" />
 
             {/* ── Mobile Layout ── */}
             <div className="flex flex-col items-center justify-center md:hidden px-6 py-24 gap-8">
@@ -95,59 +134,33 @@ export default function DesignerCoder() {
             <div className="hidden md:flex flex-row w-full h-screen relative">
 
                 {/* Left Side: DevSecOps */}
-                <div className="relative flex-1 group h-full overflow-hidden bg-white text-black flex items-center justify-end pr-20 z-10 transition-all duration-500 hover:flex-[1.5]">
-                    <div className="text-right z-20">
-                        <h2 className="text-9xl font-heading font-black tracking-tighter mb-4 text-[#1a1a1a]">
+                <div className="hero-panel-left relative flex-1 group h-full overflow-hidden bg-[#04050c] text-white flex items-center justify-end pr-20 z-10 transition-all duration-500">
+                    <div className="text-right z-20 relative">
+                        <h2 className="hero-title text-7xl lg:text-8xl 2xl:text-9xl font-heading font-black tracking-tighter mb-4 text-transparent bg-clip-text bg-gradient-to-br from-white via-cyan-100 to-cyan-400 drop-shadow-[0_0_30px_rgba(34,211,238,0.25)]">
                             DEVSECOPS
                         </h2>
-                        <p className="text-gray-500 max-w-xs ml-auto font-serif italic text-lg leading-relaxed">
+                        <p className="hero-copy text-cyan-100/80 max-w-xs ml-auto font-serif italic text-lg leading-relaxed">
                             Engineer focused on system design, problem solving, and building reliable, scalable solutions.
                         </p>
                     </div>
 
-                    {/* Background Art Effect */}
-                    <div className="absolute inset-0 opacity-10 pointer-events-none">
-                        <div className="absolute top-1/4 left-1/4 w-96 h-96 bg-pink-500/20 rounded-full blur-3xl mix-blend-multiply" />
-                        <div className="absolute bottom-1/4 left-1/3 w-96 h-96 bg-purple-500/20 rounded-full blur-3xl mix-blend-multiply" />
-                    </div>
+                    {/* Aurora + grid background */}
+                    <AuroraGrid />
                 </div>
 
-                {/* Center Image Split */}
+                {/* 3D Image Gallery replacing the Particle Face */}
+                <HeroGallery />
+                
+                {/* Crazy 3D Abstract Model */}
+                <Crazy3DModel />
+
+                {/* Center Split Line */}
                 <div className="absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[500px] h-[70vh] z-30 pointer-events-none">
                     <div className="relative w-full h-full">
 
-                        {/* Left Half */}
-                        <div className="absolute top-0 left-0 w-1/2 h-full overflow-hidden bg-transparent">
-                            <div className="relative w-[500px] h-full -left-0">
-                                <Image
-                                    src="/profile-hero.jpg"
-                                    alt="Profile Art"
-                                    fill
-                                    className="object-cover object-top grayscale contrast-125 brightness-110"
-                                    priority
-                                />
-                                <div className="absolute inset-0 bg-purple-500/10 mix-blend-color" />
-                            </div>
-                        </div>
-
-                        {/* Right Half */}
-                        <div className="absolute top-0 right-0 w-1/2 h-full overflow-hidden bg-transparent">
-                            <div className="relative w-[500px] h-full -left-[250px]">
-                                <Image
-                                    src="/profile-hero.jpg"
-                                    alt="Profile Code"
-                                    fill
-                                    className="object-cover object-top"
-                                    priority
-                                />
-                                <div className="absolute inset-0 bg-purple-900/40 mix-blend-overlay" />
-                                <div className="absolute inset-0 bg-[linear-gradient(transparent_2px,#000_2px)] bg-[size:100%_4px] opacity-30" />
-                            </div>
-                        </div>
-
                         {/* Split Line */}
-                        <div className="absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[2px] bg-white z-40">
-                            <div className="absolute top-1/2 -translate-y-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white px-6 py-2 rounded-full border border-white/20 font-bold tracking-widest text-sm shadow-2xl">
+                        <div className="hero-split-line absolute top-0 bottom-0 left-1/2 -translate-x-1/2 w-[2px] bg-white z-40">
+                            <div className="hero-pill absolute top-1/2 -translate-y-1/2 -translate-x-1/2 whitespace-nowrap bg-black text-white px-6 py-2 rounded-full border border-white/20 font-bold tracking-widest text-sm shadow-2xl">
                                 YASH SRIVASTAVA
                             </div>
                         </div>
@@ -155,12 +168,12 @@ export default function DesignerCoder() {
                 </div>
 
                 {/* Right Side: Full Stack */}
-                <div className="relative flex-1 group h-full overflow-hidden bg-[#050505] text-white flex items-center justify-start pl-20 z-10 transition-all duration-500 hover:flex-[1.5]">
+                <div className="hero-panel-right relative flex-1 group h-full overflow-hidden bg-[#050505] text-white flex items-center justify-start pl-20 z-10 transition-all duration-500">
                     <div className="text-left z-20 w-fit relative">
-                        <h2 className="text-9xl font-mono font-bold tracking-tighter mb-4 text-white">
+                        <h2 className="hero-title text-7xl lg:text-8xl 2xl:text-9xl font-mono font-bold tracking-tighter mb-4 text-white drop-shadow-[0_0_30px_rgba(167,139,250,0.35)]">
                             FULL-STACK
                         </h2>
-                        <p className="text-gray-400 max-w-xs font-mono text-sm leading-relaxed">
+                        <p className="hero-copy text-gray-400 max-w-xs font-mono text-sm leading-relaxed">
                             Software engineer with experience in DevOps, backend systems, and cloud-native applications.
                         </p>
 
@@ -169,21 +182,8 @@ export default function DesignerCoder() {
                         </div>
                     </div>
 
-                    {/* Background Code Effect */}
-                    <div className="absolute inset-0 opacity-20 pointer-events-none overflow-hidden">
-                        <pre className="text-[10px] text-purple-500/30 font-mono p-4">
-                            {`function createMagic() {
-  const aesthetic = true;
-  const performance = 100;
-  return aesthetic && performance;
-}
-
-while(alive) {
-  code();
-  design();
-}`}
-                        </pre>
-                    </div>
+                    {/* Code rain background */}
+                    <CodeRain />
                 </div>
 
             </div>

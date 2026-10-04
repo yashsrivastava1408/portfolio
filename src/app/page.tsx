@@ -4,7 +4,6 @@
 
 import Navbar from "@/components/Navbar";
 import About from "@/components/About";
-import DesignerCoder from "@/components/DesignerCoder";
 import Skills from "@/components/Skills";
 import LeetCode from "@/components/LeetCode";
 
@@ -18,6 +17,9 @@ import SplashScreen from "@/components/SplashScreen";
 import { useState } from "react";
 import { AnimatePresence, motion } from "framer-motion";
 import PhotoGallery from "@/components/PhotoGallery";
+import dynamic from "next/dynamic";
+
+const DeskScene = dynamic(() => import("@/components/DeskScene"), { ssr: false });
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true);
@@ -39,7 +41,7 @@ export default function Home() {
         >
           <Navbar />
           <BackgroundAnimation />
-          <DesignerCoder />
+          <DeskScene />
           <About />
           <Skills />
           <LeetCode />

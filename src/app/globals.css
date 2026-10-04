@@ -181,3 +181,14 @@ body {
 ::-webkit-scrollbar-thumb:hover {
   background: #5b21b6;
 }
+/* Twinkling stars for the hero (CSS-only, no JS tweens) */
+@keyframes hero-twinkle {
+  0%, 100% { opacity: 0.15; transform: scale(0.6); }
+  50% { opacity: 1; transform: scale(1.2); }
+}
+.hero-star {
+  animation: hero-twinkle 2.4s ease-in-out infinite;
+}
+@media (prefers-reduced-motion: reduce) {
+  .hero-star { animation: none; opacity: 0.5; }
+}
