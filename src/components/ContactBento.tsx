@@ -2,7 +2,7 @@
 
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
-import { Copy, Mail, Check, Github, Linkedin, ExternalLink } from "lucide-react";
+import { Copy, Mail, Check, ExternalLink, Send } from "lucide-react";
 import Globe from "./Globe";
 import Image from "next/image";
 import { useState } from "react";
@@ -10,16 +10,18 @@ import { useState } from "react";
 export default function ContactBento() {
     const [copied, setCopied] = useState(false);
 
-    const handleCopy = () => {
-        navigator.clipboard.writeText(portfolioData.personal.email);
-        setCopied(true);
-        setTimeout(() => setCopied(false), 2000);
+    const handleCopy = async () => {
+        try {
+            await navigator.clipboard.writeText(portfolioData.personal.email);
+            setCopied(true);
+            setTimeout(() => setCopied(false), 2000);
+        } catch {
+            // clipboard blocked: fall back to opening the mail app
+            window.location.href = `mailto:${portfolioData.personal.email}`;
+        }
     };
 
-    const socialLinks = [
-        { name: "GitHub", icon: Github, url: "https://github.com/yashsrivastava1408" },
-        { name: "LinkedIn", icon: Linkedin, url: "https://www.linkedin.com/in/yash-srivastava-45779531a" },
-    ];
+    const socialLinks = portfolioData.personal.social;
 
     return (
         <section id="contact" className="py-24 px-4 max-w-7xl mx-auto">
@@ -85,8 +87,9 @@ export default function ContactBento() {
                                     <Image
                                         src="/profile.jpg"
                                         className="grayscale opacity-80"
-                                        alt="User Profile"
+                                        alt="Yash Srivastava"
                                         fill
+                                        sizes="80px"
                                         style={{ objectFit: 'cover' }}
                                     />
                                 </div>
@@ -98,7 +101,7 @@ export default function ContactBento() {
                         </div>
 
                         <h3 className="text-sm tracking-widest text-gray-500 mb-2 uppercase">Collaboration</h3>
-                        <p className="text-xl text-white font-medium max-w-sm">I prioritize client collaboration, fostering open communication</p>
+                        <p className="text-xl text-white font-medium max-w-sm">I like working in the open: clear updates, honest status, no surprises</p>
                     </motion.div>
 
                     {/* CTA Card */}
@@ -108,26 +111,35 @@ export default function ContactBento() {
                         viewport={{ once: true }}
                         className="flex-shrink-0 bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 flex flex-col gap-6"
                     >
-                        <div className="flex flex-col md:flex-row items-center justify-between gap-6">
-                            <div className="text-center md:text-left">
-                                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 mx-auto md:mx-0 text-primary">
+                        <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
+                            <div className="text-center lg:text-left">
+                                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 mx-auto lg:mx-0 text-primary">
                                     <Mail className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-2xl font-bold text-white mb-1">Let&apos;s work together</h3>
-                                <p className="text-gray-400 text-sm">Have a project in mind?</p>
+                                <p className="text-gray-400 text-sm">Hiring, or have a project in mind? I reply fast.</p>
                             </div>
 
-                            <button
-                                onClick={handleCopy}
-                                className="group flex items-center gap-3 px-6 py-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all active:scale-95"
-                            >
-                                {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5 text-gray-400 group-hover:text-white" />}
-                                <span className="text-gray-300 group-hover:text-white font-mono text-sm">{portfolioData.personal.email}</span>
-                            </button>
+                            <div className="flex flex-col sm:flex-row items-stretch gap-3 shrink-0 max-w-full">
+                                <button
+                                    onClick={handleCopy}
+                                    aria-label="Copy email address"
+                                    className="group flex items-center justify-center gap-3 px-4 sm:px-6 py-4 rounded-xl border border-white/10 bg-white/5 hover:bg-white/10 transition-all active:scale-95"
+                                >
+                                    {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5 text-gray-400 group-hover:text-white" />}
+                                    <span className="text-gray-300 group-hover:text-white font-mono text-xs sm:text-sm whitespace-nowrap">{copied ? "Copied!" : portfolioData.personal.email}</span>
+                                </button>
+                                <a
+                                    href={`mailto:${portfolioData.personal.email}`}
+                                    className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-primary text-white font-bold text-sm whitespace-nowrap hover:bg-primary/90 transition-colors active:scale-95"
+                                >
+                                    <Send className="w-4 h-4" /> Email me
+                                </a>
+                            </div>
                         </div>
 
                         {/* Social Links */}
-                        <div className="flex items-center justify-center md:justify-start gap-4 pt-4 border-t border-white/5">
+                        <div className="flex items-center justify-center lg:justify-start gap-4 pt-4 border-t border-white/5">
                             {socialLinks.map((social) => (
                                 <a
                                     key={social.name}
@@ -151,7 +163,7 @@ export default function ContactBento() {
                 <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-background to-transparent z-10" />
                 <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-background to-transparent z-10" />
 
-                <div className="flex whitespace-nowrap animate-marquee">
+                <div className="flex w-max whitespace-nowrap animate-marquee" aria-hidden>
                     {[...portfolioData.skills, ...portfolioData.skills].map((skill, i) => (
                         <span key={i} className="text-4xl md:text-6xl font-black text-white/5 mx-6 uppercase">
                             {skill}

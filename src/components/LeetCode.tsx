@@ -4,28 +4,36 @@
 import { motion } from "framer-motion";
 import { ExternalLink, Trophy, Target } from "lucide-react";
 import { GitHubCalendar } from "react-github-calendar";
+import { portfolioData } from "@/data/portfolio";
+
+const RADIUS = 88;
+const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
 export default function LeetCode() {
-    const stats = {
-        totalSolved: 200,
-        easy: 70,
-        medium: 111,
-        hard: 19,
-        ranking: "N/A",
-        contestRating: 1650,
-        username: "Qce4QmSNDd"
-    };
+    const stats = portfolioData.leetcode;
+    const github = portfolioData.personal.github;
 
-    const totalQuestions = 3000;
-    const percentage = Math.round((stats.totalSolved / totalQuestions) * 100);
+    // The ring is split by difficulty: each arc is that difficulty's share of everything solved.
+    const segments = [
+        { label: "Easy", count: stats.easy, color: "#2dd4bf", text: "text-teal-400", hover: "hover:border-teal-500/30" },
+        { label: "Medium", count: stats.medium, color: "#facc15", text: "text-yellow-400", hover: "hover:border-yellow-500/30" },
+        { label: "Hard", count: stats.hard, color: "#f87171", text: "text-red-400", hover: "hover:border-red-500/30" },
+    ];
+    const gap = 6;
+    const arcs = segments.reduce<{ label: string; color: string; length: number; offset: number }[]>((acc, s) => {
+        const start = acc.length ? acc[acc.length - 1].offset + acc[acc.length - 1].length + gap : 0;
+        const length = Math.max((s.count / stats.totalSolved) * CIRCUMFERENCE - gap, 2);
+        return [...acc, { label: s.label, color: s.color, length, offset: start }];
+    }, []);
 
     return (
-        <section className="py-24 px-4 max-w-7xl mx-auto flex flex-col items-center gap-16">
+        <section id="stats" className="py-24 px-4 max-w-7xl mx-auto flex flex-col items-center gap-16">
             {/* LeetCode Card */}
             <motion.div
-                initial={{ opacity: 0, scale: 0.9 }}
-                whileInView={{ opacity: 1, scale: 1 }}
-                viewport={{ once: true }}
+                initial={{ opacity: 0, y: 30 }}
+                whileInView={{ opacity: 1, y: 0 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
                 className="w-full max-w-4xl relative"
             >
                 {/* Glow Effect */}
@@ -36,29 +44,23 @@ export default function LeetCode() {
 
                         {/* Left: Circle Graph */}
                         <div className="relative w-48 h-48 flex-shrink-0">
-                            <svg className="w-full h-full transform -rotate-90">
+                            <svg viewBox="0 0 192 192" className="w-full h-full transform -rotate-90" role="img" aria-label={`${stats.totalSolved} LeetCode problems solved: ${stats.easy} easy, ${stats.medium} medium, ${stats.hard} hard`}>
                                 {/* Background Circle */}
-                                <circle cx="96" cy="96" r="88" stroke="#1a1a1a" strokeWidth="12" fill="none" />
-                                {/* Progress Circle */}
-                                <circle
-                                    cx="96" cy="96" r="88"
-                                    stroke="url(#lc-gradient)"
-                                    strokeWidth="12"
-                                    fill="none"
-                                    strokeDasharray={2 * Math.PI * 88}
-                                    strokeDashoffset={2 * Math.PI * 88 * (1 - percentage / 100)}
-                                    strokeLinecap="round"
-                                    className="drop-shadow-[0_0_10px_rgba(109,40,217,0.5)]"
-                                />
-                                <defs>
-                                    <linearGradient id="lc-gradient" x1="0%" y1="0%" x2="100%" y2="0%">
-                                        <stop offset="0%" stopColor="#a855f7" />
-                                        <stop offset="100%" stopColor="#db2777" />
-                                    </linearGradient>
-                                </defs>
+                                <circle cx="96" cy="96" r={RADIUS} stroke="#1a1a1a" strokeWidth="12" fill="none" />
+                                {arcs.map((arc) => (
+                                    <circle
+                                        key={arc.label}
+                                        cx="96" cy="96" r={RADIUS}
+                                        stroke={arc.color}
+                                        strokeWidth="12"
+                                        fill="none"
+                                        strokeDasharray={`${arc.length} ${CIRCUMFERENCE - arc.length}`}
+                                        strokeDashoffset={-arc.offset}
+                                    />
+                                ))}
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                                <span className="text-4xl font-bold font-heading">{stats.totalSolved}+</span>
+                                <span className="text-4xl font-bold font-heading">{stats.totalSolved}</span>
                                 <span className="text-xs text-gray-400 uppercase tracking-widest">Solved</span>
                             </div>
                         </div>
@@ -73,8 +75,10 @@ export default function LeetCode() {
                                     <p className="text-gray-400 text-sm">Consistent problem solver & algorithm enthusiast</p>
                                 </div>
                                 <a
-                                    href={`https://leetcode.com/${stats.username}`}
+                                    href={`https://leetcode.com/u/${stats.username}/`}
                                     target="_blank"
+                                    rel="noopener noreferrer"
+                                    aria-label="Open LeetCode profile"
                                     className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-primary hover:text-white transition-all"
                                 >
                                     <ExternalLink className="w-5 h-5" />
@@ -82,30 +86,24 @@ export default function LeetCode() {
                             </div>
 
                             <div className="grid grid-cols-3 gap-4 mb-8">
-                                <div className="p-4 rounded-2xl bg-white/5 border border-white/5 text-center hover:border-teal-500/30 transition-colors">
-                                    <div className="text-teal-400 font-bold mb-1">{stats.easy}+</div>
-                                    <div className="text-[10px] text-gray-500 uppercase tracking-wider">Easy</div>
-                                </div>
-                                <div className="p-4 rounded-2xl bg-white/5 border border-white/5 text-center hover:border-yellow-500/30 transition-colors">
-                                    <div className="text-yellow-400 font-bold mb-1">{stats.medium}+</div>
-                                    <div className="text-[10px] text-gray-500 uppercase tracking-wider">Medium</div>
-                                </div>
-                                <div className="p-4 rounded-2xl bg-white/5 border border-white/5 text-center hover:border-red-500/30 transition-colors">
-                                    <div className="text-red-400 font-bold mb-1">{stats.hard}+</div>
-                                    <div className="text-[10px] text-gray-500 uppercase tracking-wider">Hard</div>
-                                </div>
+                                {segments.map((s) => (
+                                    <div key={s.label} className={`p-4 rounded-2xl bg-white/5 border border-white/5 text-center transition-colors ${s.hover}`}>
+                                        <div className={`${s.text} font-bold mb-1`}>{s.count}</div>
+                                        <div className="text-[10px] text-gray-500 uppercase tracking-wider">{s.label}</div>
+                                    </div>
+                                ))}
                             </div>
 
-                            {/* Fun Stats */}
-                            <div className="flex gap-6 text-sm text-gray-400">
-                                <div className="flex items-center gap-2">
-                                    <Trophy className="w-4 h-4 text-purple-400" />
-                                    <span>Top 15%</span>
-                                </div>
+                            <div className="flex flex-wrap gap-x-6 gap-y-2 text-sm text-gray-400">
                                 <div className="flex items-center gap-2">
                                     <Target className="w-4 h-4 text-pink-400" />
-                                    <span>Acceptance 68%</span>
+                                    <span>{stats.medium + stats.hard} medium &amp; hard</span>
                                 </div>
+                                <div className="flex items-center gap-2">
+                                    <Trophy className="w-4 h-4 text-purple-400" />
+                                    <span>Contest rating {stats.contestRating.toLocaleString("en-US")}</span>
+                                </div>
+                                <span className="text-gray-600">as of {stats.asOf}</span>
                             </div>
                         </div>
                     </div>
@@ -116,8 +114,8 @@ export default function LeetCode() {
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
                 whileInView={{ opacity: 1, y: 0 }}
-                viewport={{ once: true }}
-                transition={{ duration: 0.8, delay: 0.2 }}
+                viewport={{ once: true, margin: "-80px" }}
+                transition={{ duration: 0.7, ease: "easeOut" }}
                 className="w-full max-w-4xl relative"
             >
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-pink-500/5 to-purple-500/5 blur-[40px] rounded-3xl" />
@@ -128,11 +126,13 @@ export default function LeetCode() {
                             <h3 className="text-2xl font-bold text-white mb-1 flex items-center gap-2">
                                 <span className="text-purple-400">GitHub</span> Contributions
                             </h3>
-                            <p className="text-gray-500 text-sm">@yashsrivastava1408</p>
+                            <p className="text-gray-500 text-sm">@{github}</p>
                         </div>
                         <a
-                            href="https://github.com/yashsrivastava1408"
+                            href={`https://github.com/${github}`}
                             target="_blank"
+                            rel="noopener noreferrer"
+                            aria-label="Open GitHub profile"
                             className="p-3 rounded-full bg-white/5 border border-white/10 hover:bg-primary hover:text-white transition-all"
                         >
                             <ExternalLink className="w-5 h-5" />
@@ -141,7 +141,7 @@ export default function LeetCode() {
 
                     <div className="overflow-x-auto">
                         <GitHubCalendar
-                            username="yashsrivastava1408"
+                            username={github}
                             colorScheme="dark"
                             blockSize={14}
                             blockMargin={5}

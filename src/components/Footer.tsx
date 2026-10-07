@@ -1,34 +1,29 @@
 "use client";
 
 import { portfolioData } from "@/data/portfolio";
-import { Github, Linkedin, Mail, Heart, ArrowUp } from "lucide-react";
+import { Mail, Heart, ArrowUp } from "lucide-react";
 
 export default function Footer() {
     const currentYear = new Date().getFullYear();
 
     const socialLinks = [
-        { name: "GitHub", icon: Github, url: "https://github.com/yashsrivastava1408" },
-        { name: "LinkedIn", icon: Linkedin, url: "https://www.linkedin.com/in/yash-srivastava-45779531a" },
+        ...portfolioData.personal.social.map(({ name, icon, url }) => ({ name, icon, url })),
         { name: "Email", icon: Mail, url: `mailto:${portfolioData.personal.email}` },
     ];
 
-    const quickLinks = ["About", "Skills", "Projects", "Contact"];
-
-    const scrollToTop = () => {
-        window.scrollTo({ top: 0, behavior: "smooth" });
-    };
+    const quickLinks = ["About", "Skills", "Experience", "Projects", "Contact"];
 
     return (
         <footer className="border-t border-white/5 bg-[#030303] relative">
             {/* Back to Top Button */}
             <div className="absolute -top-6 left-1/2 -translate-x-1/2">
-                <button
-                    onClick={scrollToTop}
+                <a
+                    href="#"
                     className="group w-12 h-12 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-lg shadow-primary/10 hover:shadow-primary/30 hover:-translate-y-1"
                     aria-label="Back to top"
                 >
                     <ArrowUp className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />
-                </button>
+                </a>
             </div>
 
             <div className="max-w-7xl mx-auto px-4 py-12">

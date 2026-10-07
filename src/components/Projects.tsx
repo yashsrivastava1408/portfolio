@@ -1,68 +1,41 @@
-
 "use client";
 
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
-import { Github, ExternalLink, ArrowRight } from "lucide-react";
+import { Github, ExternalLink, ArrowRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
+import { useState } from "react";
 import SectionHeading from "./SectionHeading";
 
+const colors = [
+    "from-pink-500 to-rose-500", // Pink
+    "from-purple-600 to-indigo-600", // Purple
+    "from-blue-500 to-cyan-500", // Blue
+    "from-emerald-500 to-teal-500", // Green
+    "from-amber-500 to-orange-600", // Amber
+];
+
+// How many of the smaller cards show before "Show all".
+const INITIAL_MORE = 6;
+
 export default function Projects() {
-    // We'll limit to top 4 projects for this "Curated" view as it takes more space
-    const featuredProjects = portfolioData.projects.slice(0, 4);
-
-    const colors = [
-        "from-pink-500 to-rose-500", // Pink
-        "from-purple-600 to-indigo-600", // Purple
-        "from-blue-500 to-cyan-500", // Blue
-        "from-emerald-500 to-teal-500", // Green
-    ];
-
-    // Extract real highlights from each project's description
-    const getProjectHighlights = (project: typeof featuredProjects[0]) => {
-        const desc = project.description;
-        const highlights: string[] = [];
-
-        // Extract numbers and metrics from the description
-        const metricPatterns = [
-            /(\d+%[^,.]*)/g,
-            /(\d+\+[^,.]*)/g,
-            /(securing?\s+\d+[^,.]*)/gi,
-            /(achieving?\s+\d+[^,.]*)/gi,
-        ];
-
-        for (const pattern of metricPatterns) {
-            const matches = desc.match(pattern);
-            if (matches) {
-                highlights.push(...matches.map(m => m.trim()));
-            }
-        }
-
-        // Fallback: extract key phrases from tags if no metrics found
-        if (highlights.length === 0) {
-            highlights.push(
-                `Built with ${project.tags.slice(0, 2).join(" & ")}`,
-                project.tags.length > 2 ? `Powered by ${project.tags.slice(2).join(", ")}` : "Production-ready architecture"
-            );
-        }
-
-        return highlights.slice(0, 3);
-    };
+    const featuredProjects = portfolioData.projects.filter((p) => p.featured);
+    const moreProjects = portfolioData.projects.filter((p) => !p.featured);
+    const [showAll, setShowAll] = useState(false);
+    const visibleMore = showAll ? moreProjects : moreProjects.slice(0, INITIAL_MORE);
 
     return (
         <section id="projects" className="py-32 px-4 max-w-7xl mx-auto">
             {/* Section Divider */}
             <div className="w-full max-w-lg mx-auto h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-32" />
 
-            <div className="mb-32 text-center">
+            <div className="mb-24 md:mb-32 text-center">
                 <SectionHeading accent="Work" accentClassName="font-cursive text-pink-500 italic pr-2">Curated</SectionHeading>
             </div>
 
-            <div className="flex flex-col gap-32">
+            <div className="flex flex-col gap-24 md:gap-32">
                 {featuredProjects.map((project, index) => {
                     const colorGradient = colors[index % colors.length];
-                    const hasImage = project.image;
-                    const highlights = getProjectHighlights(project);
 
                     return (
                         <motion.div
@@ -70,16 +43,22 @@ export default function Projects() {
                             initial={{ opacity: 0, y: 40 }}
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true, margin: "-100px" }}
-                            transition={{ duration: 0.8 }}
+                            transition={{ duration: 0.7, ease: "easeOut" }}
                             className="grid lg:grid-cols-2 gap-12 items-center group"
                         >
                             {/* Project Card */}
-                            <div className={`relative rounded-3xl p-8 md:p-12 overflow-hidden bg-gradient-to-br ${colorGradient} shadow-2xl skew-y-1 hover:skew-y-0 transition-transform duration-700`}>
+                            <a
+                                href={project.liveUrl ?? project.link}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                aria-label={`Open ${project.title}`}
+                                className={`relative block rounded-3xl p-8 md:p-12 overflow-hidden bg-gradient-to-br ${colorGradient} shadow-2xl skew-y-1 hover:skew-y-0 transition-transform duration-700 ${index % 2 === 1 ? "lg:order-2" : ""}`}
+                            >
                                 <div className="absolute top-4 right-4 text-white/80 z-20">
                                     <ArrowRight className="w-8 h-8 -rotate-45" />
                                 </div>
 
-                                <h3 className="text-2xl font-bold text-white mb-2 leading-tight max-w-xs relative z-20">{project.description.split('.')[0]}.</h3>
+                                <p className="text-2xl font-bold text-white mb-2 leading-tight max-w-xs relative z-20">{project.tagline}</p>
 
                                 {/* Browser Mockup */}
                                 <div className="mt-12 relative rounded-t-xl bg-[#0a0a0a] border-t-4 border-x-4 border-[#1a1a1a] shadow-2xl translate-y-4 group-hover:translate-y-2 transition-transform duration-500 overflow-hidden">
@@ -88,33 +67,30 @@ export default function Projects() {
                                         <div className="w-2 h-2 rounded-full bg-red-500" />
                                         <div className="w-2 h-2 rounded-full bg-yellow-500" />
                                         <div className="w-2 h-2 rounded-full bg-green-500" />
-                                        <div className="ml-4 h-4 w-32 bg-[#2a2a2a] rounded-full text-[8px] text-gray-500 flex items-center px-2 truncate">
-                                            {project.link}
+                                        <div className="ml-4 h-4 max-w-[60%] bg-[#2a2a2a] rounded-full text-[8px] text-gray-500 flex items-center px-2">
+                                            <span className="truncate">{(project.liveUrl ?? project.link).replace("https://", "")}</span>
                                         </div>
                                     </div>
 
                                     {/* Content Area */}
                                     <div className="h-48 md:h-64 bg-[#050505] relative w-full group-hover:scale-105 transition-transform duration-700">
-                                        {hasImage ? (
+                                        {project.image ? (
                                             <Image
-
                                                 src={project.image}
-                                                alt={project.title}
+                                                alt={`${project.title} screenshot`}
                                                 fill
+                                                sizes="(max-width: 1024px) 90vw, 560px"
                                                 className="object-cover object-top"
                                             />
                                         ) : (
                                             <div className="w-full h-full flex flex-col items-center justify-center text-center relative overflow-hidden p-6">
                                                 <div className={`absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-64 h-64 bg-gradient-to-br ${colorGradient} opacity-20 blur-[80px] rounded-full`} />
-                                                <h4 className="text-3xl font-heading font-bold text-white relative z-10">{project.title}</h4>
-                                                <div className="mt-4 px-4 py-1 rounded border border-white/10 text-xs text-gray-400 bg-white/5 relative z-10">
-                                                    v1.0.0
-                                                </div>
+                                                <p className="text-3xl font-heading font-bold text-white relative z-10">{project.title}</p>
                                             </div>
                                         )}
                                     </div>
                                 </div>
-                            </div>
+                            </a>
 
                             {/* Project Details */}
                             <div className="space-y-8">
@@ -127,15 +103,16 @@ export default function Projects() {
                                     {project.description}
                                 </p>
 
-                                {/* Real project highlights */}
-                                <div className="space-y-3">
-                                    {highlights.map((highlight, i) => (
-                                        <div key={i} className="flex items-start gap-3">
-                                            <div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${colorGradient} mt-2.5 flex-shrink-0`} />
-                                            <p className="text-gray-300 text-sm">{highlight}</p>
-                                        </div>
-                                    ))}
-                                </div>
+                                {project.highlights && (
+                                    <ul className="space-y-3">
+                                        {project.highlights.map((highlight) => (
+                                            <li key={highlight} className="flex items-start gap-3">
+                                                <div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-r ${colorGradient} mt-2 flex-shrink-0`} />
+                                                <p className="text-gray-300 text-sm">{highlight}</p>
+                                            </li>
+                                        ))}
+                                    </ul>
+                                )}
 
                                 <div className="flex flex-wrap gap-3">
                                     {project.tags.map(tag => (
@@ -145,17 +122,13 @@ export default function Projects() {
                                     ))}
                                 </div>
 
-                                <div className="flex gap-4 pt-4">
+                                <div className="flex gap-6 pt-4">
                                     <a href={project.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors pb-1">
                                         <Github className="w-4 h-4" /> View Source
                                     </a>
-                                    {'liveUrl' in project && project.liveUrl ? (
-                                        <a href={project.liveUrl as string} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors pb-1">
+                                    {project.liveUrl && (
+                                        <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors pb-1">
                                             <ExternalLink className="w-4 h-4" /> Live Demo
-                                        </a>
-                                    ) : (
-                                        <a href={project.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors pb-1">
-                                            <ExternalLink className="w-4 h-4" /> Live
                                         </a>
                                     )}
                                 </div>
@@ -165,10 +138,72 @@ export default function Projects() {
                 })}
             </div>
 
-            <div className="mt-32 text-center">
-                <a href="https://github.com/yashsrivastava1408" target="_blank" className="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-white transition-all text-sm font-medium tracking-widest uppercase">
-                    See More Projects <ArrowRight className="w-4 h-4" />
-                </a>
+            {/* More projects */}
+            <div className="mt-32">
+                <div className="flex items-end justify-between gap-4 mb-10">
+                    <div>
+                        <h3 className="text-3xl md:text-4xl font-heading font-bold text-white">More builds</h3>
+                        <p className="text-gray-500 text-sm uppercase tracking-widest mt-2">
+                            Hackathons, systems work and experiments
+                        </p>
+                    </div>
+                    <span className="text-gray-600 text-sm font-mono hidden sm:block">{moreProjects.length} projects</span>
+                </div>
+
+                <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
+                    {visibleMore.map((project, index) => (
+                        <motion.article
+                            key={project.title}
+                            initial={{ opacity: 0, y: 24 }}
+                            whileInView={{ opacity: 1, y: 0 }}
+                            viewport={{ once: true, margin: "-60px" }}
+                            transition={{ duration: 0.5, ease: "easeOut", delay: (index % 3) * 0.08 }}
+                            className="group relative flex flex-col rounded-2xl bg-[#0A0A0A] border border-white/10 p-6 hover:border-white/25 hover:-translate-y-1 transition-[transform,border-color] duration-300"
+                        >
+                            <div className="flex items-start justify-between gap-4 mb-3">
+                                <h4 className="text-xl font-bold text-white leading-snug">{project.title}</h4>
+                                <ArrowUpRight className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors flex-shrink-0 mt-1" />
+                            </div>
+                            <p className="text-sm text-purple-300/90 mb-3">{project.tagline}</p>
+                            <p className="text-sm text-gray-400 leading-relaxed mb-5">{project.description}</p>
+
+                            <div className="flex flex-wrap gap-2 mt-auto mb-5">
+                                {project.tags.map((tag) => (
+                                    <span key={tag} className="px-2 py-0.5 rounded bg-white/5 border border-white/10 text-[11px] text-gray-400 font-mono">
+                                        {tag}
+                                    </span>
+                                ))}
+                            </div>
+
+                            <div className="flex gap-5 text-sm">
+                                {/* the ::after stretches this link over the whole card */}
+                                <a href={project.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-gray-300 hover:text-white transition-colors after:absolute after:inset-0 after:rounded-2xl">
+                                    <Github className="w-4 h-4" /> Source
+                                </a>
+                                {project.liveUrl && (
+                                    <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="relative z-10 flex items-center gap-2 text-gray-300 hover:text-white transition-colors">
+                                        <ExternalLink className="w-4 h-4" /> Live
+                                    </a>
+                                )}
+                            </div>
+                        </motion.article>
+                    ))}
+                </div>
+
+                <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
+                    {moreProjects.length > INITIAL_MORE && (
+                        <button
+                            onClick={() => setShowAll((v) => !v)}
+                            aria-expanded={showAll}
+                            className="px-8 py-4 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-white transition-all text-sm font-medium tracking-widest uppercase"
+                        >
+                            {showAll ? "Show fewer" : `Show all ${moreProjects.length}`}
+                        </button>
+                    )}
+                    <a href={`https://github.com/${portfolioData.personal.github}?tab=repositories`} target="_blank" rel="noopener noreferrer" className="inline-flex items-center gap-2 px-8 py-4 rounded-full border border-white/10 bg-white/5 hover:bg-white/10 text-white transition-all text-sm font-medium tracking-widest uppercase">
+                        All repos on GitHub <ArrowRight className="w-4 h-4" />
+                    </a>
+                </div>
             </div>
         </section>
     );

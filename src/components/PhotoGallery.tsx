@@ -5,6 +5,7 @@ import { Camera, X, ChevronLeft, ChevronRight } from "lucide-react";
 import Image from "next/image";
 import { portfolioData } from "@/data/portfolio";
 import { useState, useCallback, useEffect } from "react";
+import { useLenis } from "./SmoothScroll";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -31,6 +32,7 @@ const itemVariants: Variants = {
 export default function PhotoGallery() {
     const { gallery } = portfolioData;
     const [lightboxIndex, setLightboxIndex] = useState<number | null>(null);
+    const lenis = useLenis();
 
     const openLightbox = (index: number) => setLightboxIndex(index);
     const closeLightbox = () => setLightboxIndex(null);
@@ -56,13 +58,16 @@ export default function PhotoGallery() {
         };
 
         document.addEventListener("keydown", handleKeyDown);
+        // freeze the page (native and Lenis) while the lightbox is open
         document.body.style.overflow = "hidden";
+        lenis?.stop();
 
         return () => {
             document.removeEventListener("keydown", handleKeyDown);
             document.body.style.overflow = "";
+            lenis?.start();
         };
-    }, [lightboxIndex, goNext, goPrev]);
+    }, [lightboxIndex, goNext, goPrev, lenis]);
 
     if (!gallery || gallery.length === 0) return null;
 
@@ -98,10 +103,12 @@ export default function PhotoGallery() {
                     className="columns-1 md:columns-2 lg:columns-3 gap-8 space-y-8"
                 >
                     {gallery.map((item, index) => (
-                        <motion.div
+                        <motion.button
+                            type="button"
                             key={item.id}
                             variants={itemVariants}
-                            className="relative group break-inside-avoid rounded-lg overflow-hidden bg-zinc-900 border border-white/5 cursor-pointer"
+                            aria-label={`Open photo: ${item.title}`}
+                            className="relative group block w-full text-left break-inside-avoid rounded-lg overflow-hidden bg-zinc-900 border border-white/5 cursor-pointer"
                             onClick={() => openLightbox(index)}
                         >
                             {/* Grayscale Image Container */}
@@ -113,7 +120,8 @@ export default function PhotoGallery() {
                                     src={item.imageUrl}
                                     alt={item.title}
                                     fill
-                                    className="object-cover grayscale hover:grayscale-0 transition-all duration-1000 ease-in-out group-hover:scale-105"
+                                    sizes="(max-width: 768px) 100vw, (max-width: 1024px) 50vw, 33vw"
+                                    className="object-cover grayscale group-hover:grayscale-0 transition-all duration-700 ease-in-out group-hover:scale-105"
                                 />
 
                                 {/* High Contrast Overlay */}
@@ -121,7 +129,7 @@ export default function PhotoGallery() {
 
                                 {/* View indicator on hover */}
                                 <div className="absolute inset-0 flex items-center justify-center opacity-0 group-hover:opacity-100 transition-opacity duration-500 z-10">
-                                    <div className="w-12 h-12 rounded-full bg-white/10 backdrop-blur-md border border-white/20 flex items-center justify-center">
+                                    <div className="w-12 h-12 rounded-full bg-black/50 border border-white/20 flex items-center justify-center">
                                         <Camera className="w-5 h-5 text-white" />
                                     </div>
                                 </div>
@@ -143,7 +151,7 @@ export default function PhotoGallery() {
 
                             {/* Hover Border Glow */}
                             <div className="absolute inset-0 border border-white/0 group-hover:border-white/20 transition-colors duration-500 pointer-events-none" />
-                        </motion.div>
+                        </motion.button>
                     ))}
                 </motion.div>
             </div>
@@ -156,12 +164,16 @@ export default function PhotoGallery() {
                         animate={{ opacity: 1 }}
                         exit={{ opacity: 0 }}
                         transition={{ duration: 0.3 }}
-                        className="fixed inset-0 z-[200] flex items-center justify-center bg-black/90 backdrop-blur-xl"
+                        role="dialog"
+                        aria-modal="true"
+                        aria-label={gallery[lightboxIndex].title}
+                        className="fixed inset-0 z-[200] flex items-center justify-center bg-black/95"
                         onClick={closeLightbox}
                     >
                         {/* Close Button */}
                         <button
                             onClick={closeLightbox}
+                            aria-label="Close photo"
                             className="absolute top-6 right-6 z-50 w-12 h-12 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
                         >
                             <X className="w-6 h-6" />
@@ -170,12 +182,14 @@ export default function PhotoGallery() {
                         {/* Navigation Arrows */}
                         <button
                             onClick={(e) => { e.stopPropagation(); goPrev(); }}
+                            aria-label="Previous photo"
                             className="absolute left-4 md:left-8 z-50 w-12 h-12 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
                         >
                             <ChevronLeft className="w-6 h-6" />
                         </button>
                         <button
                             onClick={(e) => { e.stopPropagation(); goNext(); }}
+                            aria-label="Next photo"
                             className="absolute right-4 md:right-8 z-50 w-12 h-12 rounded-full bg-white/10 border border-white/10 flex items-center justify-center text-white hover:bg-white/20 transition-colors"
                         >
                             <ChevronRight className="w-6 h-6" />
@@ -191,13 +205,13 @@ export default function PhotoGallery() {
                             className="relative max-w-4xl w-full mx-4 md:mx-8"
                             onClick={(e) => e.stopPropagation()}
                         >
-                            <div className="relative w-full aspect-[16/10] rounded-2xl overflow-hidden">
+                            <div className="relative w-full aspect-[16/10] max-h-[65vh] rounded-2xl overflow-hidden bg-black">
                                 <Image
                                     src={gallery[lightboxIndex].imageUrl}
                                     alt={gallery[lightboxIndex].title}
                                     fill
-                                    className="object-cover"
-                                    sizes="(max-width: 768px) 100vw, 80vw"
+                                    className="object-contain"
+                                    sizes="(max-width: 768px) 100vw, 900px"
                                 />
                             </div>
 

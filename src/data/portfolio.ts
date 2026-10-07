@@ -1,15 +1,224 @@
 
 import { Github, Linkedin } from "lucide-react";
 
+export const SITE_URL =
+  process.env.NEXT_PUBLIC_BASE_URL || "https://portfolio-theta-lyart-35.vercel.app";
+
+export type Project = {
+  title: string;
+  /** One short line shown on the coloured card. */
+  tagline: string;
+  description: string;
+  /** Bullet points shown next to featured projects. */
+  highlights?: string[];
+  tags: string[];
+  link: string;
+  liveUrl?: string;
+  image?: string;
+  featured?: boolean;
+};
+
+const projects: Project[] = [
+  {
+    title: "OpsAcademy",
+    tagline: "Learn DevOps by running real Linux commands in the browser.",
+    description:
+      "Interactive browser-based DevOps learning platform featuring 14 production-grade courses, live Linux terminal (<50ms latency via xterm.js & node-pty), multi-agent LangGraph RAG mentor with Qdrant Vector DB, and an automated Docker sandbox auto-reaper reducing idle costs by ~90%.",
+    highlights: [
+      "14 courses with a live sandboxed Linux terminal",
+      "Multi-agent AI mentor that gives hints without spoiling the answer",
+      "Auto-reaper for idle Docker sandboxes (~90% lower idle cost)",
+    ],
+    tags: ["React 19", "Node.js", "LangGraph RAG", "Docker", "WebSockets", "Qdrant"],
+    link: "https://github.com/yashsrivastava1408/OpsAcademy",
+    liveUrl: "https://ops-academy-chi.vercel.app",
+    image: "/projects/opsacademy.png",
+    featured: true,
+  },
+  {
+    title: "Question Forge",
+    tagline: "LLM-written interview questions, checked before a human sees them.",
+    description:
+      "Open-source platform that drafts DSA, SQL, OOP and system-design interview questions with an LLM, then verifies each one with something other than that LLM. Coding and SQL questions are checked by running code; the rest go through an independent LLM review. Whatever passes lands in a human review queue and is assembled into exportable papers.",
+    highlights: [
+      "Coding and SQL questions are validated by executing code",
+      "Independent LLM review for the question types that cannot be run",
+      "Human review queue, paper assembly and export",
+    ],
+    tags: ["TypeScript", "React", "PostgreSQL", "Redis / BullMQ", "LLM"],
+    link: "https://github.com/yashsrivastava1408/QuestionForge",
+    image: "/projects/question-forge.png",
+    featured: true,
+  },
+  {
+    title: "Trailhead",
+    tagline: "Try the career path before you pick it.",
+    description:
+      "Evidence-based placement guide for final-year students. It reads your public GitHub repositories and resume text, builds a profile where every skill carries the evidence that proves it, scores 9 career paths in plain reproducible code, and uses a fact-checker to reject any LLM claim the profile cannot back up.",
+    highlights: [
+      "9 career paths scored in code, not by the model",
+      "A checker rejects LLM claims the evidence cannot prove",
+      "Short taste tests and a 30-day plan that adapts",
+    ],
+    tags: ["React", "Express", "LangGraph.js", "SQLite", "Zod", "Groq"],
+    link: "https://github.com/yashsrivastava1408/TrailHead",
+    image: "/projects/trailhead.jpg",
+    featured: true,
+  },
+  {
+    title: "Lock Focus",
+    tagline: "An adaptive reading system for neurodiverse users.",
+    description:
+      "Adaptive digital reading ecosystem for neurodiverse users, featuring ADHD-friendly interfaces, dyslexia-aware layouts, and behavior-driven design. Secured 3rd Place at HackElite'26 national hackathon.",
+    highlights: [
+      "3rd place among 900+ teams at HackElite'26",
+      "ADHD-friendly and dyslexia-aware reading modes",
+      "Interface adapts to reading behaviour",
+    ],
+    tags: ["React", "AI", "Accessibility", "Neurodiversity"],
+    link: "https://github.com/yashsrivastava1408/lock-focus-hackathon",
+    liveUrl: "https://lock-focus-hackathon.vercel.app",
+    image: "/projects/lock-focus.png",
+    featured: true,
+  },
+  {
+    title: "Aether Clinic",
+    tagline: "A privacy-first AI healthcare platform.",
+    description:
+      "Full-stack AI healthcare platform enabling real-time medical chat, automated report analysis, and image-based insights using React, Node.js, and MongoDB. Designed a hybrid AI inference architecture reducing response latency by 35%. Built a secure, modular REST API backend with AES-256 encryption.",
+    highlights: [
+      "Real-time medical chat, report analysis and image insights",
+      "Hybrid AI inference design (35% lower response latency)",
+      "Modular REST API with AES-256 encryption",
+    ],
+    tags: ["React", "Node.js", "MongoDB", "Python ML", "React Native"],
+    link: "https://github.com/yashsrivastava1408/Aether-Clinic",
+    liveUrl: "https://aether-clinic-umber.vercel.app",
+    image: "/projects/aether-clinic-1.png",
+    featured: true,
+  },
+  {
+    title: "Distributed Job Scheduler",
+    tagline: "A job scheduler that never runs a job twice.",
+    description:
+      "Distributed job scheduler with atomic queue claiming (SELECT ... FOR UPDATE SKIP LOCKED), queue concurrency limits, multi-tenant isolation, a heartbeat watchdog that requeues work from crashed workers, a dead letter queue and a live WebSocket dashboard.",
+    tags: ["TypeScript", "Node.js", "Prisma", "PostgreSQL", "Socket.IO"],
+    link: "https://github.com/yashsrivastava1408/distributed-job-scheduler",
+  },
+  {
+    title: "DevSick",
+    tagline: "AI incident reasoning on top of your monitoring.",
+    description:
+      "Incident reasoning platform that ingests logs and alerts, correlates events across a service graph, and uses an LLM to produce a structured root-cause analysis with human-in-the-loop remediation.",
+    tags: ["Python", "FastAPI", "Groq / Llama", "Prometheus", "Grafana"],
+    link: "https://github.com/yashsrivastava1408/DevSick",
+  },
+  {
+    title: "GigShield",
+    tagline: "Parametric micro-insurance for gig workers.",
+    description:
+      "Weekly income cover for India's gig workers. When a verified trigger such as extreme weather or severe AQI hits a worker's zone, the payout path is computed automatically. Built for Guidewire DEVTrails 2026.",
+    tags: ["Python", "FastAPI", "React", "TypeScript", "PostgreSQL"],
+    link: "https://github.com/yashsrivastava1408/GigSheild",
+    liveUrl: "https://gig-sheild-neon.vercel.app",
+  },
+  {
+    title: "Code Battleground",
+    tagline: "Real-time multiplayer competitive programming.",
+    description:
+      "Real-time coding arena built as a Turborepo monorepo: Next.js client, NestJS API, Socket.IO for live rooms, BullMQ workers for code evaluation and an Elo-based rating system.",
+    tags: ["Next.js", "NestJS", "Socket.IO", "BullMQ", "PostgreSQL", "Redis"],
+    link: "https://github.com/yashsrivastava1408/Code-Battleground",
+  },
+  {
+    title: "Urban Pluss",
+    tagline: "Accident detection from CCTV feeds.",
+    description:
+      "YOLOv5-based accident detection system achieving 92% accuracy on road collisions from CCTV feeds, with IoT-powered traffic signal automation and multithreading that cut end-to-end latency by 35%.",
+    tags: ["Python", "YOLOv5", "OpenCV", "MQTT", "IoT"],
+    link: "https://github.com/yashsrivastava1408/UrbanPluss",
+    liveUrl: "https://urban-pluss.vercel.app",
+    image: "/projects/urban-pulse-dashboard.png",
+  },
+  {
+    title: "FlowForge",
+    tagline: "A visual designer for HR workflows.",
+    description:
+      "Drag-and-drop workflow designer for onboarding, leave approval and document verification, with schema-driven node forms, an MSW-powered mock API and a step-by-step simulation sandbox.",
+    tags: ["React", "React Flow", "TypeScript", "MSW"],
+    link: "https://github.com/yashsrivastava1408/FlowForge-",
+    liveUrl: "https://flow-forge-blond.vercel.app",
+  },
+  {
+    title: "TrueSignal",
+    tagline: "Cleaner signals for kitchen prep time prediction.",
+    description:
+      "Signal-integrity layer that improves Kitchen Prep Time prediction without retraining existing models, by triangulating multiple real-world signals. Built for a Zomato hackathon.",
+    tags: ["JavaScript", "Data", "Hackathon"],
+    link: "https://github.com/yashsrivastava1408/TrueSignal",
+    liveUrl: "https://true-signal-five.vercel.app",
+  },
+  {
+    title: "ExamOracle",
+    tagline: "Lecture notes in, exam predictions out.",
+    description:
+      "Turns unstructured lecture notes into probability-ranked exam predictions, flashcards and quizzes.",
+    tags: ["Next.js", "TypeScript", "Prisma", "Gemini"],
+    link: "https://github.com/yashsrivastava1408/ExamOracle",
+  },
+  {
+    title: "LinguaLive",
+    tagline: "Real-time language learning.",
+    description: "Real-time language learning and communication platform.",
+    tags: ["Web App", "Communication"],
+    link: "https://github.com/yashsrivastava1408/LinguaLive",
+    image: "/projects/lingualive.png",
+  },
+  {
+    title: "Grovia",
+    tagline: "Voice-assisted eco-friendly shopping.",
+    description:
+      "Voice-assisted eco-friendly e-commerce platform built for Sparkathon 2025, with an AI-powered voice assistant that makes sustainable shopping faster.",
+    tags: ["Python", "Web Speech API", "AI"],
+    link: "https://github.com/yashsrivastava1408/Groviaa",
+    image: "/projects/grovia.png",
+  },
+  {
+    title: "Smart Car Parking System",
+    tagline: "IoT parking with plate recognition.",
+    description:
+      "IoT-enabled parking system with real-time slot detection and automatic license plate recognition.",
+    tags: ["IoT", "Automation"],
+    link: "https://github.com/yashsrivastava1408/SMART-CAR-PARKING-SYSTEM",
+  },
+  {
+    title: "Fish Catch System",
+    tagline: "IoT analytics for fish catch prediction.",
+    description:
+      "IoT-powered data logging and analytics system for fish catch prediction using geolocation and historical data.",
+    tags: ["IoT", "Analytics"],
+    link: "https://github.com/yashsrivastava1408/FISH-CATCH-SYSTEM",
+  },
+  {
+    title: "Volt Vision",
+    tagline: "Real-time voltage monitoring.",
+    description:
+      "Real-time voltage monitoring system using C# for data processing and a Flask web interface.",
+    tags: ["C#", "Flask", "IoT"],
+    link: "https://github.com/yashsrivastava1408/VOLT-VISION",
+  },
+];
+
 export const portfolioData = {
   personal: {
     name: "Yash Srivastava",
     title: "Full Stack Developer | DevSecOps Enthusiast",
     description:
-      "Third-year B.Tech Computer Science student who builds systems end-to-end — from backend code to production deployments. Currently a DevOps Intern working on CI/CD pipelines, containerization, and cloud-native workflows using GitHub Actions, Jenkins, Docker, Kubernetes, and Linux. My core strengths include Java, Python, backend development, and DevOps fundamentals. Actively expanding skills in cloud computing, automation, and scalable system design. Seeking internship or early-career opportunities in Software Engineering, Platform, Cloud, or DevOps roles.",
+      "Final-year B.Tech Computer Science student who builds systems end-to-end — from backend code to production deployments. I work across DevOps and software roles on CI/CD pipelines, containerization, and cloud-native workflows using GitHub Actions, Jenkins, Docker, Kubernetes, and Linux. Lately I have been building AI systems that check their own work: LangGraph agents, RAG mentors, and LLM pipelines where code, not the model, has the final say. Open to Software Engineering, Platform, Cloud, and DevOps roles.",
     email: "yashsrivastava1408@gmail.com",
     phone: "+91-6394026578",
     resume: "/resume.png",
+    github: "yashsrivastava1408",
     social: [
       {
         name: "LinkedIn",
@@ -33,11 +242,16 @@ export const portfolioData = {
   ],
   skills: [
     "Python",
+    "TypeScript",
+    "JavaScript",
     "C/C++",
     "SQL",
     "Node.js",
+    "Express",
+    "FastAPI",
     "Flask",
     "React",
+    "Next.js",
     "LangGraph / RAG",
     "WebSockets",
     "Qdrant Vector DB",
@@ -47,17 +261,34 @@ export const portfolioData = {
     "REST APIs",
     "Microservices",
     "DBMS",
+    "PostgreSQL",
+    "MySQL",
+    "MongoDB",
+    "Redis",
     "Docker",
     "Kubernetes",
     "CI/CD",
+    "GitHub Actions",
     "Jenkins",
+    "Argo CD",
+    "Prometheus",
+    "Grafana",
+    "Linux",
     "AWS",
     "Git",
     "GitHub",
     "GitLab",
-    "Argo CD",
-    "MySQL"
   ],
+  // Pulled from the public LeetCode profile. Update when the numbers move.
+  leetcode: {
+    username: "Qce4QmSNDd",
+    asOf: "Oct 2026",
+    totalSolved: 418,
+    easy: 191,
+    medium: 207,
+    hard: 20,
+    contestRating: 1455,
+  },
   experience: [
     {
       company: "TalenciaGlobal",
@@ -92,118 +323,7 @@ export const portfolioData = {
         "Built a Chrome extension tracking activity across 20+ websites, generating weekly automated reports to help users reduce unproductive screen time. Developed a real-time chat system supporting 100+ concurrent connections with instant messaging, read receipts, and online/offline presence using Socket.IO, MongoDB, and Express.js.",
     },
   ],
-  projects: [
-    {
-      title: "OpsAcademy",
-      description:
-        "Interactive browser-based DevOps learning platform featuring 14 production-grade courses, live Linux terminal (<50ms latency via xterm.js & node-pty), multi-agent LangGraph RAG mentor with Qdrant Vector DB, and an automated Docker sandbox auto-reaper reducing idle costs by ~90%.",
-      tags: ["React 19", "Node.js", "LangGraph RAG", "Docker", "WebSockets", "Qdrant"],
-      link: "https://github.com/yashsrivastava1408/OpsAcademy",
-      liveUrl: "https://ops-academy-chi.vercel.app",
-      category: "Software",
-      image: "/projects/opsacademy.png",
-    },
-    {
-      title: "Lock Focus",
-      description:
-        "Adaptive digital reading ecosystem for neurodiverse users, featuring ADHD-friendly interfaces, dyslexia-aware layouts, and behavior-driven design. Secured 3rd Place at HackElite'26 national hackathon.",
-      tags: ["React", "AI", "Accessibility", "Neurodiversity"],
-      link: "https://github.com/yashsrivastava1408/HackElite26",
-      category: "Software",
-      image: "/projects/lock-focus.png",
-    },
-    {
-      title: "Aether Clinic",
-      description:
-        "Full-stack AI healthcare platform enabling real-time medical chat, automated report analysis, and image-based insights using React, Node.js, and MongoDB. Designed a hybrid AI inference architecture reducing response latency by 35%. Built a secure, modular REST API backend with AES-256 encryption.",
-      tags: ["React", "Node.js", "MongoDB", "Cloud-Native AI"],
-      link: "https://github.com/yashsrivastava1408/Aether-Clinic",
-      category: "Software",
-      image: "/projects/aether-clinic-1.png",
-    },
-    {
-      title: "Urban Plus",
-      description:
-        "YOLOv5-based accident detection system achieving 92% accuracy, enabling real-time identification of road collisions from CCTV feeds. Integrated IoT-powered traffic signal automation. Optimized end-to-end system latency by 35% using multithreading.",
-      tags: ["Python", "YOLOv5", "OpenCV", "MQTT", "IoT"],
-      link: "https://github.com/yashsrivastava1408/UrbanPluss",
-      category: "Software",
-      image: "/projects/urban-pulse-dashboard.png",
-    },
-    {
-      title: "LinguaLive",
-      description: "Real-time language learning and communication platform.",
-      tags: ["Web App", "Communication"],
-      link: "https://github.com/yashsrivastava1408/LinguaLive",
-      category: "Software",
-      image: "/projects/lingualive.png",
-    },
-    {
-      title: "Grovia",
-      description:
-        "Voice-Assisted Eco-Friendly E-Commerce platform built for Sparkathon 2025. Features an AI-powered voice assistant ('Apply Grovia25') to make sustainable shopping smarter and faster.",
-      tags: ["React", "Web Speech API", "AI", "Sustainable Tech"],
-      link: "https://github.com/yashsrivastava1408/Groviaa",
-      category: "Software",
-      image: "/projects/grovia.png",
-    },
-    {
-      title: "Smart Shop",
-      description:
-        "E-commerce platform with user authentication, product listings, and cart functionality.",
-      tags: ["E-commerce", "Auth"],
-      link: "https://github.com/yashsrivastava1408/SMART-SHOP",
-      category: "Software",
-    },
-    {
-      title: "Fish Catch System",
-      description:
-        "IoT-powered data logging and analytics system for fish catch prediction using geolocation and historical data.",
-      tags: ["IoT", "Analytics"],
-      link: "https://github.com/yashsrivastava1408/FISH-CATCH-SYSTEM",
-      category: "Software",
-    },
-    {
-      title: "ChatBot",
-      description:
-        "Full-stack chatbot application demonstrating RESTful API integration and CRUD operations.",
-      tags: ["Full Stack", "API"],
-      link: "https://github.com/yashsrivastava1408/CHATBOT",
-      category: "Software",
-    },
-    {
-      title: "Atmos",
-      description:
-        "Responsive single-page application focused on modern UI/UX principles and client-side scripting.",
-      tags: ["SPA", "UI/UX"],
-      link: "https://github.com/yashsrivastava1408/ATMOS",
-      category: "Software",
-    },
-    {
-      title: "Volt Vision",
-      description:
-        "Real-time voltage monitoring system using C# for data processing and Flask web interface.",
-      tags: ["C#", "Flask", "IoT"],
-      link: "https://github.com/yashsrivastava1408/VOLT-VISION",
-      category: "Software",
-    },
-    {
-      title: "Smart Car Parking System",
-      description:
-        "IoT-enabled parking system with real-time slot detection and automatic license plate recognition.",
-      tags: ["IoT", "Automation"],
-      link: "https://github.com/yashsrivastava1408/SMART-CAR-PARKING-SYSTEM",
-      category: "IoT",
-    },
-    {
-      title: "Dual-Axis Sun Tracking Solar Panel",
-      description:
-        "Dual-axis tracking system to optimize solar panel energy capture using servo motors and sensors.",
-      tags: ["IoT", "Solar", "Energy"],
-      link: "https://github.com/yashsrivastava1408/home-automation",
-      category: "IoT",
-    },
-  ],
+  projects,
   gallery: [
     {
       id: 1,
@@ -235,6 +355,5 @@ export const portfolioData = {
       imageUrl: "/gallery/xenkrypt-team.jpg",
       description: "The XenKrypt team – a group of driven individuals building a next-gen cybersecurity startup from scratch. Learning by doing and pushing the limits of production-grade systems.",
     },
-
   ],
 };

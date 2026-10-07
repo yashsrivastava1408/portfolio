@@ -12,7 +12,7 @@ const services = [
         description: "Building scalable, high-performance web applications with Next.js, React, and Node.js. I focus on creating pixel-perfect, interactive experiences that perform seamlessly across all devices.",
         icon: Code2,
         gradient: "from-blue-500 to-indigo-500",
-        tags: ["Next.js 15", "React", "TypeScript", "Tailwind"]
+        tags: ["Next.js", "React", "TypeScript", "Tailwind"]
     },
     {
         title: "DevSecOps & Cloud",
@@ -32,7 +32,7 @@ const services = [
 
 export default function Services() {
     return (
-        <section className="py-32 px-4 relative max-w-7xl mx-auto">
+        <section id="services" className="py-32 px-4 relative max-w-7xl mx-auto">
             {/* Section Divider */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
@@ -51,14 +51,14 @@ export default function Services() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.6, delay: index * 0.15 }}
-                        className="group relative h-[500px] perspective-1000"
+                        className="group relative md:h-[500px]"
                     >
                         <div className="relative w-full h-full transition-all duration-500 group-hover:-translate-y-4">
 
                             {/* Background Gradient Blob */}
                             <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-2xl -z-10`} />
 
-                            <div className="h-full w-full bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 flex flex-col justify-between overflow-hidden relative backdrop-blur-sm group-hover:border-white/20 transition-colors">
+                            <div className="h-full w-full bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 flex flex-col justify-between gap-10 overflow-hidden relative group-hover:border-white/20 transition-colors">
 
                                 {/* Top Content */}
                                 <div>
@@ -83,9 +83,9 @@ export default function Services() {
                                         ))}
                                     </div>
 
-                                    <button className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-500 group-hover:text-white transition-colors group-hover:gap-4 duration-300">
+                                    <a href="#projects" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-500 group-hover:text-white transition-all group-hover:gap-4 duration-300">
                                         See Projects <ArrowUpRight className="w-4 h-4" />
-                                    </button>
+                                    </a>
                                 </div>
 
                                 {/* Hover Overlay Line */}

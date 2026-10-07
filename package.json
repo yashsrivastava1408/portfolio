@@ -1,12 +1,13 @@
 {
-  "name": "temp_app",
+  "name": "portfolio",
   "version": "0.1.0",
   "private": true,
   "scripts": {
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "typecheck": "tsc --noEmit"
   },
   "dependencies": {
     "@gsap/react": "^2.1.2",
@@ -23,7 +24,6 @@
     "react": "19.2.3",
     "react-dom": "19.2.3",
     "react-github-calendar": "^5.0.4",
-    "react-scroll": "^1.9.3",
     "tailwind-merge": "^3.4.0",
     "three": "^0.186.1"
   },
@@ -32,11 +32,13 @@
     "@types/node": "^20",
     "@types/react": "^19",
     "@types/react-dom": "^19",
-    "@types/react-scroll": "^1.8.10",
     "@types/three": "^0.186.0",
     "eslint": "^9",
     "eslint-config-next": "16.1.4",
     "tailwindcss": "^4",
     "typescript": "^5"
+  },
+  "engines": {
+    "node": ">=20.9.0"
   }
 }

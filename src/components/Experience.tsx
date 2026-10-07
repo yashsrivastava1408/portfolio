@@ -3,217 +3,182 @@
 import { motion, AnimatePresence } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
 import Image from "next/image";
-import { useState, useRef, useEffect } from "react";
-import { useLenis } from "./SmoothScroll";
+import { useState, useRef } from "react";
+import SectionHeading from "./SectionHeading";
 
-
+// Degrees between two neighbouring roles on the dial.
+const DIAL_STEP = 40;
 
 export default function Experience() {
     const [activeIndex, setActiveIndex] = useState(0);
     const experiences = portfolioData.experience;
-    const lenis = useLenis();
-
-    const containerRef = useRef<HTMLElement>(null);
-
-    // 🔒 true = scrolling disabled until user stops
-    const canScroll = useRef(true);
-
-    // ⏱ detects scroll idle
-    const wheelIdleTimeout = useRef<number | null>(null);
+    const active = experiences[activeIndex];
 
     // 📱 Touch swipe tracking
     const touchStartX = useRef(0);
 
-    // 🔄 Sync active index to ref for stable event listener
-    const activeIndexRef = useRef(activeIndex);
-    useEffect(() => {
-        activeIndexRef.current = activeIndex;
-    }, [activeIndex]);
+    const go = (index: number) => setActiveIndex(Math.max(0, Math.min(index, experiences.length - 1)));
 
-    useEffect(() => {
-        const handleScroll = (e: WheelEvent) => {
-            if (!containerRef.current || !containerRef.current.contains(e.target as Node)) return;
-
-            const isScrollingDown = e.deltaY > 0;
-            const isScrollingUp = e.deltaY < 0;
-            const isAtEnd = activeIndexRef.current === experiences.length - 1;
-            const isAtStart = activeIndexRef.current === 0;
-
-            // ✅ Pass through: Unlock Lenis & Let page scroll
-            if ((isScrollingDown && isAtEnd) || (isScrollingUp && isAtStart)) {
-                lenis?.start();
-                return;
-            }
-
-            // ⛔️ Lock: Stop Lenis & Handle locally
-            lenis?.stop();
+    // The page scroll is never hijacked here: roles are picked by click, swipe or arrow keys.
+    const handleKeyDown = (e: React.KeyboardEvent) => {
+        if (e.key === "ArrowRight" || e.key === "ArrowDown") {
             e.preventDefault();
-
-            // If scrolling is locked, just reset idle timer
-            if (!canScroll.current) {
-                if (wheelIdleTimeout.current) {
-                    window.clearTimeout(wheelIdleTimeout.current);
-                }
-
-                wheelIdleTimeout.current = window.setTimeout(() => {
-                    canScroll.current = true;
-                }, 300);
-
-                return;
-            }
-
-            // 🚀 FIRST intentional scroll
-            canScroll.current = false;
-
-            if (e.deltaY > 0) {
-                setActiveIndex(prev => Math.min(prev + 1, experiences.length - 1));
-            } else if (e.deltaY < 0) {
-                setActiveIndex(prev => Math.max(prev - 1, 0));
-            }
-
-            // Unlock ONLY after wheel fully stops
-            wheelIdleTimeout.current = window.setTimeout(() => {
-                canScroll.current = true;
-            }, 300);
-        };
-
-        const element = containerRef.current;
-        if (element) {
-            element.addEventListener("wheel", handleScroll, { passive: false });
+            go(activeIndex + 1);
+        } else if (e.key === "ArrowLeft" || e.key === "ArrowUp") {
+            e.preventDefault();
+            go(activeIndex - 1);
         }
-
-        return () => {
-            if (element) {
-                element.removeEventListener("wheel", handleScroll);
-            }
-            if (wheelIdleTimeout.current) {
-                window.clearTimeout(wheelIdleTimeout.current);
-            }
-            // Ensure we restart lenis on unmount
-            lenis?.start();
-        };
-    }, [experiences.length, lenis]);
+    };
 
     return (
         <section
-            ref={containerRef}
-            onMouseLeave={() => lenis?.start()}
-            className="py-32 px-4 relative max-w-7xl mx-auto overflow-hidden min-h-[600px] md:min-h-[800px] flex items-center justify-center"
+            id="experience"
+            className="py-32 px-4 relative max-w-7xl mx-auto overflow-hidden"
         >
             {/* Section Divider */}
             <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
 
-            <div className="flex flex-col md:flex-row items-center justify-center w-full gap-12 md:gap-32 relative z-10">
+            <div className="mb-16 text-center relative z-20">
+                <SectionHeading accent="Worked">Where I&apos;ve</SectionHeading>
+                <p className="text-gray-500 mt-4 text-sm uppercase tracking-widest">
+                    {experiences.length} roles across DevOps, software and R&amp;D
+                </p>
+            </div>
 
-                {/* Left: Dial (Desktop Only) */}
-                <div className="relative w-[300px] h-[600px] md:w-[400px] flex-shrink-0 items-center justify-center hidden md:flex">
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-white/5 opacity-40 translate-x-[50%]" />
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 w-[550px] h-[550px] rounded-full border-2 border-dashed border-white/10 opacity-30 translate-x-[50%]" />
+            <div className="flex flex-col md:flex-row items-center justify-center w-full gap-12 md:gap-20 relative z-10">
+
+                {/* Left: Dial (Desktop Only). A wheel centred on the left edge; the active role sits on the rim facing the content. */}
+                <div className="relative w-[340px] h-[600px] flex-shrink-0 overflow-hidden hidden md:block">
+                    <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full border border-white/5 opacity-40" />
+                    <div className="absolute left-0 top-1/2 -translate-x-1/2 -translate-y-1/2 w-[550px] h-[550px] rounded-full border-2 border-dashed border-white/10 opacity-30" />
 
                     {/* Active Node */}
-                    <div className="absolute right-0 top-1/2 -translate-y-1/2 translate-x-[14px] w-12 h-12 rounded-full border border-accent bg-accent/20 shadow-[0_0_30px_var(--color-accent)] z-20 flex items-center justify-center backdrop-blur-md">
+                    <div className="absolute left-[300px] top-1/2 -translate-x-1/2 -translate-y-1/2 w-12 h-12 rounded-full border border-accent bg-accent/20 shadow-[0_0_30px_var(--color-accent)] z-20 flex items-center justify-center pointer-events-none">
                         <div className="w-3 h-3 bg-accent rounded-full shadow-[0_0_10px_var(--color-accent)]" />
                     </div>
 
                     {/* Rotating Nodes */}
                     <div
-                        className="absolute right-0 top-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full translate-x-[50%] transition-transform duration-500 ease-[cubic-bezier(0.2,0.8,0.2,1)]"
-                        style={{
-                            transform: `translateX(50%) translateY(-50%) rotate(${activeIndex * -45}deg)`
-                        }}
+                        className="absolute left-0 top-1/2 w-[600px] h-[600px] rounded-full transition-transform duration-700 ease-[cubic-bezier(0.2,0.8,0.2,1)]"
+                        style={{ transform: `translate(-50%, -50%) rotate(${activeIndex * -DIAL_STEP}deg)` }}
                     >
-                        {experiences.map((_, index) => (
-                            <div
-                                key={index}
-                                className="absolute top-1/2 left-1/2 w-full h-0 origin-center"
-                                style={{ transform: `rotate(${index * 45}deg)` }}
-                            >
-                                <motion.button
+                        {experiences.map((exp, index) => {
+                            const angle = (index * DIAL_STEP * Math.PI) / 180;
+                            return (
+                                <button
+                                    key={exp.company}
                                     onClick={() => setActiveIndex(index)}
-                                    className={`absolute right-0 -top-5 w-10 h-10 -mr-5 rounded-full border flex items-center justify-center transition-all duration-300
+                                    aria-label={`Show ${exp.role} at ${exp.company}`}
+                                    tabIndex={-1}
+                                    className={`absolute -translate-x-1/2 -translate-y-1/2 w-10 h-10 rounded-full border flex items-center justify-center transition-colors duration-300
                                         ${index === activeIndex
-                                            ? "bg-black border-accent scale-110 z-30"
+                                            ? "bg-black border-accent z-30"
                                             : "bg-black/80 border-white/10 hover:border-white/40"
                                         }`}
+                                    style={{
+                                        left: `${(50 + 50 * Math.cos(angle)).toFixed(3)}%`,
+                                        top: `${(50 + 50 * Math.sin(angle)).toFixed(3)}%`,
+                                    }}
                                 >
                                     <div className={`w-2 h-2 rounded-full ${index === activeIndex ? "bg-accent" : "bg-gray-600"}`} />
-                                </motion.button>
-                            </div>
-                        ))}
+                                </button>
+                            );
+                        })}
                     </div>
                 </div>
 
                 {/* Right: Content */}
-                <div className="flex-1 max-w-xl relative min-h-[350px] md:min-h-[400px] w-full"
-                    onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
-                    onTouchEnd={(e) => {
-                        const diff = touchStartX.current - e.changedTouches[0].clientX;
-                        if (Math.abs(diff) > 50) {
-                            if (diff > 0) setActiveIndex(prev => Math.min(prev + 1, experiences.length - 1));
-                            else setActiveIndex(prev => Math.max(prev - 1, 0));
-                        }
-                    }}
-                >
-                    <AnimatePresence mode="wait">
-                        <motion.div
-                            key={activeIndex}
-                            initial={{ opacity: 0, y: 20, scale: 0.95 }}
-                            animate={{ opacity: 1, y: 0, scale: 1 }}
-                            exit={{ opacity: 0, y: -20, scale: 0.95 }}
-                            transition={{ duration: 0.4, ease: "easeOut" }}
-                            className="relative z-10"
-                        >
-                            <div className="flex items-center gap-4 mb-6">
-                                <span className="text-6xl font-black text-white/5 font-heading absolute -left-4 md:-left-12 -top-10 select-none">
-                                    0{activeIndex + 1}
-                                </span>
-                                <div className="px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-wider">
-                                    {experiences[activeIndex].period}
-                                </div>
-                            </div>
+                <div className="flex-1 max-w-xl relative w-full">
+                    {/* Company tabs: every role is one click away */}
+                    <div
+                        role="tablist"
+                        aria-label="Experience"
+                        onKeyDown={handleKeyDown}
+                        className="flex flex-wrap gap-2 mb-10"
+                    >
+                        {experiences.map((exp, index) => (
+                            <button
+                                key={exp.company}
+                                role="tab"
+                                aria-selected={index === activeIndex}
+                                tabIndex={index === activeIndex ? 0 : -1}
+                                onClick={() => setActiveIndex(index)}
+                                className={`px-4 py-2 rounded-full border text-xs font-semibold tracking-wide transition-colors duration-300
+                                    ${index === activeIndex
+                                        ? "bg-accent/15 border-accent/40 text-white"
+                                        : "bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/30"
+                                    }`}
+                            >
+                                {exp.company}
+                            </button>
+                        ))}
+                    </div>
 
-                            <h2 className="text-3xl md:text-5xl font-bold text-white mb-2">
-                                {experiences[activeIndex].role}
-                            </h2>
-                            <div className="flex items-center gap-3 mb-8">
-                                {/* Company Logo */}
-                                <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center overflow-hidden">
-                                    {experiences[activeIndex].logo ? (
-                                        <div className="relative w-full h-full">
-                                            <Image
-                                                src={experiences[activeIndex].logo}
-                                                alt={experiences[activeIndex].company}
-                                                fill
-                                                className="object-contain p-1"
-                                                onError={(e) => {
-                                                    const target = e.currentTarget as unknown as HTMLElement;
-                                                    target.style.display = 'none';
-                                                    target.parentElement?.nextElementSibling?.classList.remove('hidden');
-                                                }}
-                                            />
-                                        </div>
-                                    ) : null}
-                                    <span className={`text-white/60 font-bold text-sm ${experiences[activeIndex].logo ? 'hidden' : ''}`}>
-                                        {experiences[activeIndex].company.split(' ').map(w => w[0]).join('').slice(0, 2)}
+                    <div
+                        className="relative min-h-[420px] md:min-h-[400px]"
+                        onTouchStart={(e) => { touchStartX.current = e.touches[0].clientX; }}
+                        onTouchEnd={(e) => {
+                            const diff = touchStartX.current - e.changedTouches[0].clientX;
+                            if (Math.abs(diff) > 50) go(activeIndex + (diff > 0 ? 1 : -1));
+                        }}
+                    >
+                        <AnimatePresence mode="wait">
+                            <motion.div
+                                key={activeIndex}
+                                role="tabpanel"
+                                initial={{ opacity: 0, y: 16 }}
+                                animate={{ opacity: 1, y: 0 }}
+                                exit={{ opacity: 0, y: -16 }}
+                                transition={{ duration: 0.3, ease: "easeOut" }}
+                                className="relative z-10"
+                            >
+                                <div className="flex items-center gap-4 mb-6">
+                                    <span className="text-6xl font-black text-white/5 font-heading absolute -left-4 md:-left-12 -top-10 select-none">
+                                        0{activeIndex + 1}
                                     </span>
+                                    <div className="px-4 py-1.5 rounded-full bg-accent/10 border border-accent/20 text-accent text-xs font-bold uppercase tracking-wider">
+                                        {active.period}
+                                    </div>
                                 </div>
-                                <h3 className="text-xl text-gray-400 font-light">
-                                    {experiences[activeIndex].company}
-                                </h3>
-                            </div>
 
-                            <div className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10 rounded-2xl p-6 md:p-8 backdrop-blur-md shadow-2xl">
-                                <p className="text-base md:text-lg text-gray-300 leading-relaxed font-light">
-                                    {experiences[activeIndex].description}
-                                </p>
-                            </div>
-                        </motion.div>
-                    </AnimatePresence>
+                                <h3 className="text-3xl md:text-5xl font-bold text-white mb-2">
+                                    {active.role}
+                                </h3>
+                                <div className="flex items-center gap-3 mb-8">
+                                    {/* Company Logo */}
+                                    <div className="w-10 h-10 rounded-lg bg-white/10 border border-white/10 flex items-center justify-center overflow-hidden relative">
+                                        <span className="text-white/60 font-bold text-sm">
+                                            {active.company.split(' ').map(w => w[0]).join('').slice(0, 2)}
+                                        </span>
+                                        {active.logo ? (
+                                            <Image
+                                                src={active.logo}
+                                                alt=""
+                                                fill
+                                                sizes="40px"
+                                                className="object-contain p-1 bg-[#1a1a1a]"
+                                                onError={(e) => { e.currentTarget.style.display = 'none'; }}
+                                            />
+                                        ) : null}
+                                    </div>
+                                    <p className="text-xl text-gray-400 font-light">
+                                        {active.company}
+                                    </p>
+                                </div>
+
+                                <div className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10 rounded-2xl p-6 md:p-8 shadow-2xl">
+                                    <p className="text-base md:text-lg text-gray-300 leading-relaxed font-light">
+                                        {active.description}
+                                    </p>
+                                </div>
+                            </motion.div>
+                        </AnimatePresence>
+                    </div>
 
                     {/* Mobile Navigation: Prev/Next + Dots */}
                     <div className="flex items-center justify-center gap-6 mt-8 md:hidden">
                         <button
-                            onClick={() => setActiveIndex(prev => Math.max(prev - 1, 0))}
+                            onClick={() => go(activeIndex - 1)}
                             disabled={activeIndex === 0}
                             className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-colors"
                             aria-label="Previous experience"
@@ -233,7 +198,7 @@ export default function Experience() {
                         </div>
 
                         <button
-                            onClick={() => setActiveIndex(prev => Math.min(prev + 1, experiences.length - 1))}
+                            onClick={() => go(activeIndex + 1)}
                             disabled={activeIndex === experiences.length - 1}
                             className="w-10 h-10 rounded-full border border-white/10 bg-white/5 flex items-center justify-center text-white disabled:opacity-30 disabled:cursor-not-allowed hover:bg-white/10 transition-colors"
                             aria-label="Next experience"

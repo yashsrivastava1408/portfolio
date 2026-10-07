@@ -7,12 +7,18 @@ import Image from "next/image";
 import MusicWidget from "./MusicWidget";
 
 export default function About() {
+    // Counted from the data file, so these never drift from what the page shows.
+    const stats = [
+        { value: portfolioData.experience.length, label: "Internships & roles" },
+        { value: `${portfolioData.projects.length}+`, label: "Projects built" },
+        { value: `${portfolioData.leetcode.totalSolved}`, label: "LeetCode solved" },
+    ];
+
     return (
         <section
             id="about"
             className="py-24 px-4 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16 md:gap-24"
         >
-            {/* Left: Profile Card */}
             {/* Left: Profile Card */}
             <motion.div
                 className="w-full max-w-md relative"
@@ -31,20 +37,20 @@ export default function About() {
 
                         {/* Image */}
                         <div className="relative w-full aspect-[4/5] rounded-[30px] overflow-hidden mb-8 bg-[#1a1a1a] flex items-center justify-center">
-                            <Image
-                                src="/yash.png"
-                                alt="Yash Srivastava"
-                                fill
-                                className="object-cover grayscale hover:grayscale-0 transition-all duration-500"
-                                onError={(e) => {
-                                    e.currentTarget.style.display = 'none';
-                                    e.currentTarget.parentElement?.classList.add('fallback-profile');
-                                }}
-                            />
-                            {/* Fallback Initials (Visible if image hidden) */}
-                            <div className="absolute inset-0 flex items-center justify-center bg-gray-900 text-white font-black text-6xl opacity-0 fallback-opacity">
+                            {/* Initials sit behind the photo and show only if it fails to load */}
+                            <div className="absolute inset-0 flex items-center justify-center bg-gray-900 text-white font-black text-6xl">
                                 YS
                             </div>
+                            <Image
+                                src="/yash.jpg"
+                                alt="Yash Srivastava"
+                                fill
+                                sizes="(max-width: 768px) 90vw, 400px"
+                                className="object-cover origin-[52%_92%] scale-[1.45] grayscale hover:grayscale-0 transition-[filter] duration-500"
+                                onError={(e) => {
+                                    e.currentTarget.style.display = 'none';
+                                }}
+                            />
                             <div className="absolute inset-0 bg-purple-500/10 mix-blend-overlay pointer-events-none" />
                         </div>
 
@@ -79,7 +85,7 @@ export default function About() {
                 initial={{ opacity: 0, x: 40 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
-                transition={{ duration: 0.8, ease: "easeOut", delay: 0.2 }}
+                transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
             >
                 <h2 className="text-5xl md:text-7xl font-black text-white leading-[0.9] mb-2 font-heading tracking-tighter">
                     About
@@ -113,21 +119,13 @@ export default function About() {
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-2 md:grid-cols-3 gap-8 mb-12">
-                    <div>
-                        <h4 className="text-5xl font-bold text-white mb-2">+2</h4>
-                        <p className="text-xs text-gray-500 uppercase tracking-widest">
-                            Years of<br />Experience
-                        </p>
-                    </div>
-                    <div>
-                        <h4 className="text-5xl font-bold text-white mb-2">+15</h4>
-                        <p className="text-xs text-gray-500 uppercase tracking-widest">
-                            Projects<br />Completed
-                        </p>
-                    </div>
-
-
+                <div className="grid grid-cols-3 gap-6 md:gap-8 mb-12">
+                    {stats.map((stat) => (
+                        <div key={stat.label}>
+                            <p className="text-4xl md:text-5xl font-bold text-white mb-2">{stat.value}</p>
+                            <p className="text-xs text-gray-500 uppercase tracking-widest max-w-[9rem]">{stat.label}</p>
+                        </div>
+                    ))}
                 </div>
 
                 {/* CTAs */}
@@ -141,10 +139,11 @@ export default function About() {
                     <a
                         href={portfolioData.personal.resume}
                         target="_blank"
-                        className="px-8 py-4 bg-white/10 text-white border border-white/10 rounded-xl font-bold hover:bg-white/20 transition-colors shadow-lg flex items-center gap-2 backdrop-blur-sm"
+                        rel="noopener noreferrer"
+                        className="px-8 py-4 bg-white/10 text-white border border-white/10 rounded-xl font-bold hover:bg-white/20 transition-colors shadow-lg flex items-center gap-2"
                     >
                         <Download className="w-5 h-5" />
-                        Download Resume
+                        View Resume
                     </a>
                 </div>
             </motion.div>

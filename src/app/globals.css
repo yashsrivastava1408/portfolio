@@ -125,8 +125,18 @@
   }
 }
 
-html {
-  scroll-behavior: smooth;
+/* Lenis owns smooth scrolling. CSS scroll-behavior must stay off or the two fight each other. */
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+
+.lenis.lenis-smooth [data-lenis-prevent] {
+  overscroll-behavior: contain;
+}
+
+.lenis.lenis-stopped {
+  overflow: clip;
 }
 
 body {
@@ -134,15 +144,41 @@ body {
   background: var(--background);
   font-family: var(--font-sans);
   overflow-x: hidden;
-  cursor: none;
-  /* Hide default cursor on desktop */
 }
 
-/* Show default cursor on touch devices */
-@media (hover: none) and (pointer: coarse) {
+/* Custom cursor: mouse-driven devices only, touch screens keep the native one */
+.custom-cursor {
+  display: none;
+}
+
+@media (hover: hover) and (pointer: fine) {
   body {
-    cursor: auto;
+    cursor: none;
   }
+
+  .custom-cursor {
+    display: block;
+  }
+}
+
+/* Visible focus ring for keyboard users */
+:focus-visible {
+  outline: 2px solid #a855f7;
+  outline-offset: 3px;
+}
+
+/* Skills marquee: the track holds two copies and slides by one of them */
+.skill-marquee {
+  mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
+}
+
+.skill-track {
+  animation: marquee 60s linear infinite;
+  will-change: transform;
+}
+
+.skill-marquee:hover .skill-track {
+  animation-play-state: paused;
 }
 
 /* Reduced motion support */
@@ -154,6 +190,13 @@ body {
     animation-duration: 0.01ms !important;
     animation-iteration-count: 1 !important;
     transition-duration: 0.01ms !important;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .skill-track {
+    animation: none;
+    flex-wrap: wrap;
   }
 }
 

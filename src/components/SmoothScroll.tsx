@@ -13,13 +13,16 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
     const [lenis, setLenis] = useState<Lenis | null>(null);
 
     useEffect(() => {
+        // Respect the OS setting: no smoothing, native scroll only.
+        if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
+
         const lenisInstance = new Lenis({
-            duration: 1.2,
+            duration: 1.1,
             easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
             orientation: "vertical",
             gestureOrientation: "vertical",
             smoothWheel: true,
-            wheelMultiplier: 1, // Optional: tweak for wheel sensitivity
+            wheelMultiplier: 1,
         });
 
         // keep GSAP ScrollTrigger in step with Lenis' smoothed scroll position
@@ -29,7 +32,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
         const updateLenis = (time: number) => {
             lenisInstance.raf(time * 1000);
         };
-        
+
         gsap.ticker.add(updateLenis);
         gsap.ticker.lagSmoothing(0); // prevent lag smoothing conflicts
 
@@ -42,6 +45,33 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
             setLenis(null);
         };
     }, []);
+
+    // One place that handles every in-page link (#about, #contact, "#" = top),
+    // so the navbar, footer and hero buttons all scroll the same way.
+    useEffect(() => {
+        const onClick = (e: MouseEvent) => {
+            if (e.defaultPrevented || e.button !== 0 || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+            const link = (e.target as HTMLElement | null)?.closest<HTMLAnchorElement>('a[href^="#"]');
+            if (!link) return;
+
+            const hash = link.getAttribute("href") ?? "#";
+            const target = hash === "#" ? null : document.getElementById(hash.slice(1));
+            if (hash !== "#" && !target) return;
+
+            e.preventDefault();
+            if (lenis) {
+                lenis.start();
+                lenis.scrollTo(target ?? 0);
+            } else if (target) {
+                target.scrollIntoView();
+            } else {
+                window.scrollTo(0, 0);
+            }
+        };
+
+        document.addEventListener("click", onClick);
+        return () => document.removeEventListener("click", onClick);
+    }, [lenis]);
 
     return (
         <LenisContext.Provider value={lenis}>

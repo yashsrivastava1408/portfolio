@@ -1,74 +1,87 @@
-
 "use client";
 
-import { motion } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
 import Image from "next/image";
-import { useState } from "react";
 import SectionHeading from "./SectionHeading";
 
-
-// Helper to get icon URL
-const getIconUrl = (skill: string) => {
-    if (skill === "C/C++") return "https://cdn.simpleicons.org/cplusplus";
-    if (skill === "Data Structures & Algorithms") return "https://cdn.simpleicons.org/leetcode";
-
-    const cleanName = skill.toLowerCase().replace(".", "dot").replace("/", "");
-    const map: Record<string, string> = {
-        "java": "java",
-        "python": "python",
-        "react": "react",
-        "nodejs": "nodedotjs",
-        "nextjs": "nextdotjs",
-        "aws": "aws",
-        "sql": "mysql",
-        "django": "django",
-        "flask": "flask",
-        "git": "git",
-        "linux": "linux",
-        "mongodb": "mongodb",
-        "postgresql": "postgresql"
-    };
-
-    if (map[cleanName]) return `https://cdn.simpleicons.org/${map[cleanName]}`;
-
-    if (skill.includes("Docker")) return "https://cdn.simpleicons.org/docker";
-    if (skill.includes("Jenkins")) return "https://cdn.simpleicons.org/jenkins";
-    if (skill.includes("IoT")) return "https://cdn.simpleicons.org/arduino";
-    if (skill.includes("HTML")) return "https://cdn.simpleicons.org/html5";
-    if (skill.includes("JavaScript")) return "https://cdn.simpleicons.org/javascript";
-    if (skill.includes("TypeScript")) return "https://cdn.simpleicons.org/typescript";
-
-    return "";
+// Simple Icons slugs. Skills without a slug still show, with a dot instead of a logo.
+const ICON_SLUGS: Record<string, string> = {
+    "Python": "python",
+    "TypeScript": "typescript",
+    "JavaScript": "javascript",
+    "C/C++": "cplusplus",
+    "SQL": "mysql",
+    "Node.js": "nodedotjs",
+    "Express": "express",
+    "FastAPI": "fastapi",
+    "Flask": "flask",
+    "React": "react",
+    "Next.js": "nextdotjs",
+    "LangGraph / RAG": "langgraph",
+    "WebSockets": "socketdotio",
+    "Qdrant Vector DB": "qdrant",
+    "Data Structures & Algorithms": "leetcode",
+    "PostgreSQL": "postgresql",
+    "MySQL": "mysql",
+    "MongoDB": "mongodb",
+    "Redis": "redis",
+    "Docker": "docker",
+    "Kubernetes": "kubernetes",
+    "GitHub Actions": "githubactions",
+    "Jenkins": "jenkins",
+    "Argo CD": "argo",
+    "Prometheus": "prometheus",
+    "Grafana": "grafana",
+    "Linux": "linux",
+    "Git": "git",
+    "GitHub": "github",
+    "GitLab": "gitlab",
 };
 
-const SkillPill = ({ skill }: { skill: { name: string, icon: string } }) => (
-    <div className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-full mx-4 min-w-max hover:bg-white/10 transition-colors group">
-        <div className="w-8 h-8 relative opacity-70 group-hover:opacity-100 transition-opacity">
-            <Image
-                src={skill.icon}
-                alt={skill.name}
-                fill
-                unoptimized
-                className="object-contain invert"
-            />
-        </div>
+type Skill = { name: string; icon: string | null };
+
+const skills: Skill[] = portfolioData.skills.map((name) => ({
+    name,
+    icon: ICON_SLUGS[name] ? `https://cdn.simpleicons.org/${ICON_SLUGS[name]}/e5e7eb` : null,
+}));
+
+const SkillPill = ({ skill }: { skill: Skill }) => (
+    <div className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-full mx-3 min-w-max hover:bg-white/10 transition-colors group">
+        {skill.icon ? (
+            <div className="w-6 h-6 relative opacity-70 group-hover:opacity-100 transition-opacity">
+                <Image src={skill.icon} alt="" fill unoptimized loading="lazy" className="object-contain" />
+            </div>
+        ) : (
+            <span className="w-2 h-2 rounded-full bg-gradient-to-br from-primary to-accent" />
+        )}
         <span className="text-gray-300 font-medium whitespace-nowrap">{skill.name}</span>
     </div>
 );
 
-export default function Skills() {
-    const [visualSkills] = useState<{ name: string, icon: string }[]>(() =>
-        portfolioData.skills.map(skill => ({
-            name: skill,
-            icon: getIconUrl(skill)
-        })).filter(s => s.icon !== "")
-    );
+// Two identical copies side by side; the CSS animation slides the track by exactly
+// one copy (-50%), so the loop has no visible jump and runs on the compositor.
+const MarqueeRow = ({ items, reverse, duration }: { items: Skill[]; reverse?: boolean; duration: number }) => (
+    <div className="flex overflow-hidden">
+        <div
+            className="skill-track flex w-max"
+            style={{ animationDuration: `${duration}s`, animationDirection: reverse ? "reverse" : "normal" }}
+        >
+            {[0, 1].map((copy) => (
+                <div key={copy} className="flex" aria-hidden={copy === 1}>
+                    {items.map((skill) => (
+                        <SkillPill key={skill.name} skill={skill} />
+                    ))}
+                </div>
+            ))}
+        </div>
+    </div>
+);
 
+export default function Skills() {
     // Split skills into two rows used for marquee
-    const half = Math.ceil(visualSkills.length / 2);
-    const row1 = visualSkills.slice(0, half);
-    const row2 = visualSkills.slice(half);
+    const half = Math.ceil(skills.length / 2);
+    const row1 = skills.slice(0, half);
+    const row2 = skills.slice(half);
 
     return (
         <section id="skills" className="py-32 px-4 relative overflow-hidden bg-[#050505]">
@@ -82,50 +95,10 @@ export default function Skills() {
                 </p>
             </div>
 
-            <div className="flex flex-col gap-12 relative z-10 masking-gradient">
-                {/* Row 1 - Left to Right */}
-                <div className="flex overflow-hidden">
-                    <motion.div
-                        className="flex"
-                        animate={{ x: [0, -1000] }}
-                        transition={{
-                            repeat: Infinity,
-                            ease: "linear",
-                            duration: 30
-                        }}
-                    >
-                        {/* Duplicate for infinite loop */}
-                        {[...row1, ...row1, ...row1, ...row1].map((skill, i) => (
-                            <SkillPill key={`${skill.name}-1-${i}`} skill={skill} />
-                        ))}
-                    </motion.div>
-                </div>
-
-                {/* Row 2 - Right to Left */}
-                <div className="flex overflow-hidden">
-                    <motion.div
-                        className="flex"
-                        animate={{ x: [-1000, 0] }}
-                        transition={{
-                            repeat: Infinity,
-                            ease: "linear",
-                            duration: 35
-                        }}
-                    >
-                        {/* Duplicate for infinite loop */}
-                        {[...row2, ...row2, ...row2, ...row2].map((skill, i) => (
-                            <SkillPill key={`${skill.name}-2-${i}`} skill={skill} />
-                        ))}
-                    </motion.div>
-                </div>
+            <div className="skill-marquee flex flex-col gap-8 relative z-10">
+                <MarqueeRow items={row1} duration={55} />
+                <MarqueeRow items={row2} duration={65} reverse />
             </div>
-
-            {/* Masking Gradient CSS Helper */}
-            <style jsx>{`
-                .masking-gradient {
-                    mask-image: linear-gradient(to right, transparent, black 10%, black 90%, transparent);
-                }
-             `}</style>
         </section>
     );
 }
