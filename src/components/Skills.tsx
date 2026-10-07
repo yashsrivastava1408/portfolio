@@ -2,6 +2,8 @@
 
 import { portfolioData } from "@/data/portfolio";
 import Image from "next/image";
+import { useRef } from "react";
+import { useInView } from "framer-motion";
 import SectionHeading from "./SectionHeading";
 
 // Simple Icons slugs. Skills without a slug still show, with a dot instead of a logo.
@@ -83,6 +85,10 @@ export default function Skills() {
     const row1 = skills.slice(0, half);
     const row2 = skills.slice(half);
 
+    // the marquee only moves while it is on screen
+    const marqueeRef = useRef<HTMLDivElement>(null);
+    const inView = useInView(marqueeRef, { margin: "200px" });
+
     return (
         <section id="skills" className="py-32 px-4 relative overflow-hidden bg-[#050505]">
             {/* Section Divider */}
@@ -95,7 +101,7 @@ export default function Skills() {
                 </p>
             </div>
 
-            <div className="skill-marquee flex flex-col gap-8 relative z-10">
+            <div ref={marqueeRef} data-paused={!inView} className="skill-marquee flex flex-col gap-8 relative z-10">
                 <MarqueeRow items={row1} duration={55} />
                 <MarqueeRow items={row2} duration={65} reverse />
             </div>

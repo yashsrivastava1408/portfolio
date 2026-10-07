@@ -7,6 +7,9 @@ import { ScrollTrigger } from "gsap/ScrollTrigger";
 
 const LenisContext = createContext<Lenis | null>(null);
 
+// Slow start and slow stop for long jumps between sections.
+const easeInOutCubic = (t: number) => (t < 0.5 ? 4 * t * t * t : 1 - Math.pow(-2 * t + 2, 3) / 2);
+
 export const useLenis = () => useContext(LenisContext);
 
 export default function SmoothScroll({ children }: { children: React.ReactNode }) {
@@ -16,14 +19,20 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
         // Respect the OS setting: no smoothing, native scroll only.
         if (window.matchMedia("(prefers-reduced-motion: reduce)").matches) return;
 
+        // Lerp-based smoothing glides continuously toward the target, so quick wheel ticks
+        // blend into one motion instead of restarting a timed ease on every tick.
         const lenisInstance = new Lenis({
-            duration: 1.1,
-            easing: (t) => Math.min(1, 1.001 - Math.pow(2, -10 * t)),
+            lerp: 0.075,
             orientation: "vertical",
             gestureOrientation: "vertical",
             smoothWheel: true,
-            wheelMultiplier: 1,
+            wheelMultiplier: 0.9,
+            // touch screens keep native momentum scrolling, which is already the smoothest option
+            syncTouch: false,
         });
+
+        // On phones the address bar showing/hiding fires resize; do not rebuild the pinned hero for that.
+        ScrollTrigger.config({ ignoreMobileResize: true });
 
         // keep GSAP ScrollTrigger in step with Lenis' smoothed scroll position
         lenisInstance.on("scroll", ScrollTrigger.update);
@@ -61,7 +70,7 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
             e.preventDefault();
             if (lenis) {
                 lenis.start();
-                lenis.scrollTo(target ?? 0);
+                lenis.scrollTo(target ?? 0, { duration: 1.6, easing: easeInOutCubic });
             } else if (target) {
                 target.scrollIntoView();
             } else {

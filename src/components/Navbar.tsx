@@ -33,6 +33,8 @@ export default function Navbar() {
             (entries) => {
                 for (const entry of entries) {
                     if (entry.isIntersecting) setActive(entry.target.id);
+                    // scrolled back up into the hero: nothing is active
+                    else if (entry.target === sections[0] && entry.boundingClientRect.top > 0) setActive("");
                 }
             },
             { rootMargin: "-45% 0px -50% 0px" },

@@ -177,7 +177,8 @@ body {
   will-change: transform;
 }
 
-.skill-marquee:hover .skill-track {
+.skill-marquee:hover .skill-track,
+.skill-marquee[data-paused="true"] .skill-track {
   animation-play-state: paused;
 }
 

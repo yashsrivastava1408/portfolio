@@ -1,14 +1,17 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useInView } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
 import { Copy, Mail, Check, ExternalLink, Send } from "lucide-react";
 import Globe from "./Globe";
 import Image from "next/image";
-import { useState } from "react";
+import { useRef, useState } from "react";
 
 export default function ContactBento() {
     const [copied, setCopied] = useState(false);
+    // the big background marquee only moves while it is on screen
+    const marqueeRef = useRef<HTMLDivElement>(null);
+    const marqueeInView = useInView(marqueeRef, { margin: "200px" });
 
     const handleCopy = async () => {
         try {
@@ -159,11 +162,11 @@ export default function ContactBento() {
             </div>
 
             {/* Tech Stack Marquee */}
-            <div className="mt-20 border-t border-white/5 pt-10 overflow-hidden relative">
+            <div ref={marqueeRef} className="mt-20 border-t border-white/5 pt-10 overflow-hidden relative">
                 <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-background to-transparent z-10" />
                 <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-background to-transparent z-10" />
 
-                <div className="flex w-max whitespace-nowrap animate-marquee" aria-hidden>
+                <div className="flex w-max whitespace-nowrap animate-marquee" style={{ animationPlayState: marqueeInView ? "running" : "paused" }} aria-hidden>
                     {[...portfolioData.skills, ...portfolioData.skills].map((skill, i) => (
                         <span key={i} className="text-4xl md:text-6xl font-black text-white/5 mx-6 uppercase">
                             {skill}

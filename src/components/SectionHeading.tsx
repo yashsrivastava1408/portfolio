@@ -51,11 +51,10 @@ export default function SectionHeading({
                 <motion.span
                     key={i}
                     variants={{
-                        hidden: { opacity: 0, y: 30, filter: "blur(8px)" },
+                        hidden: { opacity: 0, y: 30 },
                         visible: {
                             opacity: 1,
                             y: 0,
-                            filter: "blur(0px)",
                             transition: { duration: 0.5, ease: [0.215, 0.61, 0.355, 1] },
                         },
                     }}
@@ -67,12 +66,11 @@ export default function SectionHeading({
             {accentWord && (
                 <motion.span
                     variants={{
-                        hidden: { opacity: 0, y: 30, scale: 0.9, filter: "blur(8px)" },
+                        hidden: { opacity: 0, y: 30, scale: 0.9 },
                         visible: {
                             opacity: 1,
                             y: 0,
                             scale: 1,
-                            filter: "blur(0px)",
                             transition: { duration: 0.6, ease: [0.215, 0.61, 0.355, 1] },
                         },
                     }}

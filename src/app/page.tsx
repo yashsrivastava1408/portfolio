@@ -15,6 +15,7 @@ import SplashScreen from "@/components/SplashScreen";
 import { useEffect, useState } from "react";
 import PhotoGallery from "@/components/PhotoGallery";
 import { useLenis } from "@/components/SmoothScroll";
+import PauseOffscreenCanvas from "@/components/PauseOffscreenCanvas";
 import dynamic from "next/dynamic";
 
 const loadDeskScene = () => import("@/components/DeskScene");
@@ -55,6 +56,7 @@ export default function Home() {
       <Navbar />
       <BackgroundAnimation />
       {showHero ? <DeskScene /> : <div className="h-screen w-full bg-[#05060e]" aria-hidden />}
+      {showHero && <PauseOffscreenCanvas selector="#hero" />}
       <About />
       <Skills />
       <LeetCode />
