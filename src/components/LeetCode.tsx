@@ -2,15 +2,35 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { ExternalLink, Trophy, Target } from "lucide-react";
+import { ExternalLink, GitBranch, Trophy, Target } from "lucide-react";
 import { GitHubCalendar } from "react-github-calendar";
 import { portfolioData } from "@/data/portfolio";
+import type { GithubStats, LeetcodeStats } from "@/lib/stats";
 
 const RADIUS = 88;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
 
-export default function LeetCode() {
-    const stats = portfolioData.leetcode;
+// GitHub's own colours for the languages that show up most; anything else gets grey.
+const LANGUAGE_COLORS: Record<string, string> = {
+    TypeScript: "#3178c6",
+    JavaScript: "#f1e05a",
+    Python: "#3572A5",
+    HTML: "#e34c26",
+    "C++": "#f34b7d",
+    CSS: "#663399",
+    Java: "#b07219",
+    Rust: "#dea584",
+    Go: "#00ADD8",
+};
+const languageColor = (name: string) => LANGUAGE_COLORS[name] ?? "#6b7280";
+
+interface LeetCodeProps {
+    stats: LeetcodeStats;
+    /** Live GitHub numbers, or null if GitHub could not be reached at build time. */
+    github: GithubStats | null;
+}
+
+export default function LeetCode({ stats, github: githubStats }: LeetCodeProps) {
     const github = portfolioData.personal.github;
 
     // The ring is split by difficulty: each arc is that difficulty's share of everything solved.
@@ -99,16 +119,86 @@ export default function LeetCode() {
                                     <Target className="w-4 h-4 text-pink-400" />
                                     <span>{stats.medium + stats.hard} medium &amp; hard</span>
                                 </div>
-                                <div className="flex items-center gap-2">
-                                    <Trophy className="w-4 h-4 text-purple-400" />
-                                    <span>Contest rating {stats.contestRating.toLocaleString("en-US")}</span>
-                                </div>
-                                <span className="text-gray-600">as of {stats.asOf}</span>
+                                {stats.contestRating !== null && (
+                                    <div className="flex items-center gap-2">
+                                        <Trophy className="w-4 h-4 text-purple-400" />
+                                        <span>Contest rating {stats.contestRating.toLocaleString("en-US")}</span>
+                                    </div>
+                                )}
+                                <span className="text-gray-600">updated {stats.asOf}</span>
                             </div>
                         </div>
                     </div>
                 </div>
             </motion.div>
+
+            {/* GitHub at a glance: fetched at build time, refreshed daily */}
+            {githubStats && (
+                <motion.div
+                    initial={{ opacity: 0, y: 30 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-80px" }}
+                    transition={{ duration: 0.7, ease: "easeOut" }}
+                    className="w-full max-w-4xl relative bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 md:p-12"
+                >
+                    <div className="flex items-start justify-between gap-4 mb-8">
+                        <div>
+                            <h3 className="text-2xl font-bold text-white mb-1">
+                                <span className="text-purple-400">GitHub</span> at a glance
+                            </h3>
+                            <p className="text-gray-500 text-sm">Live from the GitHub API · updated {githubStats.asOf}</p>
+                        </div>
+                        <div className="text-right flex-shrink-0">
+                            <p className="text-4xl font-bold font-heading text-white leading-none">{githubStats.publicRepos}</p>
+                            <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-2">Public repos</p>
+                        </div>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-10">
+                        {/* Top languages */}
+                        <div>
+                            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Top languages</h4>
+                            <div className="flex h-2.5 rounded-full overflow-hidden gap-0.5 mb-5" aria-hidden>
+                                {githubStats.languages.map((lang) => (
+                                    <div key={lang.name} style={{ flexGrow: lang.count, backgroundColor: languageColor(lang.name) }} />
+                                ))}
+                            </div>
+                            <ul className="space-y-2.5">
+                                {githubStats.languages.map((lang) => (
+                                    <li key={lang.name} className="flex items-center gap-3 text-sm">
+                                        <span className="w-2.5 h-2.5 rounded-full flex-shrink-0" style={{ backgroundColor: languageColor(lang.name) }} />
+                                        <span className="text-gray-300">{lang.name}</span>
+                                        <span className="ml-auto text-gray-500 font-mono text-xs">
+                                            {lang.count} {lang.count === 1 ? "repo" : "repos"}
+                                        </span>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+
+                        {/* Latest pushes */}
+                        <div>
+                            <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Latest pushes</h4>
+                            <ul className="space-y-1">
+                                {githubStats.recent.map((repo) => (
+                                    <li key={repo.name}>
+                                        <a
+                                            href={repo.url}
+                                            target="_blank"
+                                            rel="noopener noreferrer"
+                                            className="group/repo flex items-center gap-3 -mx-3 px-3 py-2.5 rounded-xl hover:bg-white/5 transition-colors"
+                                        >
+                                            <GitBranch className="w-4 h-4 text-gray-600 group-hover/repo:text-purple-400 transition-colors flex-shrink-0" />
+                                            <span className="text-gray-200 group-hover/repo:text-white text-sm font-medium truncate">{repo.name}</span>
+                                            <span className="ml-auto text-gray-500 font-mono text-xs whitespace-nowrap">{repo.pushedAt}</span>
+                                        </a>
+                                    </li>
+                                ))}
+                            </ul>
+                        </div>
+                    </div>
+                </motion.div>
+            )}
 
             {/* GitHub Contribution Calendar */}
             <motion.div

@@ -1,7 +1,7 @@
 "use client";
 
 import { motion } from "framer-motion";
-import { portfolioData } from "@/data/portfolio";
+import { portfolioData, type ProjectCategory } from "@/data/portfolio";
 import { Github, ExternalLink, ArrowRight, ArrowUpRight } from "lucide-react";
 import Image from "next/image";
 import { useState } from "react";
@@ -22,7 +22,15 @@ export default function Projects() {
     const featuredProjects = portfolioData.projects.filter((p) => p.featured);
     const moreProjects = portfolioData.projects.filter((p) => !p.featured);
     const [showAll, setShowAll] = useState(false);
-    const visibleMore = showAll ? moreProjects : moreProjects.slice(0, INITIAL_MORE);
+    const [filter, setFilter] = useState<ProjectCategory | "All">("All");
+
+    // Only offer filters that actually match something, in a fixed order.
+    const filters = (["AI", "DevOps", "Full-stack", "IoT"] as const).filter((c) =>
+        moreProjects.some((p) => p.categories.includes(c)),
+    );
+    const filtered = filter === "All" ? moreProjects : moreProjects.filter((p) => p.categories.includes(filter));
+    // A chosen filter shows every match; "All" keeps the short list until "Show all" is pressed.
+    const visibleMore = showAll || filter !== "All" ? filtered : filtered.slice(0, INITIAL_MORE);
 
     return (
         <section id="projects" className="py-32 px-4 max-w-7xl mx-auto">
@@ -147,17 +155,40 @@ export default function Projects() {
                             Hackathons, systems work and experiments
                         </p>
                     </div>
-                    <span className="text-gray-600 text-sm font-mono hidden sm:block">{moreProjects.length} projects</span>
+                    <span className="text-gray-600 text-sm font-mono hidden sm:block" aria-live="polite">
+                        {filter === "All" ? `${moreProjects.length} projects` : `${filtered.length} of ${moreProjects.length}`}
+                    </span>
+                </div>
+
+                {/* Filter chips */}
+                <div className="flex flex-wrap gap-2 mb-8" role="group" aria-label="Filter projects by type">
+                    {(["All", ...filters] as const).map((option) => (
+                        <button
+                            key={option}
+                            onClick={() => setFilter(option)}
+                            aria-pressed={filter === option}
+                            className={`px-4 py-2 rounded-full border text-xs font-semibold tracking-wide transition-colors duration-300
+                                ${filter === option
+                                    ? "bg-primary border-primary text-white"
+                                    : "bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/30"
+                                }`}
+                        >
+                            {option}
+                            <span className={`ml-2 font-mono ${filter === option ? "text-white/70" : "text-gray-600"}`}>
+                                {option === "All" ? moreProjects.length : moreProjects.filter((p) => p.categories.includes(option)).length}
+                            </span>
+                        </button>
+                    ))}
                 </div>
 
                 <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-6">
                     {visibleMore.map((project, index) => (
                         <motion.article
-                            key={project.title}
+                            key={`${filter}-${project.title}`}
                             initial={{ opacity: 0, y: 24 }}
                             whileInView={{ opacity: 1, y: 0 }}
-                            viewport={{ once: true, margin: "-60px" }}
-                            transition={{ duration: 0.5, ease: "easeOut", delay: (index % 3) * 0.08 }}
+                            viewport={{ once: true }}
+                            transition={{ duration: 0.4, ease: "easeOut", delay: (index % 3) * 0.06 }}
                             className="group relative flex flex-col rounded-2xl bg-[#0A0A0A] border border-white/10 p-6 hover:border-white/25 hover:-translate-y-1 transition-[transform,border-color] duration-300"
                         >
                             <div className="flex items-start justify-between gap-4 mb-3">
@@ -191,7 +222,7 @@ export default function Projects() {
                 </div>
 
                 <div className="mt-12 flex flex-wrap items-center justify-center gap-4">
-                    {moreProjects.length > INITIAL_MORE && (
+                    {filter === "All" && moreProjects.length > INITIAL_MORE && (
                         <button
                             onClick={() => setShowAll((v) => !v)}
                             aria-expanded={showAll}

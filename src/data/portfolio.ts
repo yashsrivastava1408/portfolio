@@ -4,6 +4,24 @@ import { Github, Linkedin } from "lucide-react";
 export const SITE_URL =
   process.env.NEXT_PUBLIC_BASE_URL || "https://portfolio-theta-lyart-35.vercel.app";
 
+export type ProjectCategory = "AI" | "DevOps" | "Full-stack" | "IoT";
+
+export type Achievement = {
+  /** The big number or rank, e.g. "3rd". */
+  value: string;
+  title: string;
+  detail: string;
+};
+
+export type Testimonial = {
+  quote: string;
+  name: string;
+  /** e.g. "Engineering Manager, XenKrypt Technologies" */
+  role: string;
+  /** Optional link to the person's LinkedIn, so the quote can be checked. */
+  url?: string;
+};
+
 export type Project = {
   title: string;
   /** One short line shown on the coloured card. */
@@ -16,11 +34,14 @@ export type Project = {
   liveUrl?: string;
   image?: string;
   featured?: boolean;
+  /** Used by the filter chips above the "More builds" grid. */
+  categories: ProjectCategory[];
 };
 
 const projects: Project[] = [
   {
     title: "OpsAcademy",
+    categories: ["DevOps", "AI"],
     tagline: "Learn DevOps by running real Linux commands in the browser.",
     description:
       "Interactive browser-based DevOps learning platform featuring 14 production-grade courses, live Linux terminal (<50ms latency via xterm.js & node-pty), multi-agent LangGraph RAG mentor with Qdrant Vector DB, and an automated Docker sandbox auto-reaper reducing idle costs by ~90%.",
@@ -37,6 +58,7 @@ const projects: Project[] = [
   },
   {
     title: "Question Forge",
+    categories: ["AI", "Full-stack"],
     tagline: "LLM-written interview questions, checked before a human sees them.",
     description:
       "Open-source platform that drafts DSA, SQL, OOP and system-design interview questions with an LLM, then verifies each one with something other than that LLM. Coding and SQL questions are checked by running code; the rest go through an independent LLM review. Whatever passes lands in a human review queue and is assembled into exportable papers.",
@@ -52,6 +74,7 @@ const projects: Project[] = [
   },
   {
     title: "Trailhead",
+    categories: ["AI", "Full-stack"],
     tagline: "Try the career path before you pick it.",
     description:
       "Evidence-based placement guide for final-year students. It reads your public GitHub repositories and resume text, builds a profile where every skill carries the evidence that proves it, scores 9 career paths in plain reproducible code, and uses a fact-checker to reject any LLM claim the profile cannot back up.",
@@ -67,6 +90,7 @@ const projects: Project[] = [
   },
   {
     title: "Lock Focus",
+    categories: ["AI", "Full-stack"],
     tagline: "An adaptive reading system for neurodiverse users.",
     description:
       "Adaptive digital reading ecosystem for neurodiverse users, featuring ADHD-friendly interfaces, dyslexia-aware layouts, and behavior-driven design. Secured 3rd Place at HackElite'26 national hackathon.",
@@ -83,6 +107,7 @@ const projects: Project[] = [
   },
   {
     title: "Aether Clinic",
+    categories: ["AI", "Full-stack"],
     tagline: "A privacy-first AI healthcare platform.",
     description:
       "Full-stack AI healthcare platform enabling real-time medical chat, automated report analysis, and image-based insights using React, Node.js, and MongoDB. Designed a hybrid AI inference architecture reducing response latency by 35%. Built a secure, modular REST API backend with AES-256 encryption.",
@@ -99,6 +124,7 @@ const projects: Project[] = [
   },
   {
     title: "Distributed Job Scheduler",
+    categories: ["Full-stack", "DevOps"],
     tagline: "A job scheduler that never runs a job twice.",
     description:
       "Distributed job scheduler with atomic queue claiming (SELECT ... FOR UPDATE SKIP LOCKED), queue concurrency limits, multi-tenant isolation, a heartbeat watchdog that requeues work from crashed workers, a dead letter queue and a live WebSocket dashboard.",
@@ -107,6 +133,7 @@ const projects: Project[] = [
   },
   {
     title: "DevSick",
+    categories: ["AI", "DevOps"],
     tagline: "AI incident reasoning on top of your monitoring.",
     description:
       "Incident reasoning platform that ingests logs and alerts, correlates events across a service graph, and uses an LLM to produce a structured root-cause analysis with human-in-the-loop remediation.",
@@ -115,6 +142,7 @@ const projects: Project[] = [
   },
   {
     title: "GigShield",
+    categories: ["Full-stack"],
     tagline: "Parametric micro-insurance for gig workers.",
     description:
       "Weekly income cover for India's gig workers. When a verified trigger such as extreme weather or severe AQI hits a worker's zone, the payout path is computed automatically. Built for Guidewire DEVTrails 2026.",
@@ -124,6 +152,7 @@ const projects: Project[] = [
   },
   {
     title: "Code Battleground",
+    categories: ["Full-stack"],
     tagline: "Real-time multiplayer competitive programming.",
     description:
       "Real-time coding arena built as a Turborepo monorepo: Next.js client, NestJS API, Socket.IO for live rooms, BullMQ workers for code evaluation and an Elo-based rating system.",
@@ -132,6 +161,7 @@ const projects: Project[] = [
   },
   {
     title: "Urban Pluss",
+    categories: ["AI", "IoT"],
     tagline: "Accident detection from CCTV feeds.",
     description:
       "YOLOv5-based accident detection system achieving 92% accuracy on road collisions from CCTV feeds, with IoT-powered traffic signal automation and multithreading that cut end-to-end latency by 35%.",
@@ -142,6 +172,7 @@ const projects: Project[] = [
   },
   {
     title: "FlowForge",
+    categories: ["Full-stack"],
     tagline: "A visual designer for HR workflows.",
     description:
       "Drag-and-drop workflow designer for onboarding, leave approval and document verification, with schema-driven node forms, an MSW-powered mock API and a step-by-step simulation sandbox.",
@@ -151,6 +182,7 @@ const projects: Project[] = [
   },
   {
     title: "TrueSignal",
+    categories: ["AI"],
     tagline: "Cleaner signals for kitchen prep time prediction.",
     description:
       "Signal-integrity layer that improves Kitchen Prep Time prediction without retraining existing models, by triangulating multiple real-world signals. Built for a Zomato hackathon.",
@@ -160,6 +192,7 @@ const projects: Project[] = [
   },
   {
     title: "ExamOracle",
+    categories: ["AI", "Full-stack"],
     tagline: "Lecture notes in, exam predictions out.",
     description:
       "Turns unstructured lecture notes into probability-ranked exam predictions, flashcards and quizzes.",
@@ -168,6 +201,7 @@ const projects: Project[] = [
   },
   {
     title: "LinguaLive",
+    categories: ["Full-stack"],
     tagline: "Real-time language learning.",
     description: "Real-time language learning and communication platform.",
     tags: ["Web App", "Communication"],
@@ -176,6 +210,7 @@ const projects: Project[] = [
   },
   {
     title: "Grovia",
+    categories: ["AI", "Full-stack"],
     tagline: "Voice-assisted eco-friendly shopping.",
     description:
       "Voice-assisted eco-friendly e-commerce platform built for Sparkathon 2025, with an AI-powered voice assistant that makes sustainable shopping faster.",
@@ -185,6 +220,7 @@ const projects: Project[] = [
   },
   {
     title: "Smart Car Parking System",
+    categories: ["IoT"],
     tagline: "IoT parking with plate recognition.",
     description:
       "IoT-enabled parking system with real-time slot detection and automatic license plate recognition.",
@@ -193,6 +229,7 @@ const projects: Project[] = [
   },
   {
     title: "Fish Catch System",
+    categories: ["IoT"],
     tagline: "IoT analytics for fish catch prediction.",
     description:
       "IoT-powered data logging and analytics system for fish catch prediction using geolocation and historical data.",
@@ -201,6 +238,7 @@ const projects: Project[] = [
   },
   {
     title: "Volt Vision",
+    categories: ["IoT"],
     tagline: "Real-time voltage monitoring.",
     description:
       "Real-time voltage monitoring system using C# for data processing and a Flask web interface.",
@@ -217,7 +255,12 @@ export const portfolioData = {
       "Final-year B.Tech Computer Science student who builds systems end-to-end — from backend code to production deployments. I work across DevOps and software roles on CI/CD pipelines, containerization, and cloud-native workflows using GitHub Actions, Jenkins, Docker, Kubernetes, and Linux. Lately I have been building AI systems that check their own work: LangGraph agents, RAG mentors, and LLM pipelines where code, not the model, has the final say. Open to Software Engineering, Platform, Cloud, and DevOps roles.",
     email: "yashsrivastava1408@gmail.com",
     phone: "+91-6394026578",
-    resume: "/resume.png",
+    resume: "/resume.pdf",
+    // One line about this month's work. Shown in the About section; delete it to hide the line.
+    currentlyBuilding: {
+      text: "Question Forge — making an LLM prove its interview questions are correct by running the code.",
+      url: "https://github.com/yashsrivastava1408/QuestionForge",
+    },
     github: "yashsrivastava1408",
     social: [
       {
@@ -279,32 +322,32 @@ export const portfolioData = {
     "GitHub",
     "GitLab",
   ],
-  // Pulled from the public LeetCode profile. Update when the numbers move.
+  // Fallback only: the live numbers are fetched in src/lib/stats.ts. These show if LeetCode cannot be reached.
   leetcode: {
     username: "Qce4QmSNDd",
-    asOf: "Oct 2026",
+    asOf: "7 Oct 2026",
     totalSolved: 418,
     easy: 191,
     medium: 207,
     hard: 20,
-    contestRating: 1455,
+    contestRating: 1455 as number | null,
   },
   experience: [
     {
       company: "TalenciaGlobal",
       role: "Software Trainee",
-      period: "Jan 2026 – Present",
+      period: "July 2026 – Present",
       logo: "/logos/talenciaglobal.png",
       description:
-        "Containerized multi-service security stacks (Vault, Prometheus, Grafana) with Docker Compose & GitHub Actions to achieve zero configuration drift across all environments. Built a Next.js documentation platform with JWT auth, Markdown rendering, Mermaid diagram support, and admin access control as a single secure source of truth for technical specs.",
+        "Working on the Sentrix AI Security Platform. Built RADIX, a data-intensive enterprise platform on FastAPI, PostgreSQL, Redis, and AWS Bedrock, with REST APIs for company research, scoring, and analytics. Designed a hybrid relational/EAV PostgreSQL model for 164 research fields per company, so the schema can grow without repeated migrations. Added malware scanning and CVE checks to GitHub Actions CI/CD, and built a background-processing layer with ARQ, Redis, and PostgreSQL advisory locks.",
     },
     {
       company: "XenKrypt Technologies",
       role: "DevOps Intern",
-      period: "Dec 2025 – Present",
+      period: "Dec 2025 – Mar 2026",
       logo: "/logos/xenkrypt.png",
       description:
-        "Improved CI performance by 82% (22 min → 4 min) by redesigning GitHub Actions using matrix-driven conditional execution and intelligent change detection. Eliminated silent deployment failures by refactoring Makefile workflows to validate Docker images early. Stabilized Jenkins CI in a self-hosted GitLab environment by integrating secure credential handling and commit status reporting.",
+        "Provisioned and automated a Kubernetes environment on AWS EC2 with GitLab, Harbor, ArgoCD, and NGINX Ingress. Rebuilt GitHub Actions CI/CD with change detection and matrix-based execution, cutting build and test time from 22 minutes to 4. Troubleshot deployment failures across Kubernetes, Docker, networking, and service configuration, and deployed Odoo and n8n to automate internal workflows.",
     },
     {
       company: "SheSafe",
@@ -324,6 +367,14 @@ export const portfolioData = {
     },
   ],
   projects,
+  // The LeetCode tile is added automatically from the live numbers.
+  achievements: [
+    { value: "3rd", title: "HackElite'26", detail: "National hackathon, 900+ teams" },
+    { value: "Top 5", title: "CodeMavens 2025", detail: "With Punya, a food-waste platform" },
+    { value: "22 → 4 min", title: "CI build time", detail: "GitHub Actions rebuild at XenKrypt" },
+  ] as Achievement[],
+  // Real quotes only. The section stays hidden while this list is empty.
+  testimonials: [] as Testimonial[],
   gallery: [
     {
       id: 1,

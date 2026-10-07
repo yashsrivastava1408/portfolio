@@ -2,17 +2,19 @@
 
 import { motion } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
-import { Download } from "lucide-react";
+import { ArrowUpRight, Download } from "lucide-react";
 import Image from "next/image";
 import MusicWidget from "./MusicWidget";
 
-export default function About() {
+export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
     // Counted from the data file, so these never drift from what the page shows.
     const stats = [
         { value: portfolioData.experience.length, label: "Internships & roles" },
         { value: `${portfolioData.projects.length}+`, label: "Projects built" },
-        { value: `${portfolioData.leetcode.totalSolved}`, label: "LeetCode solved" },
+        { value: `${leetcodeSolved}`, label: "LeetCode solved" },
     ];
+
+    const { currentlyBuilding } = portfolioData.personal;
 
     return (
         <section
@@ -100,6 +102,26 @@ export default function About() {
                 <p className="text-gray-400 text-lg mb-12 max-w-xl leading-relaxed">
                     {portfolioData.personal.description}
                 </p>
+
+                {/* Currently building */}
+                {currentlyBuilding && (
+                    <a
+                        href={currentlyBuilding.url}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="group flex items-start gap-3 mb-12 -mt-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/25 transition-colors max-w-xl"
+                    >
+                        <span className="relative flex w-2.5 h-2.5 mt-1.5 flex-shrink-0">
+                            <span className="absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-60 animate-ping" />
+                            <span className="relative inline-flex w-2.5 h-2.5 rounded-full bg-green-500" />
+                        </span>
+                        <span className="text-sm text-gray-300 leading-relaxed">
+                            <span className="block text-xs font-bold text-gray-500 uppercase tracking-widest mb-1">Currently building</span>
+                            {currentlyBuilding.text}
+                        </span>
+                        <ArrowUpRight className="w-4 h-4 text-gray-600 group-hover:text-white transition-colors flex-shrink-0 mt-1 ml-auto" />
+                    </a>
+                )}
 
                 {/* Education */}
                 <div className="mb-12">

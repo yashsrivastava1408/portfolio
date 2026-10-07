@@ -59,8 +59,15 @@ Open [http://localhost:3000](http://localhost:3000) with your browser to see the
 Almost everything on the page comes from `src/data/portfolio.ts`:
 
 - `projects`: set `featured: true` to show a project as a large card; the rest appear in the "More builds" grid.
-- `leetcode`: numbers are typed in by hand. Update them (and `asOf`) when they change.
+- `leetcode`: fallback numbers only. The live ones are fetched by `src/lib/stats.ts`.
+- `achievements`: the strip under the hero. The LeetCode tile is added automatically.
+- `testimonials`: empty by default, and the section stays hidden until a real quote is added.
+- `personal.currentlyBuilding`: the "Currently building" line in About.
 - `experience`, `skills`, `gallery`, `personal`: plain lists.
+
+### Live stats
+
+`src/lib/stats.ts` fetches GitHub (repo count, top languages, latest pushes) and LeetCode numbers when the page is built, and the page rebuilds itself at most once a day. If either API cannot be reached, the GitHub card is hidden and LeetCode falls back to the numbers in `portfolio.ts`, so a build never fails because of them. Setting a `GITHUB_TOKEN` environment variable is optional and only raises GitHub's rate limit.
 
 Set `NEXT_PUBLIC_BASE_URL` if the site moves to a different domain; it feeds the canonical URL, share image and structured data.
 

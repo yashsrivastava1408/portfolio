@@ -1,71 +1,12 @@
-"use client";
+import HomeClient from "@/components/HomeClient";
+import { getGithubStats, getLeetcodeStats } from "@/lib/stats";
 
-import Navbar from "@/components/Navbar";
-import About from "@/components/About";
-import Skills from "@/components/Skills";
-import LeetCode from "@/components/LeetCode";
+// Rebuild this page at most once a day so the GitHub and LeetCode numbers stay current.
+// Keep in sync with STATS_REVALIDATE_SECONDS (Next needs a plain number here).
+export const revalidate = 86400;
 
-import Experience from "@/components/Experience";
-import Services from "@/components/Services";
-import Projects from "@/components/Projects";
-import ContactBento from "@/components/ContactBento";
-import Footer from "@/components/Footer";
-import BackgroundAnimation from "@/components/BackgroundAnimation";
-import SplashScreen from "@/components/SplashScreen";
-import { useEffect, useState } from "react";
-import PhotoGallery from "@/components/PhotoGallery";
-import { useLenis } from "@/components/SmoothScroll";
-import PauseOffscreenCanvas from "@/components/PauseOffscreenCanvas";
-import dynamic from "next/dynamic";
+export default async function Home() {
+  const [github, leetcode] = await Promise.all([getGithubStats(), getLeetcodeStats()]);
 
-const loadDeskScene = () => import("@/components/DeskScene");
-const DeskScene = dynamic(loadDeskScene, { ssr: false });
-
-export default function Home() {
-  const [isLoading, setIsLoading] = useState(true);
-  // The hero plays its own intro on mount, so it is held back until the splash starts to lift.
-  const [showHero, setShowHero] = useState(false);
-  const lenis = useLenis();
-
-  // Download the 3D scene while the splash is playing, so the reveal does not stutter.
-  useEffect(() => {
-    loadDeskScene();
-  }, []);
-
-  // No scrolling behind the splash.
-  useEffect(() => {
-    if (!isLoading) return;
-    lenis?.stop();
-    document.documentElement.style.overflow = "hidden";
-    return () => {
-      document.documentElement.style.overflow = "";
-      lenis?.start();
-    };
-  }, [isLoading, lenis]);
-
-  return (
-    <main className="min-h-screen overflow-hidden selection:bg-primary/30 relative">
-      {isLoading && (
-        <SplashScreen
-          onReveal={() => setShowHero(true)}
-          finishLoading={() => setIsLoading(false)}
-        />
-      )}
-
-      {/* The page is rendered from the start (good for SEO); the splash just sits on top. */}
-      <Navbar />
-      <BackgroundAnimation />
-      {showHero ? <DeskScene /> : <div className="h-screen w-full bg-[#05060e]" aria-hidden />}
-      {showHero && <PauseOffscreenCanvas selector="#hero" />}
-      <About />
-      <Skills />
-      <LeetCode />
-      <Experience />
-      <Services />
-      <Projects />
-      <PhotoGallery />
-      <ContactBento />
-      <Footer />
-    </main>
-  );
+  return <HomeClient github={github} leetcode={leetcode} />;
 }
