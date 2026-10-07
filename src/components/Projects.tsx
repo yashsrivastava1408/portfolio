@@ -33,15 +33,15 @@ export default function Projects() {
     const visibleMore = showAll || filter !== "All" ? filtered : filtered.slice(0, INITIAL_MORE);
 
     return (
-        <section id="projects" className="py-32 px-4 max-w-7xl mx-auto">
+        <section id="projects" className="py-20 md:py-28 px-4 max-w-7xl mx-auto relative">
             {/* Section Divider */}
-            <div className="w-full max-w-lg mx-auto h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-32" />
+            <div className="section-divider absolute top-0 left-1/2 -translate-x-1/2" />
 
-            <div className="mb-24 md:mb-32 text-center">
-                <SectionHeading accent="Work" accentClassName="font-cursive text-pink-500 italic pr-2">Curated</SectionHeading>
+            <div className="mb-16 md:mb-20 text-center">
+                <SectionHeading kicker="Projects" accent="Work">Curated</SectionHeading>
             </div>
 
-            <div className="flex flex-col gap-24 md:gap-32">
+            <div className="flex flex-col gap-20 md:gap-24">
                 {featuredProjects.map((project, index) => {
                     const colorGradient = colors[index % colors.length];
 
@@ -147,7 +147,7 @@ export default function Projects() {
             </div>
 
             {/* More projects */}
-            <div className="mt-32">
+            <div className="mt-24">
                 <div className="flex items-end justify-between gap-4 mb-10">
                     <div>
                         <h3 className="text-3xl md:text-4xl font-heading font-bold text-white">More builds</h3>
@@ -169,7 +169,7 @@ export default function Projects() {
                             aria-pressed={filter === option}
                             className={`px-4 py-2 rounded-full border text-xs font-semibold tracking-wide transition-colors duration-300
                                 ${filter === option
-                                    ? "bg-primary border-primary text-white"
+                                    ? "btn-glow border-transparent"
                                     : "bg-white/5 border-white/10 text-gray-400 hover:text-white hover:border-white/30"
                                 }`}
                         >
@@ -189,13 +189,13 @@ export default function Projects() {
                             whileInView={{ opacity: 1, y: 0 }}
                             viewport={{ once: true }}
                             transition={{ duration: 0.4, ease: "easeOut", delay: (index % 3) * 0.06 }}
-                            className="group relative flex flex-col rounded-2xl bg-[#0A0A0A] border border-white/10 p-6 hover:border-white/25 hover:-translate-y-1 transition-[transform,border-color] duration-300"
+                            className="glow-card group flex flex-col rounded-2xl p-6 hover:-translate-y-1 transition-transform duration-300"
                         >
                             <div className="flex items-start justify-between gap-4 mb-3">
                                 <h4 className="text-xl font-bold text-white leading-snug">{project.title}</h4>
                                 <ArrowUpRight className="w-5 h-5 text-gray-600 group-hover:text-white transition-colors flex-shrink-0 mt-1" />
                             </div>
-                            <p className="text-sm text-purple-300/90 mb-3">{project.tagline}</p>
+                            <p className="text-sm text-cyan-200/80 mb-3">{project.tagline}</p>
                             <p className="text-sm text-gray-400 leading-relaxed mb-5">{project.description}</p>
 
                             <div className="flex flex-wrap gap-2 mt-auto mb-5">

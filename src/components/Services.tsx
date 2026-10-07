@@ -32,12 +32,12 @@ const services = [
 
 export default function Services() {
     return (
-        <section id="services" className="py-32 px-4 relative max-w-7xl mx-auto">
+        <section id="services" className="py-20 md:py-28 px-4 relative max-w-7xl mx-auto">
             {/* Section Divider */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="section-divider absolute top-0 left-1/2 -translate-x-1/2" />
 
-            <div className="mb-20 text-center relative z-20">
-                <SectionHeading accent="Do" className="mb-4">What I</SectionHeading>
+            <div className="mb-12 md:mb-16 text-center relative z-20">
+                <SectionHeading kicker="Services" accent="Do" className="mb-4">What I</SectionHeading>
                 <p className="text-gray-500 text-sm uppercase tracking-widest max-w-lg mx-auto">
                     Bridging the gap between creative design and robust engineering
                 </p>
@@ -51,14 +51,14 @@ export default function Services() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.6, delay: index * 0.15 }}
-                        className="group relative md:h-[500px]"
+                        className="group relative md:h-[460px]"
                     >
                         <div className="relative w-full h-full transition-all duration-500 group-hover:-translate-y-4">
 
                             {/* Background Gradient Blob */}
                             <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-2xl -z-10`} />
 
-                            <div className="h-full w-full bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 flex flex-col justify-between gap-10 overflow-hidden relative group-hover:border-white/20 transition-colors">
+                            <div className="glow-card h-full w-full rounded-3xl p-8 flex flex-col justify-between gap-10 overflow-hidden group-hover:border-white/20 transition-colors">
 
                                 {/* Top Content */}
                                 <div>

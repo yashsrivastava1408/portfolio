@@ -6,6 +6,7 @@ import Image from "next/image";
 import { portfolioData } from "@/data/portfolio";
 import { useState, useCallback, useEffect } from "react";
 import { useLenis } from "./SmoothScroll";
+import SectionHeading from "./SectionHeading";
 
 const containerVariants = {
     hidden: { opacity: 0 },
@@ -72,28 +73,17 @@ export default function PhotoGallery() {
     if (!gallery || gallery.length === 0) return null;
 
     return (
-        <section id="gallery" className="py-32 bg-background relative z-10">
+        <section id="gallery" className="py-20 md:py-28 bg-background relative z-10">
             {/* Section Divider */}
-            <div className="w-full max-w-lg mx-auto h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-32" />
+            <div className="section-divider absolute top-0 left-1/2 -translate-x-1/2" />
 
             <div className="container mx-auto px-4 max-w-7xl relative">
-                <motion.div
-                    initial={{ opacity: 0, y: 20 }}
-                    whileInView={{ opacity: 1, y: 0 }}
-                    viewport={{ once: true }}
-                    transition={{ duration: 0.8 }}
-                    className="text-center mb-24"
-                >
-                    <div className="inline-flex items-center justify-center p-4 mb-8 rounded-full bg-white/5 border border-white/10">
-                        <Camera className="w-6 h-6 text-white" />
-                    </div>
-                    <h2 className="text-6xl md:text-8xl font-bold font-heading mb-8 tracking-tighter">
-                        VISUAL <span className="italic font-cursive font-light text-gray-500 underline decoration-1 underline-offset-8">CHRONICLE</span>
-                    </h2>
-                    <p className="text-gray-500 text-lg md:text-xl max-w-xl mx-auto font-light leading-relaxed uppercase tracking-widest">
-                        Snapshots of the journey.
+                <div className="text-center mb-12 md:mb-16">
+                    <SectionHeading kicker="Moments" accent="Chronicle">Visual</SectionHeading>
+                    <p className="text-gray-500 mt-4 text-sm uppercase tracking-widest">
+                        Snapshots of the journey
                     </p>
-                </motion.div>
+                </div>
 
                 <motion.div
                     variants={containerVariants}
@@ -108,7 +98,7 @@ export default function PhotoGallery() {
                             key={item.id}
                             variants={itemVariants}
                             aria-label={`Open photo: ${item.title}`}
-                            className="relative group block w-full text-left break-inside-avoid rounded-lg overflow-hidden bg-zinc-900 border border-white/5 cursor-pointer"
+                            className="relative group block w-full text-left break-inside-avoid rounded-2xl overflow-hidden bg-[#0a0c1a] border border-white/10 cursor-pointer hover:border-cyan-300/40 hover:shadow-[0_20px_60px_-30px_rgba(168,85,247,0.6)] transition-[border-color,box-shadow] duration-500"
                             onClick={() => openLightbox(index)}
                         >
                             {/* Grayscale Image Container */}

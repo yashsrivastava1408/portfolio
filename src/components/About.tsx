@@ -5,13 +5,16 @@ import { portfolioData } from "@/data/portfolio";
 import { ArrowUpRight, Download } from "lucide-react";
 import Image from "next/image";
 import MusicWidget from "./MusicWidget";
+import SectionHeading from "./SectionHeading";
+import CountUp from "./CountUp";
+import Magnetic from "./Magnetic";
 
 export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
     // Counted from the data file, so these never drift from what the page shows.
     const stats = [
-        { value: portfolioData.experience.length, label: "Internships & roles" },
-        { value: `${portfolioData.projects.length}+`, label: "Projects built" },
-        { value: `${leetcodeSolved}`, label: "LeetCode solved" },
+        { value: portfolioData.experience.length, suffix: "", label: "Internships & roles" },
+        { value: portfolioData.projects.length, suffix: "+", label: "Projects built" },
+        { value: leetcodeSolved, suffix: "", label: "LeetCode solved" },
     ];
 
     const { currentlyBuilding } = portfolioData.personal;
@@ -19,7 +22,7 @@ export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
     return (
         <section
             id="about"
-            className="py-24 px-4 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16 md:gap-24"
+            className="py-20 md:py-24 px-4 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16 md:gap-24"
         >
             {/* Left: Profile Card */}
             <motion.div
@@ -89,15 +92,7 @@ export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
                 viewport={{ once: true, margin: "-100px" }}
                 transition={{ duration: 0.8, ease: "easeOut", delay: 0.1 }}
             >
-                <h2 className="text-5xl md:text-7xl font-black text-white leading-[0.9] mb-2 font-heading tracking-tighter">
-                    About
-                </h2>
-                <h2
-                    className="text-5xl md:text-7xl font-black text-[#1a1a1a] leading-[0.9] mb-8 font-heading tracking-tighter"
-                    style={{ WebkitTextStroke: "2px #333" }}
-                >
-                    Me
-                </h2>
+                <SectionHeading kicker="Who I am" accent="Me" className="mb-8">About</SectionHeading>
 
                 <p className="text-gray-400 text-lg mb-12 max-w-xl leading-relaxed">
                     {portfolioData.personal.description}
@@ -109,7 +104,7 @@ export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
                         href={currentlyBuilding.url}
                         target="_blank"
                         rel="noopener noreferrer"
-                        className="group flex items-start gap-3 mb-12 -mt-4 p-4 rounded-2xl bg-white/5 border border-white/10 hover:border-white/25 transition-colors max-w-xl"
+                        className="glow-card group flex items-start gap-3 mb-12 -mt-4 p-4 rounded-2xl max-w-xl"
                     >
                         <span className="relative flex w-2.5 h-2.5 mt-1.5 flex-shrink-0">
                             <span className="absolute inline-flex h-full w-full rounded-full bg-green-500 opacity-60 animate-ping" />
@@ -127,13 +122,13 @@ export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
                 <div className="mb-12">
                     <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Education</h3>
                     {portfolioData.education.map((edu, index) => (
-                        <div key={index} className="flex flex-col md:flex-row md:items-center justify-between gap-2 p-6 rounded-2xl bg-white/5 border border-white/10 hover:bg-white/10 transition-colors">
+                        <div key={index} className="glow-card flex flex-col md:flex-row md:items-center justify-between gap-2 p-6 rounded-2xl">
                             <div>
                                 <h4 className="text-xl font-bold text-white max-w-md">{edu.institution}</h4>
                                 <p className="text-gray-400 mt-1">{edu.degree}</p>
                             </div>
                             <div className="text-right md:text-right">
-                                <p className="text-purple-400 font-mono text-sm">{edu.period}</p>
+                                <p className="text-cyan-300 font-mono text-sm">{edu.period}</p>
                                 <p className="text-gray-600 text-xs mt-1 uppercase tracking-wider">{edu.location}</p>
                             </div>
                         </div>
@@ -144,7 +139,9 @@ export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
                 <div className="grid grid-cols-3 gap-6 md:gap-8 mb-12">
                     {stats.map((stat) => (
                         <div key={stat.label}>
-                            <p className="text-4xl md:text-5xl font-bold text-white mb-2">{stat.value}</p>
+                            <p className="text-4xl md:text-5xl font-bold text-white mb-2">
+                                <CountUp value={stat.value} suffix={stat.suffix} />
+                            </p>
                             <p className="text-xs text-gray-500 uppercase tracking-widest max-w-[9rem]">{stat.label}</p>
                         </div>
                     ))}
@@ -152,21 +149,22 @@ export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
 
                 {/* CTAs */}
                 <div className="flex flex-wrap gap-4">
-                    <a
-                        href="#contact"
-                        className="px-8 py-4 bg-primary text-white rounded-xl font-bold hover:bg-primary/90 transition-colors shadow-lg shadow-primary/20"
-                    >
-                        Hire Me
-                    </a>
-                    <a
-                        href={portfolioData.personal.resume}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="px-8 py-4 bg-white/10 text-white border border-white/10 rounded-xl font-bold hover:bg-white/20 transition-colors shadow-lg flex items-center gap-2"
-                    >
-                        <Download className="w-5 h-5" />
-                        View Resume
-                    </a>
+                    <Magnetic>
+                        <a href="#contact" className="btn-glow block px-8 py-4 rounded-xl font-bold">
+                            Hire Me
+                        </a>
+                    </Magnetic>
+                    <Magnetic>
+                        <a
+                            href={portfolioData.personal.resume}
+                            target="_blank"
+                            rel="noopener noreferrer"
+                            className="px-8 py-4 bg-white/5 text-white border border-white/15 rounded-xl font-bold hover:bg-white/10 hover:border-cyan-300/40 transition-colors flex items-center gap-2"
+                        >
+                            <Download className="w-5 h-5" />
+                            View Resume
+                        </a>
+                    </Magnetic>
                 </div>
             </motion.div>
         </section>

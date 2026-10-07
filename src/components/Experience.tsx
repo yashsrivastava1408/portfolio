@@ -33,13 +33,13 @@ export default function Experience() {
     return (
         <section
             id="experience"
-            className="py-32 px-4 relative max-w-7xl mx-auto overflow-hidden"
+            className="py-20 md:py-28 px-4 relative max-w-7xl mx-auto overflow-hidden"
         >
             {/* Section Divider */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="section-divider absolute top-0 left-1/2 -translate-x-1/2" />
 
-            <div className="mb-16 text-center relative z-20">
-                <SectionHeading accent="Worked">Where I&apos;ve</SectionHeading>
+            <div className="mb-12 md:mb-16 text-center relative z-20">
+                <SectionHeading kicker="Experience" accent="Worked">Where I&apos;ve</SectionHeading>
                 <p className="text-gray-500 mt-4 text-sm uppercase tracking-widest">
                     {experiences.length} roles across DevOps, software and R&amp;D
                 </p>
@@ -166,7 +166,7 @@ export default function Experience() {
                                     </p>
                                 </div>
 
-                                <div className="bg-gradient-to-br from-white/5 to-white/0 border border-white/10 rounded-2xl p-6 md:p-8 shadow-2xl">
+                                <div className="glow-card rounded-2xl p-6 md:p-8">
                                     <p className="text-base md:text-lg text-gray-300 leading-relaxed font-light">
                                         {active.description}
                                     </p>

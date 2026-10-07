@@ -55,8 +55,8 @@ export default function Navbar() {
         >
             <div className="flex flex-col items-center w-full max-w-3xl">
                 {/* Main Bar */}
-                <div className="flex items-center justify-between w-full px-6 py-3 rounded-full bg-secondary/90 border border-white/10 shadow-lg shadow-primary/5 relative z-50">
-                    <a href="#" aria-label="Back to top" className="text-xl font-heading font-bold text-transparent bg-clip-text bg-gradient-to-r from-primary to-accent">
+                <div className="flex items-center justify-between w-full px-6 py-3 rounded-full bg-[#0c0e20]/90 border border-white/10 shadow-lg shadow-purple-500/10 relative z-50">
+                    <a href="#" aria-label="Back to top" className="text-xl font-heading font-bold text-glow">
                         YS
                     </a>
 
@@ -80,7 +80,7 @@ export default function Navbar() {
                     <div className="flex items-center gap-4">
                         <a
                             href={`mailto:${portfolioData.personal.email}`}
-                            className="hidden md:block px-4 py-2 text-xs font-semibold bg-primary text-white rounded-full hover:bg-primary/90 transition-transform hover:scale-105"
+                            className="btn-glow hidden md:block px-4 py-2 text-xs font-semibold rounded-full"
                         >
                             Hire Me
                         </a>
@@ -105,7 +105,7 @@ export default function Navbar() {
                             animate={{ opacity: 1, y: 0, scale: 1 }}
                             exit={{ opacity: 0, y: -20, scale: 0.95 }}
                             transition={{ duration: 0.2 }}
-                            className="absolute top-20 left-0 right-0 mx-4 p-4 rounded-3xl bg-[#0a0a0a]/90 backdrop-blur-xl border border-white/10 flex flex-col gap-4 shadow-2xl md:hidden"
+                            className="absolute top-20 left-0 right-0 mx-4 p-4 rounded-3xl bg-[#0a0c1a]/95 border border-white/10 flex flex-col gap-4 shadow-2xl md:hidden"
                         >
                             {links.map((link) => (
                                 <a
@@ -119,7 +119,7 @@ export default function Navbar() {
                             ))}
                             <a
                                 href={`mailto:${portfolioData.personal.email}`}
-                                className="block w-full text-center px-4 py-3 mt-2 text-sm font-bold bg-primary text-white rounded-full"
+                                className="btn-glow block w-full text-center px-4 py-3 mt-2 text-sm font-bold rounded-full"
                             >
                                 Hire Me
                             </a>

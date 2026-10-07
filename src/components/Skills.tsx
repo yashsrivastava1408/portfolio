@@ -48,13 +48,13 @@ const skills: Skill[] = portfolioData.skills.map((name) => ({
 }));
 
 const SkillPill = ({ skill }: { skill: Skill }) => (
-    <div className="flex items-center gap-3 px-6 py-3 bg-white/5 border border-white/10 rounded-full mx-3 min-w-max hover:bg-white/10 transition-colors group">
+    <div className="flex items-center gap-3 px-6 py-3 bg-white/[0.04] border border-white/10 rounded-full mx-3 min-w-max hover:bg-white/10 hover:border-cyan-300/40 transition-colors group">
         {skill.icon ? (
             <div className="w-6 h-6 relative opacity-70 group-hover:opacity-100 transition-opacity">
                 <Image src={skill.icon} alt="" fill unoptimized loading="lazy" className="object-contain" />
             </div>
         ) : (
-            <span className="w-2 h-2 rounded-full bg-gradient-to-br from-primary to-accent" />
+            <span className="w-2 h-2 rounded-full bg-gradient-to-br from-purple-400 to-cyan-300" />
         )}
         <span className="text-gray-300 font-medium whitespace-nowrap">{skill.name}</span>
     </div>
@@ -90,12 +90,12 @@ export default function Skills() {
     const inView = useInView(marqueeRef, { margin: "200px" });
 
     return (
-        <section id="skills" className="py-32 px-4 relative overflow-hidden bg-[#050505]">
+        <section id="skills" className="py-20 md:py-28 px-4 relative overflow-hidden">
             {/* Section Divider */}
-            <div className="absolute top-0 left-1/2 -translate-x-1/2 w-full max-w-lg h-px bg-gradient-to-r from-transparent via-white/10 to-transparent" />
+            <div className="section-divider absolute top-0 left-1/2 -translate-x-1/2" />
 
-            <div className="mb-20 text-center relative z-20">
-                <SectionHeading accent="Sauce">The Secret</SectionHeading>
+            <div className="mb-12 md:mb-16 text-center relative z-20">
+                <SectionHeading kicker="Stack" accent="Sauce">The Secret</SectionHeading>
                 <p className="text-gray-500 mt-4 text-sm uppercase tracking-widest">
                     Technologies &amp; Tools I Use
                 </p>

@@ -5,23 +5,35 @@ import { motion } from "framer-motion";
 interface SectionHeadingProps {
     children: string;
     className?: string;
+    /** Small label above the title, in the same style as the hero captions. */
+    kicker?: string;
     accent?: string;
     accentClassName?: string;
 }
 
+const reveal = {
+    hidden: { opacity: 0, y: 30 },
+    visible: {
+        opacity: 1,
+        y: 0,
+        transition: { duration: 0.5, ease: [0.215, 0.61, 0.355, 1] as const },
+    },
+};
+
 /**
- * Animated section heading with word-by-word reveal.
- * Splits the text at a pipe `|` — everything after the pipe
- * is rendered as the italic cursive accent word.
+ * The one heading style used by every section: a small kicker, a bold white title,
+ * and an italic accent word in the hero's purple → pink → cyan glow.
+ * Words reveal one by one as the heading scrolls into view.
  *
- * Usage: <SectionHeading accent="Work">Curated</SectionHeading>
+ * Usage: <SectionHeading kicker="Work" accent="Work">Curated</SectionHeading>
  * or:    <SectionHeading>The Secret|Sauce</SectionHeading>
  */
 export default function SectionHeading({
     children,
     className = "",
+    kicker,
     accent,
-    accentClassName = "font-cursive text-accent italic pr-2",
+    accentClassName = "italic text-glow pr-3",
 }: SectionHeadingProps) {
     let mainWords: string[];
     let accentWord: string | undefined = accent;
@@ -35,7 +47,7 @@ export default function SectionHeading({
     }
 
     return (
-        <motion.h2
+        <motion.div
             initial="hidden"
             whileInView="visible"
             viewport={{ once: true, margin: "-80px" }}
@@ -45,40 +57,24 @@ export default function SectionHeading({
                     transition: { staggerChildren: 0.08 },
                 },
             }}
-            className={`text-6xl md:text-8xl text-white font-heading tracking-tight ${className}`}
         >
-            {mainWords.map((word, i) => (
-                <motion.span
-                    key={i}
-                    variants={{
-                        hidden: { opacity: 0, y: 30 },
-                        visible: {
-                            opacity: 1,
-                            y: 0,
-                            transition: { duration: 0.5, ease: [0.215, 0.61, 0.355, 1] },
-                        },
-                    }}
-                    className="inline-block mr-[0.3em]"
-                >
-                    {word}
-                </motion.span>
-            ))}
-            {accentWord && (
-                <motion.span
-                    variants={{
-                        hidden: { opacity: 0, y: 30, scale: 0.9 },
-                        visible: {
-                            opacity: 1,
-                            y: 0,
-                            scale: 1,
-                            transition: { duration: 0.6, ease: [0.215, 0.61, 0.355, 1] },
-                        },
-                    }}
-                    className={`inline-block ${accentClassName}`}
-                >
-                    {accentWord}
-                </motion.span>
+            {kicker && (
+                <motion.p variants={reveal} className="text-xs uppercase tracking-[0.3em] text-purple-300 mb-4">
+                    {kicker}
+                </motion.p>
             )}
-        </motion.h2>
+            <h2 className={`text-5xl md:text-7xl text-white font-heading font-bold tracking-tight leading-[1.05] ${className}`}>
+                {mainWords.map((word, i) => (
+                    <motion.span key={i} variants={reveal} className="inline-block mr-[0.25em]">
+                        {word}
+                    </motion.span>
+                ))}
+                {accentWord && (
+                    <motion.span variants={reveal} className={`inline-block ${accentClassName}`}>
+                        {accentWord}
+                    </motion.span>
+                )}
+            </h2>
+        </motion.div>
     );
 }

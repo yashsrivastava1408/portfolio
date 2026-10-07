@@ -4,7 +4,7 @@
     "description": "Full Stack Developer & DevSecOps Enthusiast Portfolio",
     "start_url": "/",
     "display": "standalone",
-    "background_color": "#0a0a0a",
+    "background_color": "#05060e",
     "theme_color": "#6d28d9",
     "orientation": "any",
     "icons": [

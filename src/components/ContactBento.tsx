@@ -4,6 +4,8 @@ import { motion, useInView } from "framer-motion";
 import { portfolioData } from "@/data/portfolio";
 import { Copy, Mail, Check, ExternalLink, Send } from "lucide-react";
 import Globe from "./Globe";
+import SectionHeading from "./SectionHeading";
+import Magnetic from "./Magnetic";
 import Image from "next/image";
 import { useRef, useState } from "react";
 
@@ -27,14 +29,15 @@ export default function ContactBento() {
     const socialLinks = portfolioData.personal.social;
 
     return (
-        <section id="contact" className="py-24 px-4 max-w-7xl mx-auto">
+        <section id="contact" className="py-20 md:py-28 px-4 max-w-7xl mx-auto relative">
+            <div className="section-divider absolute top-0 left-1/2 -translate-x-1/2" />
             <motion.div
                 initial={{ opacity: 0, y: 20 }}
                 whileInView={{ opacity: 1, y: 0 }}
                 viewport={{ once: true }}
-                className="mb-12 flex flex-col md:flex-row md:items-center md:justify-between gap-4"
+                className="mb-12 flex flex-col md:flex-row md:items-end md:justify-between gap-6"
             >
-                <h2 className="text-5xl font-bold font-heading text-white mb-2">Get In Touch</h2>
+                <SectionHeading kicker="Contact" accent="Touch">Get In</SectionHeading>
 
                 {/* Availability Badge */}
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full bg-green-500/10 border border-green-500/20">
@@ -49,7 +52,7 @@ export default function ContactBento() {
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    className="col-span-1 md:col-span-1 bg-[#0A0A0A] border border-white/5 rounded-3xl relative overflow-hidden flex flex-col justify-between p-8 group"
+                    className="glow-card col-span-1 md:col-span-1 rounded-3xl overflow-hidden flex flex-col justify-between p-8 group"
                 >
                     <div className="relative z-10">
                         <h3 className="text-3xl font-heading text-white leading-tight mb-4">
@@ -74,7 +77,7 @@ export default function ContactBento() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="flex-1 bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 relative overflow-hidden flex flex-col items-center justify-center text-center"
+                        className="glow-card flex-1 rounded-3xl p-8 overflow-hidden flex flex-col items-center justify-center text-center"
                     >
                         <div className="absolute inset-0 bg-primary/5 blur-[100px]" />
 
@@ -112,11 +115,11 @@ export default function ContactBento() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="flex-shrink-0 bg-[#0A0A0A] border border-white/5 rounded-3xl p-8 flex flex-col gap-6"
+                        className="glow-card flex-shrink-0 rounded-3xl p-8 flex flex-col gap-6"
                     >
                         <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
                             <div className="text-center lg:text-left">
-                                <div className="w-10 h-10 bg-primary/10 rounded-lg flex items-center justify-center mb-3 mx-auto lg:mx-0 text-primary">
+                                <div className="w-10 h-10 bg-purple-500/15 rounded-lg flex items-center justify-center mb-3 mx-auto lg:mx-0 text-purple-300">
                                     <Mail className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-2xl font-bold text-white mb-1">Let&apos;s work together</h3>
@@ -132,12 +135,14 @@ export default function ContactBento() {
                                     {copied ? <Check className="w-5 h-5 text-green-400" /> : <Copy className="w-5 h-5 text-gray-400 group-hover:text-white" />}
                                     <span className="text-gray-300 group-hover:text-white font-mono text-xs sm:text-sm whitespace-nowrap">{copied ? "Copied!" : portfolioData.personal.email}</span>
                                 </button>
-                                <a
-                                    href={`mailto:${portfolioData.personal.email}`}
-                                    className="flex items-center justify-center gap-2 px-6 py-4 rounded-xl bg-primary text-white font-bold text-sm whitespace-nowrap hover:bg-primary/90 transition-colors active:scale-95"
-                                >
-                                    <Send className="w-4 h-4" /> Email me
-                                </a>
+                                <Magnetic className="flex">
+                                    <a
+                                        href={`mailto:${portfolioData.personal.email}`}
+                                        className="btn-glow flex flex-1 items-center justify-center gap-2 px-6 py-4 rounded-xl font-bold text-sm whitespace-nowrap active:scale-95"
+                                    >
+                                        <Send className="w-4 h-4" /> Email me
+                                    </a>
+                                </Magnetic>
                             </div>
                         </div>
 
@@ -162,7 +167,7 @@ export default function ContactBento() {
             </div>
 
             {/* Tech Stack Marquee */}
-            <div ref={marqueeRef} className="mt-20 border-t border-white/5 pt-10 overflow-hidden relative">
+            <div ref={marqueeRef} className="mt-16 border-t border-white/5 pt-10 overflow-hidden relative">
                 <div className="absolute left-0 top-0 bottom-0 w-20 bg-gradient-to-r from-background to-transparent z-10" />
                 <div className="absolute right-0 top-0 bottom-0 w-20 bg-gradient-to-l from-background to-transparent z-10" />
 

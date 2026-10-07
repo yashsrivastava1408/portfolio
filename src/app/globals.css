@@ -114,14 +114,83 @@
 }
 
 :root {
-  --background: #0a0a0a;
+  /* the hero's deep navy, carried down the whole page */
+  --background: #05060e;
   --foreground: #ededed;
+  --card: #0a0c1a;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+/* Shared look for the whole page, taken from the 3D hero: purple, pink and cyan glow on navy. */
+@layer components {
+  /* Any card. A soft light and a glowing edge follow the cursor (see CardGlow.tsx). */
+  .glow-card {
+    position: relative;
+    background: linear-gradient(180deg, #0c0e1e, var(--card));
+    border: 1px solid rgb(255 255 255 / 0.08);
+    transition: border-color 0.3s ease, box-shadow 0.3s ease;
+  }
+
+  .glow-card::before,
+  .glow-card::after {
+    content: "";
+    position: absolute;
+    inset: 0;
+    border-radius: inherit;
+    pointer-events: none;
+    opacity: 0;
+    transition: opacity 0.35s ease;
+  }
+
+  .glow-card::before {
+    background: radial-gradient(420px circle at var(--mx, 50%) var(--my, 50%), rgb(168 85 247 / 0.13), rgb(34 211 238 / 0.05) 45%, transparent 70%);
+  }
+
+  .glow-card::after {
+    padding: 1px;
+    background: radial-gradient(280px circle at var(--mx, 50%) var(--my, 50%), rgb(103 232 249 / 0.9), rgb(244 114 182 / 0.55) 45%, transparent 75%);
+    -webkit-mask: linear-gradient(#000 0 0) content-box, linear-gradient(#000 0 0);
+    -webkit-mask-composite: xor;
+    mask: linear-gradient(#000 0 0) content-box exclude, linear-gradient(#000 0 0);
+  }
+
+  @media (hover: hover) {
+    .glow-card:hover {
+      box-shadow: 0 20px 60px -30px rgb(168 85 247 / 0.45);
+    }
+
+    .glow-card:hover::before,
+    .glow-card:hover::after {
+      opacity: 1;
+    }
+  }
+
+  /* Accent text: the same gradient as the hero's progress bar */
+  .text-glow {
+    background-image: linear-gradient(90deg, #c084fc, #f472b6 55%, #67e8f9);
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+  }
+
+  /* Primary button */
+  .btn-glow {
+    color: #fff;
+    background-image: linear-gradient(135deg, #7c3aed, #c026d3 55%, #db2777);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.1), 0 10px 30px -10px rgb(168 85 247 / 0.7);
+    transition: box-shadow 0.3s ease, filter 0.3s ease;
+  }
+
+  .btn-glow:hover {
+    filter: brightness(1.12);
+    box-shadow: inset 0 0 0 1px rgb(255 255 255 / 0.18), 0 10px 36px -8px rgb(34 211 238 / 0.6);
+  }
+
+  /* Thin glowing line between sections */
+  .section-divider {
+    height: 1px;
+    width: 100%;
+    max-width: 32rem;
+    background-image: linear-gradient(90deg, transparent, rgb(192 132 252 / 0.45), rgb(103 232 249 / 0.35), transparent);
   }
 }
 
@@ -214,7 +283,7 @@ body {
 }
 
 ::-webkit-scrollbar-track {
-  background: #1a1a1a;
+  background: #0a0c1a;
 }
 
 ::-webkit-scrollbar-thumb {

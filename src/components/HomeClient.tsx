@@ -17,6 +17,7 @@ import PhotoGallery from "@/components/PhotoGallery";
 import { useLenis } from "@/components/SmoothScroll";
 import PauseOffscreenCanvas from "@/components/PauseOffscreenCanvas";
 import Achievements from "@/components/Achievements";
+import CardGlow from "@/components/CardGlow";
 import Testimonials from "@/components/Testimonials";
 import type { GithubStats, LeetcodeStats } from "@/lib/stats";
 import dynamic from "next/dynamic";
@@ -62,6 +63,7 @@ export default function HomeClient({ github, leetcode }: HomeClientProps) {
 
       {/* The page is rendered from the start (good for SEO); the splash just sits on top. */}
       <Navbar />
+      <CardGlow />
       <BackgroundAnimation />
       {showHero ? <DeskScene /> : <div className="h-screen w-full bg-[#05060e]" aria-hidden />}
       {showHero && <PauseOffscreenCanvas selector="#hero" />}

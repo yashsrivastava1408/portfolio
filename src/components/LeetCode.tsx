@@ -6,6 +6,8 @@ import { ExternalLink, GitBranch, Trophy, Target } from "lucide-react";
 import { GitHubCalendar } from "react-github-calendar";
 import { portfolioData } from "@/data/portfolio";
 import type { GithubStats, LeetcodeStats } from "@/lib/stats";
+import SectionHeading from "./SectionHeading";
+import CountUp from "./CountUp";
 
 const RADIUS = 88;
 const CIRCUMFERENCE = 2 * Math.PI * RADIUS;
@@ -47,7 +49,13 @@ export default function LeetCode({ stats, github: githubStats }: LeetCodeProps) 
     }, []);
 
     return (
-        <section id="stats" className="py-24 px-4 max-w-7xl mx-auto flex flex-col items-center gap-16">
+        <section id="stats" className="py-20 md:py-28 px-4 max-w-7xl mx-auto flex flex-col items-center gap-8 relative">
+            <div className="section-divider absolute top-0 left-1/2 -translate-x-1/2" />
+
+            <div className="mb-4 md:mb-8 text-center">
+                <SectionHeading kicker="Proof" accent="Numbers">By the</SectionHeading>
+            </div>
+
             {/* LeetCode Card */}
             <motion.div
                 initial={{ opacity: 0, y: 30 }}
@@ -57,30 +65,34 @@ export default function LeetCode({ stats, github: githubStats }: LeetCodeProps) 
                 className="w-full max-w-4xl relative"
             >
                 {/* Glow Effect */}
-                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-purple-500/10 blur-[60px] rounded-3xl" />
+                <div className="absolute inset-0 bg-gradient-to-r from-purple-500/10 via-pink-500/10 to-cyan-400/10 blur-[60px] rounded-3xl" />
 
-                <div className="relative bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 md:p-12 overflow-hidden group">
+                <div className="glow-card rounded-3xl p-8 md:p-12 overflow-hidden group">
                     <div className="flex flex-col md:flex-row gap-12 items-center">
 
                         {/* Left: Circle Graph */}
                         <div className="relative w-48 h-48 flex-shrink-0">
                             <svg viewBox="0 0 192 192" className="w-full h-full transform -rotate-90" role="img" aria-label={`${stats.totalSolved} LeetCode problems solved: ${stats.easy} easy, ${stats.medium} medium, ${stats.hard} hard`}>
                                 {/* Background Circle */}
-                                <circle cx="96" cy="96" r={RADIUS} stroke="#1a1a1a" strokeWidth="12" fill="none" />
-                                {arcs.map((arc) => (
-                                    <circle
+                                <circle cx="96" cy="96" r={RADIUS} stroke="#161a2e" strokeWidth="12" fill="none" />
+                                {/* each arc draws itself in, one after the other */}
+                                {arcs.map((arc, i) => (
+                                    <motion.circle
                                         key={arc.label}
                                         cx="96" cy="96" r={RADIUS}
                                         stroke={arc.color}
                                         strokeWidth="12"
                                         fill="none"
-                                        strokeDasharray={`${arc.length} ${CIRCUMFERENCE - arc.length}`}
                                         strokeDashoffset={-arc.offset}
+                                        initial={{ strokeDasharray: `0 ${CIRCUMFERENCE}` }}
+                                        whileInView={{ strokeDasharray: `${arc.length} ${CIRCUMFERENCE - arc.length}` }}
+                                        viewport={{ once: true }}
+                                        transition={{ duration: 0.9, ease: "easeOut", delay: 0.2 + i * 0.25 }}
                                     />
                                 ))}
                             </svg>
                             <div className="absolute inset-0 flex flex-col items-center justify-center text-white">
-                                <span className="text-4xl font-bold font-heading">{stats.totalSolved}</span>
+                                <span className="text-4xl font-bold font-heading"><CountUp value={stats.totalSolved} /></span>
                                 <span className="text-xs text-gray-400 uppercase tracking-widest">Solved</span>
                             </div>
                         </div>
@@ -89,9 +101,9 @@ export default function LeetCode({ stats, github: githubStats }: LeetCodeProps) 
                         <div className="flex-1 w-full relative z-10">
                             <div className="flex justify-between items-start mb-8">
                                 <div>
-                                    <h2 className="text-3xl font-bold text-white mb-2 flex items-center gap-2">
-                                        <span className="text-purple-400">LeetCode</span> Profile
-                                    </h2>
+                                    <h3 className="text-3xl font-bold text-white mb-2 flex items-center gap-2">
+                                        <span className="text-glow">LeetCode</span> Profile
+                                    </h3>
                                     <p className="text-gray-400 text-sm">Consistent problem solver & algorithm enthusiast</p>
                                 </div>
                                 <a
@@ -108,7 +120,7 @@ export default function LeetCode({ stats, github: githubStats }: LeetCodeProps) 
                             <div className="grid grid-cols-3 gap-4 mb-8">
                                 {segments.map((s) => (
                                     <div key={s.label} className={`p-4 rounded-2xl bg-white/5 border border-white/5 text-center transition-colors ${s.hover}`}>
-                                        <div className={`${s.text} font-bold mb-1`}>{s.count}</div>
+                                        <div className={`${s.text} font-bold mb-1`}><CountUp value={s.count} /></div>
                                         <div className="text-[10px] text-gray-500 uppercase tracking-wider">{s.label}</div>
                                     </div>
                                 ))}
@@ -139,17 +151,17 @@ export default function LeetCode({ stats, github: githubStats }: LeetCodeProps) 
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true, margin: "-80px" }}
                     transition={{ duration: 0.7, ease: "easeOut" }}
-                    className="w-full max-w-4xl relative bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 md:p-12"
+                    className="glow-card w-full max-w-4xl rounded-3xl p-8 md:p-12"
                 >
                     <div className="flex items-start justify-between gap-4 mb-8">
                         <div>
                             <h3 className="text-2xl font-bold text-white mb-1">
-                                <span className="text-purple-400">GitHub</span> at a glance
+                                <span className="text-glow">GitHub</span> at a glance
                             </h3>
                             <p className="text-gray-500 text-sm">Live from the GitHub API · updated {githubStats.asOf}</p>
                         </div>
                         <div className="text-right flex-shrink-0">
-                            <p className="text-4xl font-bold font-heading text-white leading-none">{githubStats.publicRepos}</p>
+                            <p className="text-4xl font-bold font-heading text-white leading-none"><CountUp value={githubStats.publicRepos} /></p>
                             <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-2">Public repos</p>
                         </div>
                     </div>
@@ -158,11 +170,18 @@ export default function LeetCode({ stats, github: githubStats }: LeetCodeProps) 
                         {/* Top languages */}
                         <div>
                             <h4 className="text-xs font-bold text-gray-500 uppercase tracking-widest mb-4">Top languages</h4>
-                            <div className="flex h-2.5 rounded-full overflow-hidden gap-0.5 mb-5" aria-hidden>
+                            <motion.div
+                                className="flex h-2.5 rounded-full overflow-hidden gap-0.5 mb-5 origin-left"
+                                aria-hidden
+                                initial={{ scaleX: 0 }}
+                                whileInView={{ scaleX: 1 }}
+                                viewport={{ once: true }}
+                                transition={{ duration: 0.9, ease: [0.16, 1, 0.3, 1], delay: 0.2 }}
+                            >
                                 {githubStats.languages.map((lang) => (
                                     <div key={lang.name} style={{ flexGrow: lang.count, backgroundColor: languageColor(lang.name) }} />
                                 ))}
-                            </div>
+                            </motion.div>
                             <ul className="space-y-2.5">
                                 {githubStats.languages.map((lang) => (
                                     <li key={lang.name} className="flex items-center gap-3 text-sm">
@@ -210,11 +229,11 @@ export default function LeetCode({ stats, github: githubStats }: LeetCodeProps) 
             >
                 <div className="absolute inset-0 bg-gradient-to-r from-purple-500/5 via-pink-500/5 to-purple-500/5 blur-[40px] rounded-3xl" />
 
-                <div className="relative bg-[#0A0A0A] border border-white/10 rounded-3xl p-8 md:p-12 overflow-hidden">
+                <div className="glow-card rounded-3xl p-8 md:p-12 overflow-hidden">
                     <div className="flex items-center justify-between mb-8">
                         <div>
                             <h3 className="text-2xl font-bold text-white mb-1 flex items-center gap-2">
-                                <span className="text-purple-400">GitHub</span> Contributions
+                                <span className="text-glow">GitHub</span> Contributions
                             </h3>
                             <p className="text-gray-500 text-sm">@{github}</p>
                         </div>

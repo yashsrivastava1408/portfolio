@@ -14,12 +14,12 @@ export default function Footer() {
     const quickLinks = ["About", "Skills", "Experience", "Projects", "Contact"];
 
     return (
-        <footer className="border-t border-white/5 bg-[#030303] relative">
+        <footer className="border-t border-white/5 bg-[#03040a] relative">
             {/* Back to Top Button */}
             <div className="absolute -top-6 left-1/2 -translate-x-1/2">
                 <a
                     href="#"
-                    className="group w-12 h-12 rounded-full bg-primary/20 border border-primary/30 flex items-center justify-center text-primary hover:bg-primary hover:text-white transition-all duration-300 shadow-lg shadow-primary/10 hover:shadow-primary/30 hover:-translate-y-1"
+                    className="group w-12 h-12 rounded-full bg-[#0a0c1a] border border-purple-400/40 flex items-center justify-center text-purple-300 hover:bg-purple-600 hover:text-white transition-all duration-300 shadow-lg shadow-primary/10 hover:shadow-primary/30 hover:-translate-y-1"
                     aria-label="Back to top"
                 >
                     <ArrowUp className="w-5 h-5 group-hover:-translate-y-0.5 transition-transform" />

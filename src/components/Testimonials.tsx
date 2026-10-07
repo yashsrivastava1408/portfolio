@@ -12,11 +12,11 @@ export default function Testimonials() {
     if (testimonials.length === 0) return null;
 
     return (
-        <section id="testimonials" className="py-32 px-4 max-w-7xl mx-auto">
-            <div className="w-full max-w-lg mx-auto h-px bg-gradient-to-r from-transparent via-white/10 to-transparent mb-32" />
+        <section id="testimonials" className="py-20 md:py-28 px-4 max-w-7xl mx-auto relative">
+            <div className="section-divider absolute top-0 left-1/2 -translate-x-1/2" />
 
-            <div className="mb-20 text-center">
-                <SectionHeading accent="Say">What People</SectionHeading>
+            <div className="mb-12 md:mb-16 text-center">
+                <SectionHeading kicker="Kind words" accent="Say">What People</SectionHeading>
             </div>
 
             <div className={`grid gap-6 ${testimonials.length > 1 ? "md:grid-cols-2" : "max-w-3xl mx-auto"}`}>
@@ -27,9 +27,9 @@ export default function Testimonials() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-60px" }}
                         transition={{ duration: 0.6, ease: "easeOut", delay: index * 0.1 }}
-                        className="relative rounded-3xl bg-[#0A0A0A] border border-white/10 p-8 md:p-10"
+                        className="glow-card rounded-3xl p-8 md:p-10"
                     >
-                        <Quote className="w-8 h-8 text-primary mb-6" aria-hidden />
+                        <Quote className="w-8 h-8 text-purple-400 mb-6" aria-hidden />
                         <blockquote className="text-lg md:text-xl text-gray-200 leading-relaxed font-light">
                             {t.quote}
                         </blockquote>
