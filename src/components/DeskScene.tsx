@@ -15,21 +15,25 @@ import { Download, Mail } from "lucide-react";
 import { portfolioData } from "@/data/portfolio";
 import { AbstractShape } from "./Crazy3DModel";
 import { AuroraGrid, CodeRain } from "./HeroBackground";
+import DeveloperHead from "./DeveloperHead";
+import HeroSound from "./HeroSound";
+import { heroMusic } from "@/lib/heroMusic";
 
 gsap.registerPlugin(ScrollTrigger);
 
 const RING_PHOTOS = [
     "/profile-hero.jpg",
     "/gallery/hackelite-26.jpg",
-    "/gallery/sih-urbanpulse.png",
+    "/ring/sih-urbanpulse.jpg",
     "/profile.jpg",
     "/gallery/xenkrypt-team.jpg",
-    "/gallery/codemavens-punya.png",
-    "/gallery/rack-server.png",
+    "/ring/codemavens-punya.jpg",
+    "/ring/rack-server.jpg",
 ];
 
 const SKIN = "#b87b57";
-const SUIT = "#0c0d14";
+const HOODIE = "#565d73";
+const HOODIE_TRIM = "#444a5e";
 const PANTS = "#14151d";
 
 const CAPTIONS = [
@@ -167,10 +171,9 @@ function Developer() {
     const joints = useRef<THREE.Mesh[]>([]);
     const handL = useRef<THREE.Mesh>(null);
     const handR = useRef<THREE.Mesh>(null);
+    const cuffs = useRef<THREE.Mesh[]>([]);
     const mug = useRef<THREE.Group>(null);
     const glow = useRef<THREE.Mesh>(null);
-    const eyes = useRef<THREE.Group[]>([]);
-    const irises = useRef<THREE.Group[]>([]);
     const torso = useRef<THREE.Group>(null);
     const pointer = useThree((s) => s.pointer);
 
@@ -217,32 +220,32 @@ function Developer() {
         joints.current[1]?.position.copy(P.elR);
         joints.current[2]?.position.copy(P.knL);
         joints.current[3]?.position.copy(P.knR);
+        // ribbed cuffs sit at the end of each sleeve, turned the same way as the forearm
+        [[P.elL, P.haL, B[1]] as const, [P.elR, P.haR, B[3]] as const].forEach(([el, ha, arm], i) => {
+            const cuff = cuffs.current[i];
+            if (!cuff || !arm) return;
+            cuff.position.lerpVectors(el, ha, 0.86);
+            cuff.quaternion.copy(arm.quaternion);
+        });
         handL.current?.position.copy(P.haL);
         handR.current?.position.copy(P.haR);
 
         // breathing + idle swivel + head follows the pointer
+        // while the hero's music plays, he nods (and bounces a touch) on every beat
+        const nod = heroMusic.nod();
         if (rig.current) {
             rig.current.rotation.y = Math.sin(t * 0.35) * 0.1;
-            rig.current.position.y = Math.sin(t * 1.6) * 0.004;
+            rig.current.position.y = Math.sin(t * 1.6) * 0.004 - nod * 0.006;
         }
         if (head.current) {
             const tx = pointer.x * 0.55;
-            const ty = -pointer.y * 0.3 + 0.12;
+            const ty = -pointer.y * 0.3 + 0.12 + nod * 0.16;
             head.current.rotation.y += (tx - head.current.rotation.y) * 0.06;
-            head.current.rotation.x += (ty - head.current.rotation.x) * 0.06;
+            head.current.rotation.x += (ty - head.current.rotation.x) * (nod > 0.01 ? 0.25 : 0.06);
         }
         if (mug.current) mug.current.rotation.y = t * 0.2;
         if (glow.current) (glow.current.material as THREE.MeshStandardMaterial).emissive.setHSL((0.75 + Math.sin(t * 0.3) * 0.12) % 1, 0.85, 0.55);
 
-        // blink every ~3.5s, irises glance toward the pointer
-        const phase = t % 3.5;
-        const blink = phase > 3.3 ? 1 - Math.sin(((phase - 3.3) / 0.2) * Math.PI) * 0.92 : 1;
-        eyes.current.forEach((e) => e && (e.scale.y += (blink - e.scale.y) * 0.5));
-        irises.current.forEach((e) => {
-            if (!e) return;
-            e.position.x += (pointer.x * 0.05 - e.position.x) * 0.1;
-            e.position.y += (pointer.y * 0.035 - e.position.y) * 0.1;
-        });
         if (torso.current) torso.current.scale.set(1 + Math.sin(t * 1.6) * 0.008, 1 + Math.sin(t * 1.6) * 0.012, 1);
     });
 
@@ -416,40 +419,61 @@ function Developer() {
                     <meshStandardMaterial color={PANTS} roughness={0.8} />
                 </mesh>
                 <group ref={torso} position={[0, 0.62, 0]} rotation={[0.07, 0, 0]}>
-                    <mesh position={[0, 0.3, 0]} scale={[1.2, 1, 0.82]} castShadow>
+                    {/* hoodie body: a little roomier than the torso under it */}
+                    <mesh position={[0, 0.3, 0]} scale={[1.27, 1, 0.9]} castShadow>
                         <capsuleGeometry args={[0.17, 0.3, 10, 24]} />
-                        <meshStandardMaterial color={SUIT} roughness={0.75} />
+                        <meshStandardMaterial color={HOODIE} roughness={0.95} />
                     </mesh>
-                    {/* shirt + tie */}
-                    <mesh position={[0, 0.4, 0.137]}>
-                        <boxGeometry args={[0.09, 0.3, 0.01]} />
-                        <meshStandardMaterial color="#f4f4f6" roughness={0.8} />
+                    {/* ribbed hem */}
+                    <mesh position={[0, 0.14, 0]} rotation={[Math.PI / 2, 0, 0]} scale={[1.27, 0.9, 1]}>
+                        <torusGeometry args={[0.158, 0.026, 12, 40]} />
+                        <meshStandardMaterial color={HOODIE_TRIM} roughness={1} />
                     </mesh>
-                    <mesh position={[0, 0.37, 0.145]}>
-                        <boxGeometry args={[0.045, 0.27, 0.012]} />
-                        <meshStandardMaterial color="#14224a" roughness={0.6} />
+                    {/* kangaroo pocket */}
+                    <mesh position={[0, 0.25, 0.138]} rotation={[0, 0, Math.PI / 2]} scale={[1, 1, 0.3]}>
+                        <capsuleGeometry args={[0.055, 0.17, 8, 20]} />
+                        <meshStandardMaterial color={HOODIE_TRIM} roughness={1} />
                     </mesh>
+                    {/* drawstrings with metal tips */}
+                    {[-1, 1].map((sd) => (
+                        <group key={sd} position={[sd * 0.035, 0.43, 0.158]} rotation={[-0.1, 0, sd * 0.06]}>
+                            <mesh position={[0, -0.02, 0]}>
+                                <cylinderGeometry args={[0.006, 0.006, 0.13 + sd * 0.012, 8]} />
+                                <meshStandardMaterial color="#e8e6f0" roughness={0.8} />
+                            </mesh>
+                            <mesh position={[0, -0.095 - sd * 0.006, 0]}>
+                                <cylinderGeometry args={[0.008, 0.008, 0.022, 8]} />
+                                <meshStandardMaterial color="#b9bcc8" metalness={0.8} roughness={0.3} />
+                            </mesh>
+                        </group>
+                    ))}
                 </group>
                 {[P.shL, P.shR].map((s, i) => (
                     <mesh key={i} position={s} castShadow>
-                        <sphereGeometry args={[0.085, 16, 16]} />
-                        <meshStandardMaterial color={SUIT} roughness={0.75} />
+                        <sphereGeometry args={[0.092, 16, 16]} />
+                        <meshStandardMaterial color={HOODIE} roughness={0.95} />
                     </mesh>
                 ))}
 
                 {/* limbs */}
-                {bone(0, 0.065, SUIT)}
-                {bone(1, 0.052, SUIT)}
-                {bone(2, 0.065, SUIT)}
-                {bone(3, 0.052, SUIT)}
+                {bone(0, 0.073, HOODIE)}
+                {bone(1, 0.060, HOODIE)}
+                {bone(2, 0.073, HOODIE)}
+                {bone(3, 0.060, HOODIE)}
                 {bone(4, 0.095, PANTS)}
                 {bone(5, 0.07, PANTS)}
                 {bone(6, 0.095, PANTS)}
                 {bone(7, 0.07, PANTS)}
-                {joint(0, 0.058, SUIT)}
-                {joint(1, 0.058, SUIT)}
+                {joint(0, 0.066, HOODIE)}
+                {joint(1, 0.066, HOODIE)}
                 {joint(2, 0.09, PANTS)}
                 {joint(3, 0.09, PANTS)}
+                {[0, 1].map((i) => (
+                    <mesh key={i} ref={(m) => { if (m) cuffs.current[i] = m; }} castShadow>
+                        <cylinderGeometry args={[0.066, 0.062, 0.06, 20]} />
+                        <meshStandardMaterial color={HOODIE_TRIM} roughness={1} />
+                    </mesh>
+                ))}
                 <mesh ref={handL} castShadow>
                     <sphereGeometry args={[0.048, 14, 14]} />
                     <meshStandardMaterial color={SKIN} roughness={0.6} />
@@ -465,111 +489,34 @@ function Developer() {
                     </mesh>
                 ))}
 
-                {/* neck + collar */}
+                {/* neck + hood */}
                 <mesh position={[0, 1.17, 0.04]} castShadow>
                     <cylinderGeometry args={[0.055, 0.065, 0.12, 28]} />
                     <meshStandardMaterial color={SKIN} roughness={0.55} />
                 </mesh>
-                <mesh position={[0, 1.12, 0.045]} rotation={[Math.PI / 2 - 0.1, 0, 0]}>
-                    <torusGeometry args={[0.075, 0.017, 12, 32]} />
-                    <meshStandardMaterial color="#f4f4f6" roughness={0.7} />
+                {/* hoodie neck opening, dipping at the front */}
+                <mesh position={[0, 1.105, 0.03]} rotation={[Math.PI / 2 - 0.28, 0, 0]} scale={[1.15, 1, 1]}>
+                    <torusGeometry args={[0.088, 0.034, 14, 36]} />
+                    <meshStandardMaterial color={HOODIE} roughness={0.95} />
+                </mesh>
+                {/* the hood, down: a soft roll of fabric behind the neck (nothing hanging off the back) */}
+                <mesh position={[0, 1.1, -0.015]} rotation={[-Math.PI / 2 + 0.25, 0, 0]} scale={[1.25, 1, 1]} castShadow>
+                    <torusGeometry args={[0.1, 0.04, 14, 32, Math.PI]} />
+                    <meshStandardMaterial color={HOODIE} roughness={0.95} />
                 </mesh>
 
                 {/* head */}
                 <group ref={head} position={[0, 1.37, 0.05]}>
                     <group scale={[0.145, 0.185, 0.155]}>
-                        <mesh castShadow>
-                            <sphereGeometry args={[1, 64, 64]} />
-                            <meshStandardMaterial color={SKIN} roughness={0.55} />
-                        </mesh>
-                        {/* hair: cap + swept quiff + back */}
-                        <mesh scale={1.045} rotation={[-0.3, 0, 0]} castShadow>
-                            <sphereGeometry args={[1, 64, 32, 0, Math.PI * 2, 0, 0.98]} />
-                            <meshStandardMaterial color="#09080b" roughness={0.65} />
-                        </mesh>
-                        <mesh position={[0.05, 0.62, 0.42]} rotation={[0.5, 0, -0.08]} scale={[0.9, 0.42, 0.7]}>
-                            <sphereGeometry args={[1, 32, 20]} />
-                            <meshStandardMaterial color="#09080b" roughness={0.65} />
-                        </mesh>
-                        {/* ears */}
-                        {[-1, 1].map((sd) => (
-                            <mesh key={sd} position={[sd * 0.97, -0.04, 0.02]} scale={[0.17, 0.3, 0.2]}>
-                                <sphereGeometry args={[1, 24, 24]} />
-                                <meshStandardMaterial color={SKIN} roughness={0.55} />
-                            </mesh>
-                        ))}
-                        {/* headphones */}
-                        <mesh position={[0, 0.02, 0]} rotation={[0, 0, 0]}>
-                            <torusGeometry args={[1.1, 0.07, 16, 64, Math.PI]} />
-                            <meshStandardMaterial color="#12121c" metalness={0.6} roughness={0.3} />
-                        </mesh>
-                        {[-1, 1].map((sd) => (
-                            <group key={sd} position={[sd * 1.08, -0.02, 0.02]} rotation={[0, 0, Math.PI / 2]}>
-                                <mesh scale={[1, 1, 0.9]}>
-                                    <cylinderGeometry args={[0.36, 0.36, 0.3, 40]} />
-                                    <meshStandardMaterial color="#14141f" metalness={0.5} roughness={0.35} />
-                                </mesh>
-                                <mesh position={[0, -sd * 0.16, 0]} rotation={[Math.PI / 2, 0, 0]}>
-                                    <torusGeometry args={[0.25, 0.028, 12, 48]} />
-                                    <meshStandardMaterial color="#000" emissive={sd > 0 ? "#22d3ee" : "#a855f7"} emissiveIntensity={3} toneMapped={false} />
-                                </mesh>
-                            </group>
-                        ))}
-                        {/* eyes */}
-                        {[-1, 1].map((sd, i) => (
-                            <group key={sd} position={[sd * 0.36, 0.1, 0.9]} rotation={[0, sd * 0.38, 0]}>
-                                <group ref={(g) => { if (g) eyes.current[i] = g; }}>
-                                    <mesh scale={[1, 0.8, 0.5]}>
-                                        <sphereGeometry args={[0.15, 32, 32]} />
-                                        <meshStandardMaterial color="#fbfbfd" roughness={0.2} />
-                                    </mesh>
-                                    <group ref={(g) => { if (g) irises.current[i] = g; }}>
-                                        <mesh position={[0, 0, 0.055]} scale={[1, 1, 0.35]}>
-                                            <sphereGeometry args={[0.085, 32, 32]} />
-                                            <meshStandardMaterial color="#4a2a17" roughness={0.3} />
-                                        </mesh>
-                                        <mesh position={[0, 0, 0.075]} scale={[1, 1, 0.3]}>
-                                            <sphereGeometry args={[0.045, 24, 24]} />
-                                            <meshBasicMaterial color="#030305" />
-                                        </mesh>
-                                        <mesh position={[0.03, 0.035, 0.088]}>
-                                            <sphereGeometry args={[0.014, 12, 12]} />
-                                            <meshBasicMaterial color="#ffffff" toneMapped={false} />
-                                        </mesh>
-                                    </group>
-                                </group>
-                                {/* eyebrow */}
-                                <mesh position={[sd * 0.01, 0.2, 0.0]} rotation={[0, 0, sd * -0.12]} scale={[1, 0.28, 0.5]}>
-                                    <capsuleGeometry args={[0.07, 0.17, 8, 16]} />
-                                    <meshStandardMaterial color="#0a0809" roughness={0.9} />
-                                </mesh>
-                            </group>
-                        ))}
-                        {/* nose */}
-                        <mesh position={[0, -0.12, 0.99]} scale={[0.75, 1, 0.8]}>
-                            <sphereGeometry args={[0.11, 24, 24]} />
-                            <meshStandardMaterial color={SKIN} roughness={0.5} />
-                        </mesh>
-                        {/* beard: chin + sideburns */}
-                        <mesh scale={1.03}>
-                            <sphereGeometry args={[1, 48, 32, Math.PI / 2 - 1.0, 2.0, 2.2, 0.85]} />
-                            <meshStandardMaterial color="#120d0b" roughness={0.95} />
-                        </mesh>
-                        {/* mustache + smile */}
-                        <mesh position={[0, -0.27, 0.935]} rotation={[0.25, 0, 0]}>
-                            <torusGeometry args={[0.17, 0.035, 10, 28, Math.PI]} />
-                            <meshStandardMaterial color="#0d0908" roughness={0.9} />
-                        </mesh>
-                        <mesh position={[0, -0.36, 0.935]} rotation={[0.25, 0, Math.PI]}>
-                            <torusGeometry args={[0.13, 0.016, 10, 28, Math.PI * 0.85]} />
-                            <meshStandardMaterial color="#8a4b45" roughness={0.5} />
-                        </mesh>
+                        <DeveloperHead />
                     </group>
                 </group>
             </group>
 
             {/* screen glow onto the developer's face */}
             <pointLight position={[0, 1.25, 0.75]} color="#7dd3fc" intensity={1.4} distance={2.2} />
+            {/* a warm fill from the front-left, so the brow, nose and jaw catch some shape */}
+            <pointLight position={[-0.9, 1.75, 1.3]} color="#ffd9b8" intensity={1.6} distance={3} />
         </group>
     );
 }
@@ -632,10 +579,76 @@ function PhotoRing({ progress }: { progress: React.MutableRefObject<number> }) {
 }
 
 /** Soft glow on anything emissive, so neon, lamp and headphones feel lit. */
+/**
+ * Keeps the scene smooth on any machine. It watches the real frame rate and, when the GPU
+ * cannot keep up, renders at a lower resolution (and back up when there is room again).
+ * Shadows are redrawn every other frame; the scene moves too little for that to show.
+ */
+const DPR_MIN = 0.75;
+function AdaptiveQuality() {
+    const gl = useThree((s) => s.gl);
+    const setDpr = useThree((s) => s.setDpr);
+    const small = useThree((s) => s.size.width < 768);
+    const q = useRef({ dpr: 1, max: 1, frames: 0, time: 0, good: 0, wait: 0, slow: 0, raised: false, locked: false, n: 0 });
+
+    useEffect(() => {
+        const max = Math.min(window.devicePixelRatio || 1, small ? 1.5 : 1.75);
+        q.current.max = q.current.dpr = max;
+        setDpr(max);
+    }, [small, setDpr]);
+
+    useEffect(() => {
+        gl.shadowMap.autoUpdate = false;
+        return () => {
+            gl.shadowMap.autoUpdate = true;
+        };
+    }, [gl]);
+
+    useFrame((_, dt) => {
+        const s = q.current;
+        if (s.n++ % 2 === 0) gl.shadowMap.needsUpdate = true;
+
+        // one long frame is a paused tab or a hitch while loading; several in a row is a slow GPU
+        if (dt > 0.25 && ++s.slow < 3) return;
+        if (dt <= 0.25) s.slow = 0;
+        s.frames++;
+        s.time += dt;
+        if (s.time < 1) return;
+        const fps = s.frames / s.time;
+        s.frames = s.time = 0;
+        if (s.wait > 0) {
+            s.wait--; // let a change settle before judging it
+            return;
+        }
+        if (fps < 42 && s.dpr > DPR_MIN) {
+            // going back down right after going up means that level is too much: stay put from now on
+            if (s.raised) s.locked = true;
+            s.dpr = Math.max(DPR_MIN, s.dpr - (fps < 25 ? 0.5 : 0.25)); // far too slow: take a bigger step
+            s.raised = false;
+            s.good = 0;
+            s.wait = 1;
+            setDpr(s.dpr);
+        } else if (fps > 56 && s.dpr < s.max && !s.locked) {
+            if (++s.good >= 4) {
+                s.dpr = Math.min(s.max, s.dpr + 0.25);
+                s.raised = true;
+                s.good = 0;
+                s.wait = 1;
+                setDpr(s.dpr);
+            }
+        } else {
+            s.good = 0;
+        }
+    });
+    return null;
+}
+
 function Bloom() {
     const { gl, scene, camera, size } = useThree();
+    const dpr = useThree((s) => s.viewport.dpr);
     const composer = useMemo(() => {
-        const rt = new THREE.WebGLRenderTarget(size.width, size.height, { type: THREE.HalfFloatType, samples: 4 });
+        // phones have dense screens, so lighter edge smoothing is enough there
+        const rt = new THREE.WebGLRenderTarget(size.width, size.height, { type: THREE.HalfFloatType, samples: size.width < 768 ? 2 : 4 });
         const c = new EffectComposer(gl, rt);
         c.addPass(new RenderPass(scene, camera));
         c.addPass(new UnrealBloomPass(new THREE.Vector2(size.width, size.height), 0.7, 0.65, 0.97));
@@ -644,9 +657,9 @@ function Bloom() {
         // eslint-disable-next-line react-hooks/exhaustive-deps
     }, [gl, scene, camera]);
     useEffect(() => {
-        composer.setPixelRatio(gl.getPixelRatio());
+        composer.setPixelRatio(dpr);
         composer.setSize(size.width, size.height);
-    }, [composer, gl, size]);
+    }, [composer, dpr, size]);
     useEffect(() => () => composer.dispose(), [composer]);
     useFrame((_, dt) => composer.render(dt), 1);
     return null;
@@ -843,12 +856,12 @@ function CameraRig({ progress, view }: { progress: React.MutableRefObject<number
     }, [camera, size]);
 
     useFrame((_, dt) => {
-        smooth.current = THREE.MathUtils.damp(smooth.current, progress.current, 3.5, dt);
+        smooth.current = THREE.MathUtils.damp(smooth.current, progress.current, 5, dt);
         const t = THREE.MathUtils.clamp(smooth.current, 0, 1);
         posCurve.getPoint(t, pos);
         targetCurve.getPoint(t, look);
         // on desktop, nudge the scene right as the hero opens so the captions on the left stay clear
-        const sh = size.width >= 768 ? Math.round(view.current * 1000) / 1000 : 0;
+        const sh = size.width >= 1024 ? Math.round(view.current * 1000) / 1000 : 0;
         if (sh !== shift.current) {
             shift.current = sh;
             if (sh === 0) camera.clearViewOffset();
@@ -889,9 +902,15 @@ export default function DeskScene() {
                     trigger: root.current,
                     start: "top top",
                     end: reduce ? "+=100%" : `+=${(count + 1) * 90}%`,
-                    scrub: 1.2,
+                    scrub: 0.6,
                     pin: true,
                     anticipatePin: 1,
+                    // the rock track plays only while the 3D story is on screen, and builds as you scroll through it
+                    onUpdate: (self) => {
+                        heroMusic.setIntensity(self.progress);
+                        heroMusic.setActive(self.isActive && self.progress > 0.02);
+                    },
+                    onToggle: (self) => heroMusic.setActive(self.isActive && self.progress > 0.02),
                 },
             });
             // unit 0..1 : the hero splits open and the camera drifts into the scene
@@ -910,6 +929,7 @@ export default function DeskScene() {
                 tl.to(c, { opacity: 1, y: 0, duration: 0.25, ease: "power2.out" }, i + 1.05);
                 if (i < count - 1) tl.to(c, { opacity: 0, y: -40, duration: 0.2, ease: "power2.in" }, i + 1.8);
             });
+            tl.to(".desk-fade", { opacity: 1, duration: 0.4 }, 0.8);
             tl.fromTo(".desk-hint", { opacity: 0 }, { opacity: 1, duration: 0.2 }, 0.9);
             tl.to(".desk-hint", { opacity: 0, duration: 0.2 }, 1.7);
         },
@@ -958,6 +978,7 @@ export default function DeskScene() {
                 <Dust />
                 <TechOrbit progress={progress} />
                 <CameraRig progress={progress} view={view} />
+                <AdaptiveQuality />
                 <Bloom />
             </Canvas>
 
@@ -979,11 +1000,11 @@ export default function DeskScene() {
                 </div>
 
                 <div
-                    className="hero-panel-right absolute overflow-hidden flex items-center justify-center md:justify-start inset-x-0 bottom-0 h-[34%] md:inset-y-0 md:right-0 md:left-auto md:h-full md:w-1/2 md:pl-[20vw] text-white"
+                    className="hero-panel-right absolute overflow-hidden flex items-center justify-center max-md:items-start max-md:pt-3 md:justify-start inset-x-0 bottom-0 h-[34%] md:inset-y-0 md:right-0 md:left-auto md:h-full md:w-1/2 md:pl-[20vw] text-white"
                     style={{ background: "linear-gradient(to left, #050505 22%, rgba(5,5,5,0.5) 48%, rgba(5,5,5,0) 78%)" }}
                 >
                     <div className="absolute inset-0 opacity-70 [mask-image:linear-gradient(to_left,black_30%,transparent_85%)] max-md:[mask-image:linear-gradient(to_top,black_40%,transparent)]"><CodeRain /></div>
-                    <div className="relative text-center md:text-left pb-24 md:pb-0">
+                    <div className="relative text-center md:text-left">
                         <h1 className="hero-title text-[10vw] md:text-[4.6vw] leading-none font-mono font-bold tracking-tighter mb-3 text-white drop-shadow-[0_0_30px_rgba(167,139,250,0.35)]">
                             FULL-STACK
                         </h1>
@@ -995,8 +1016,8 @@ export default function DeskScene() {
 
                 <div className="hero-line absolute left-1/2 top-0 h-[17vh] w-px -translate-x-1/2 bg-gradient-to-b from-transparent to-white/70" />
 
-                <div className="hero-center absolute inset-x-0 bottom-0 pb-8 flex flex-col items-center gap-4 z-20">
-                    <span className="px-5 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs md:text-sm text-gray-300 backdrop-blur-md flex items-center gap-2">
+                <div className="hero-center absolute inset-x-0 bottom-0 pb-5 md:pb-8 flex flex-col items-center gap-3 md:gap-4 z-20">
+                    <span className="px-5 py-1.5 rounded-full border border-white/10 bg-white/5 text-xs md:text-sm text-gray-300 backdrop-blur-md flex items-center gap-2 [@media(max-height:480px)]:hidden">
                         <span className="w-2 h-2 rounded-full bg-green-500 animate-pulse" />
                         Available for opportunities
                     </span>
@@ -1020,7 +1041,7 @@ export default function DeskScene() {
                             Contact
                         </a>
                     </div>
-                    <div className="flex flex-col items-center gap-1 text-[10px] uppercase tracking-[0.3em] text-gray-500">
+                    <div className="hidden md:flex flex-col items-center gap-1 text-[10px] uppercase tracking-[0.3em] text-gray-500 [@media(max-height:480px)]:hidden">
                         Scroll
                         <div className="w-px h-6 bg-gradient-to-b from-purple-500 to-transparent" />
                     </div>
@@ -1028,12 +1049,14 @@ export default function DeskScene() {
             </div>
 
             {/* captions */}
-            <div className="pointer-events-none absolute inset-0 flex items-end md:items-center px-6 md:px-16 pb-24 md:pb-0">
+            <div className="pointer-events-none absolute inset-0 flex items-end lg:items-center px-6 md:px-16 pb-24 lg:pb-0">
+                {/* on phones and tablets the captions sit over the scene, so they get a dark fade to read against */}
+                <div className="desk-fade lg:hidden absolute inset-x-0 bottom-0 h-[55%] bg-gradient-to-t from-[#05060e] via-[#05060e]/75 to-transparent opacity-0" />
                 <div className="relative w-full max-w-md">
                     {CAPTIONS.map((c, i) => (
-                        <div key={c.title} className={`desk-caption desk-caption-${i} absolute bottom-0 md:bottom-auto md:top-1/2 md:-translate-y-1/2 left-0 right-0`}>
+                        <div key={c.title} className={`desk-caption desk-caption-${i} absolute bottom-0 lg:bottom-auto lg:top-1/2 lg:-translate-y-1/2 left-0 right-0`}>
                             <p className="text-xs uppercase tracking-[0.3em] text-purple-300 mb-3">{c.kicker}</p>
-                            <h2 className="font-heading text-4xl md:text-6xl font-bold tracking-tight text-white mb-4 drop-shadow-[0_0_30px_rgba(168,85,247,0.5)]">
+                            <h2 className="font-heading text-[clamp(1.75rem,8vw,2.25rem)] md:text-5xl lg:text-6xl font-bold tracking-tight text-white mb-4 drop-shadow-[0_0_30px_rgba(168,85,247,0.5)]">
                                 {c.title}
                             </h2>
                             <p className="text-gray-300/90 leading-relaxed text-base md:text-lg">{c.body}</p>
@@ -1043,11 +1066,12 @@ export default function DeskScene() {
             </div>
 
             {/* progress + hint */}
-            <div className="pointer-events-none absolute bottom-8 left-6 right-6 md:left-16 md:right-16 flex items-center gap-4">
+            <div className="pointer-events-none absolute bottom-5 md:bottom-6 left-6 right-6 md:left-16 md:right-16 z-30 flex items-center gap-4">
                 <span className="desk-hint opacity-0 text-[10px] uppercase tracking-[0.3em] text-gray-400">Scroll to explore · move mouse to look</span>
                 <div className="h-px flex-1 bg-white/10 overflow-hidden">
                     <div className="desk-bar h-full origin-left scale-x-0 bg-gradient-to-r from-purple-400 via-pink-400 to-cyan-300" />
                 </div>
+                <HeroSound />
             </div>
         </section>
     );

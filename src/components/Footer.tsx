@@ -41,12 +41,12 @@ export default function Footer() {
                     {/* Quick Links */}
                     <div>
                         <h4 className="text-sm uppercase tracking-widest text-gray-500 mb-4">Quick Links</h4>
-                        <ul className="space-y-2">
+                        <ul>
                             {quickLinks.map((link) => (
                                 <li key={link}>
                                     <a
                                         href={`#${link.toLowerCase()}`}
-                                        className="text-gray-400 hover:text-white transition-colors text-sm"
+                                        className="inline-block py-2 text-gray-400 hover:text-white transition-colors text-sm"
                                     >
                                         {link}
                                     </a>

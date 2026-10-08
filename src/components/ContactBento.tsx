@@ -46,16 +46,16 @@ export default function ContactBento() {
                 </div>
             </motion.div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 h-auto md:h-[600px]">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 h-auto lg:h-[600px]">
                 {/* Globe Card */}
                 <motion.div
                     initial={{ opacity: 0, x: -20 }}
                     whileInView={{ opacity: 1, x: 0 }}
                     viewport={{ once: true }}
-                    className="glow-card col-span-1 md:col-span-1 rounded-3xl overflow-hidden flex flex-col justify-between p-8 group"
+                    className="glow-card col-span-1 min-h-[360px] lg:min-h-0 rounded-3xl overflow-hidden flex flex-col justify-between p-6 sm:p-8 group"
                 >
                     <div className="relative z-10">
-                        <h3 className="text-3xl font-heading text-white leading-tight mb-4">
+                        <h3 className="text-2xl sm:text-3xl font-heading text-white leading-tight mb-4">
                             I&apos;m very flexible with time zone communications
                         </h3>
                         <div className="flex gap-3">
@@ -71,7 +71,7 @@ export default function ContactBento() {
                 </motion.div>
 
                 {/* Right Column */}
-                <div className="col-span-1 md:col-span-2 flex flex-col gap-6">
+                <div className="col-span-1 lg:col-span-2 flex flex-col gap-6">
                     {/* Collaboration Card */}
                     <motion.div
                         initial={{ opacity: 0, y: 20 }}
@@ -115,18 +115,18 @@ export default function ContactBento() {
                         initial={{ opacity: 0, y: 20 }}
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true }}
-                        className="glow-card flex-shrink-0 rounded-3xl p-8 flex flex-col gap-6"
+                        className="glow-card flex-shrink-0 rounded-3xl p-6 sm:p-8 flex flex-col gap-6"
                     >
-                        <div className="flex flex-col lg:flex-row items-center justify-between gap-6">
-                            <div className="text-center lg:text-left">
-                                <div className="w-10 h-10 bg-purple-500/15 rounded-lg flex items-center justify-center mb-3 mx-auto lg:mx-0 text-purple-300">
+                        <div className="flex flex-col xl:flex-row items-center justify-between gap-6">
+                            <div className="text-center xl:text-left">
+                                <div className="w-10 h-10 bg-purple-500/15 rounded-lg flex items-center justify-center mb-3 mx-auto xl:mx-0 text-purple-300">
                                     <Mail className="w-5 h-5" />
                                 </div>
                                 <h3 className="text-2xl font-bold text-white mb-1">Let&apos;s work together</h3>
                                 <p className="text-gray-400 text-sm">Hiring, or have a project in mind? I reply fast.</p>
                             </div>
 
-                            <div className="flex flex-col sm:flex-row items-stretch gap-3 shrink-0 max-w-full">
+                            <div className="flex flex-col sm:flex-row items-stretch gap-3 shrink-0 w-full sm:w-auto max-w-full">
                                 <button
                                     onClick={handleCopy}
                                     aria-label="Copy email address"
@@ -147,7 +147,7 @@ export default function ContactBento() {
                         </div>
 
                         {/* Social Links */}
-                        <div className="flex items-center justify-center lg:justify-start gap-4 pt-4 border-t border-white/5">
+                        <div className="flex flex-wrap items-center justify-center xl:justify-start gap-4 pt-4 border-t border-white/5">
                             {socialLinks.map((social) => (
                                 <a
                                     key={social.name}

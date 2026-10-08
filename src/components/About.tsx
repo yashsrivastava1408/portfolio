@@ -22,7 +22,7 @@ export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
     return (
         <section
             id="about"
-            className="py-20 md:py-24 px-4 max-w-7xl mx-auto flex flex-col md:flex-row items-center gap-16 md:gap-24"
+            className="py-20 md:py-24 px-4 max-w-7xl mx-auto flex flex-col lg:flex-row items-center gap-14 lg:gap-20 xl:gap-24"
         >
             {/* Left: Profile Card */}
             <motion.div
@@ -86,7 +86,7 @@ export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
 
             {/* Right: Content */}
             <motion.div
-                className="flex-1"
+                className="w-full min-w-0 max-w-2xl lg:max-w-none lg:flex-1"
                 initial={{ opacity: 0, x: 40 }}
                 whileInView={{ opacity: 1, x: 0 }}
                 viewport={{ once: true, margin: "-100px" }}
@@ -94,7 +94,7 @@ export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
             >
                 <SectionHeading kicker="Who I am" accent="Me" className="mb-8">About</SectionHeading>
 
-                <p className="text-gray-400 text-lg mb-12 max-w-xl leading-relaxed">
+                <p className="text-gray-400 text-base sm:text-lg mb-12 max-w-xl leading-relaxed">
                     {portfolioData.personal.description}
                 </p>
 
@@ -122,12 +122,12 @@ export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
                 <div className="mb-12">
                     <h3 className="text-sm font-bold text-gray-500 uppercase tracking-widest mb-4">Education</h3>
                     {portfolioData.education.map((edu, index) => (
-                        <div key={index} className="glow-card flex flex-col md:flex-row md:items-center justify-between gap-2 p-6 rounded-2xl">
+                        <div key={index} className="glow-card flex flex-col sm:flex-row sm:items-center justify-between gap-2 p-5 sm:p-6 rounded-2xl">
                             <div>
                                 <h4 className="text-xl font-bold text-white max-w-md">{edu.institution}</h4>
                                 <p className="text-gray-400 mt-1">{edu.degree}</p>
                             </div>
-                            <div className="text-right md:text-right">
+                            <div className="sm:text-right shrink-0">
                                 <p className="text-cyan-300 font-mono text-sm">{edu.period}</p>
                                 <p className="text-gray-600 text-xs mt-1 uppercase tracking-wider">{edu.location}</p>
                             </div>
@@ -136,10 +136,10 @@ export default function About({ leetcodeSolved }: { leetcodeSolved: number }) {
                 </div>
 
                 {/* Stats */}
-                <div className="grid grid-cols-3 gap-6 md:gap-8 mb-12">
+                <div className="grid grid-cols-3 gap-4 sm:gap-6 md:gap-8 mb-12">
                     {stats.map((stat) => (
                         <div key={stat.label}>
-                            <p className="text-4xl md:text-5xl font-bold text-white mb-2">
+                            <p className="text-[clamp(1.75rem,9vw,2.25rem)] md:text-5xl font-bold text-white mb-2">
                                 <CountUp value={stat.value} suffix={stat.suffix} />
                             </p>
                             <p className="text-xs text-gray-500 uppercase tracking-widest max-w-[9rem]">{stat.label}</p>

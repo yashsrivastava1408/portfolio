@@ -121,7 +121,7 @@ export default function LeetCode({ stats, github: githubStats }: LeetCodeProps) 
                                 {segments.map((s) => (
                                     <div key={s.label} className={`p-4 rounded-2xl bg-white/5 border border-white/5 text-center transition-colors ${s.hover}`}>
                                         <div className={`${s.text} font-bold mb-1`}><CountUp value={s.count} /></div>
-                                        <div className="text-[10px] text-gray-500 uppercase tracking-wider">{s.label}</div>
+                                        <div className="text-[11px] text-gray-500 uppercase tracking-wider">{s.label}</div>
                                     </div>
                                 ))}
                             </div>
@@ -162,7 +162,7 @@ export default function LeetCode({ stats, github: githubStats }: LeetCodeProps) 
                         </div>
                         <div className="text-right flex-shrink-0">
                             <p className="text-4xl font-bold font-heading text-white leading-none"><CountUp value={githubStats.publicRepos} /></p>
-                            <p className="text-[10px] text-gray-500 uppercase tracking-wider mt-2">Public repos</p>
+                            <p className="text-[11px] text-gray-500 uppercase tracking-wider mt-2">Public repos</p>
                         </div>
                     </div>
 

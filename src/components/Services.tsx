@@ -43,7 +43,7 @@ export default function Services() {
                 </p>
             </div>
 
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-8 relative z-10">
+            <div className="grid grid-cols-1 lg:grid-cols-3 gap-6 lg:gap-8 relative z-10 max-w-2xl lg:max-w-none mx-auto">
                 {services.map((service, index) => (
                     <motion.div
                         key={index}
@@ -51,21 +51,21 @@ export default function Services() {
                         whileInView={{ opacity: 1, y: 0 }}
                         viewport={{ once: true, margin: "-50px" }}
                         transition={{ duration: 0.6, delay: index * 0.15 }}
-                        className="group relative md:h-[460px]"
+                        className="group relative lg:h-[460px]"
                     >
                         <div className="relative w-full h-full transition-all duration-500 group-hover:-translate-y-4">
 
                             {/* Background Gradient Blob */}
                             <div className={`absolute inset-0 bg-gradient-to-br ${service.gradient} opacity-0 group-hover:opacity-10 transition-opacity duration-500 blur-2xl -z-10`} />
 
-                            <div className="glow-card h-full w-full rounded-3xl p-8 flex flex-col justify-between gap-10 overflow-hidden group-hover:border-white/20 transition-colors">
+                            <div className="glow-card h-full w-full rounded-3xl p-6 sm:p-8 flex flex-col justify-between gap-10 overflow-hidden group-hover:border-white/20 transition-colors">
 
                                 {/* Top Content */}
                                 <div>
                                     <div className={`w-14 h-14 rounded-2xl bg-gradient-to-br ${service.gradient} p-3 mb-8 shadow-lg group-hover:scale-110 transition-transform duration-500`}>
                                         <service.icon className="w-full h-full text-white" />
                                     </div>
-                                    <h3 className="text-3xl font-bold text-white mb-4 leading-tight">
+                                    <h3 className="text-2xl sm:text-3xl font-bold text-white mb-4 leading-tight">
                                         {service.title}
                                     </h3>
                                     <p className="text-gray-400 leading-relaxed group-hover:text-gray-300 transition-colors">
@@ -83,7 +83,7 @@ export default function Services() {
                                         ))}
                                     </div>
 
-                                    <a href="#projects" className="flex items-center gap-2 text-sm font-bold uppercase tracking-wider text-gray-500 group-hover:text-white transition-all group-hover:gap-4 duration-300">
+                                    <a href="#projects" className="flex items-center gap-2 py-2 -my-2 text-sm font-bold uppercase tracking-wider text-gray-500 group-hover:text-white transition-all group-hover:gap-4 duration-300">
                                         See Projects <ArrowUpRight className="w-4 h-4" />
                                     </a>
                                 </div>

@@ -22,11 +22,11 @@ export default function SmoothScroll({ children }: { children: React.ReactNode }
         // Lerp-based smoothing glides continuously toward the target, so quick wheel ticks
         // blend into one motion instead of restarting a timed ease on every tick.
         const lenisInstance = new Lenis({
-            lerp: 0.075,
+            lerp: 0.1,
             orientation: "vertical",
             gestureOrientation: "vertical",
             smoothWheel: true,
-            wheelMultiplier: 0.9,
+            wheelMultiplier: 1,
             // touch screens keep native momentum scrolling, which is already the smoothest option
             syncTouch: false,
         });

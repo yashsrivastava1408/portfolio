@@ -131,11 +131,11 @@ export default function Projects() {
                                 </div>
 
                                 <div className="flex gap-6 pt-4">
-                                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors pb-1">
+                                    <a href={project.link} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors py-2">
                                         <Github className="w-4 h-4" /> View Source
                                     </a>
                                     {project.liveUrl && (
-                                        <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors pb-1">
+                                        <a href={project.liveUrl} target="_blank" rel="noopener noreferrer" className="flex items-center gap-2 text-white border-b border-transparent hover:border-white transition-colors py-2">
                                             <ExternalLink className="w-4 h-4" /> Live Demo
                                         </a>
                                     )}

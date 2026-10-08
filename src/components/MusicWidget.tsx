@@ -161,7 +161,7 @@ export default function MusicWidget() {
                     </div>
 
                     <div className="flex items-center justify-center gap-6 text-white">
-                        <button onClick={handlePrev} className="hover:text-white/70">
+                        <button onClick={handlePrev} className="p-2 -m-2 hover:text-white/70">
                             <SkipBack className="w-5 h-5 fill-current" />
                         </button>
 
@@ -172,7 +172,7 @@ export default function MusicWidget() {
                             {isPlaying ? <Pause className="w-5 h-5" /> : <Play className="w-5 h-5 ml-1" />}
                         </button>
 
-                        <button onClick={handleNext} className="hover:text-white/70">
+                        <button onClick={handleNext} className="p-2 -m-2 hover:text-white/70">
                             <SkipForward className="w-5 h-5 fill-current" />
                         </button>
                     </div>
